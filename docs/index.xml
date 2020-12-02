@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Wed, 02 Dec 2020 17:42:12 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 02 Dec 2020 18:13:44 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>利用Nginx和Daphne部署Django3.x和Django channels 3.x</title>
+      <link>https://pengchuanc.github.io/posts/django-channels-deploy/</link>
+      <pubDate>Wed, 02 Dec 2020 18:13:44 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/django-channels-deploy/</guid>
+      <description>Django在3.0正式引入asgi，部署方式与2.x略有不同 仅部署http网站 如果仅部署http网站，可采用uvicorn来进行部署，然后</description>
+    </item>
+    
     <item>
       <title>记录GRPC在各种语言下的编译方式</title>
       <link>https://pengchuanc.github.io/posts/rpc-complie/</link>

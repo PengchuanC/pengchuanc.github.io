@@ -3,4 +3,5 @@ title: "关于"
 date: "2020-12-01"
 ---
 
-这是关于Asin。
+主要工作是网站开发和爬虫，感兴趣的话
+[GitHub](https://github.com/PengchuanC/)
