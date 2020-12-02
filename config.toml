@@ -6,7 +6,7 @@ theme = "hermit"
 # enableGitInfo = true
 pygmentsCodefences  = true
 pygmentsUseClasses  = true
-# hasCJKLanguage = true  # If Chinese/Japanese/Korean is your main content language, enable this to make wordCount works right.
+hasCJKLanguage = true  # If Chinese/Japanese/Korean is your main content language, enable this to make wordCount works right.
 rssLimit = 10  # Maximum number of items in the RSS feed.
 copyright = "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License." # This message is only used by the RSS template.
 enableEmoji = true  # Shorthand emojis in content files - https://gohugo.io/functions/emojify/
@@ -22,7 +22,7 @@ enableEmoji = true  # Shorthand emojis in content files - https://gohugo.io/func
   # nofollowLinks = true
 
 [taxonomies]
-  tag = "tags"
+  tag = "标签"
   # Categories are disabled by default.
 
 [params]
@@ -36,7 +36,7 @@ enableEmoji = true  # Shorthand emojis in content files - https://gohugo.io/func
   # images = [""]
   themeColor = "#494f5c"
 
-  homeSubtitle = "A minimal and fast theme for Hugo."
+  homeSubtitle = "Python、Go和Typescript拾遗."
   footerCopyright = ' &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
   # bgImg = ""  # Homepage background-image URL
 
@@ -60,8 +60,8 @@ enableEmoji = true  # Shorthand emojis in content files - https://gohugo.io/func
     url = "https://twitter.com/"
 
   [[params.social]]
-    name = "instagram"
-    url = "https://instagram.com/"
+    name = "qq"
+    url = "https://qq.com/"
 
   [[params.social]]
     name = "github"

@@ -6,7 +6,27 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>zh-cn</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+		<lastBuildDate>Wed, 02 Dec 2020 17:42:12 +0800</lastBuildDate>
 		<atom:link href="https://pengchuanc.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>记录GRPC在各种语言下的编译方式</title>
+			<link>https://pengchuanc.github.io/posts/rpc-complie/</link>
+			<pubDate>Wed, 02 Dec 2020 17:42:12 +0800</pubDate>
+			
+			<guid>https://pengchuanc.github.io/posts/rpc-complie/</guid>
+			<description>Python Python中的编译方式 假设当前工作目录为protobuf，待编译文件为hello.proto &amp;gt; cd protobuf &amp;gt; python -m grpc_tools.protoc --python_out=. --grpc_python_out=. -I. hello.proto Go Golang中的编译</description>
+			<content type="html"><![CDATA[<h1 id="python">Python</h1>
+<h3 id="python中的编译方式">Python中的编译方式</h3>
+<p>假设当前工作目录为<code>protobuf</code>，待编译文件为<code>hello.proto</code></p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">&gt; <span class="nb">cd</span> protobuf
+&gt; python -m grpc_tools.protoc --python_out<span class="o">=</span>. --grpc_python_out<span class="o">=</span>. -I. hello.proto
+</code></pre></div><h1 id="go">Go</h1>
+<h3 id="golang中的编译方式">Golang中的编译方式</h3>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">&gt; <span class="nb">cd</span> protobuf
+&gt; protoc --go_out<span class="o">=</span><span class="nv">plugins</span><span class="o">=</span>grpc:. hello.proto
+</code></pre></div>]]></content>
+		</item>
 		
 	</channel>
 </rss>
