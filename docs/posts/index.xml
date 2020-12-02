@@ -1,8 +1,8 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
-		<title>文章列表 on Hugo Hermit</title>
+		<title>文章列表 on Learn to Code</title>
 		<link>https://pengchuanc.github.io/posts/</link>
-		<description>Recent content in 文章列表 on Hugo Hermit</description>
+		<description>Recent content in 文章列表 on Learn to Code</description>
 		<generator>Hugo -- gohugo.io</generator>
 		<language>zh-cn</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>

@@ -1,7 +1,7 @@
 baseURL = "https://pengchuanc.github.io/"
 languageCode = "zh-cn"
 defaultContentLanguage = "en"
-title = "Hugo Hermit"
+title = "Learn to Code"
 theme = "hermit"
 # enableGitInfo = true
 pygmentsCodefences  = true
