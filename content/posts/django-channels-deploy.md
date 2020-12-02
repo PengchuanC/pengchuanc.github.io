@@ -95,4 +95,4 @@ server {
 
 ```
 
-这样便可以使用 http://0.0.0.0/management/访问http服务，使用ws://0.0.0.0/ws/访问ws服务
+这样便可以使用 http://0.0.0.0/management/ 访问http服务，使用 ws://0.0.0.0/ws/ 访问ws服务
