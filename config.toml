@@ -1,6 +1,6 @@
-baseURL = "https://example.com"
+baseURL = "https://pengchuanc.github.io/"
 languageCode = "zh-cn"
-defaultContentLanguage = "en"
+defaultContentLanguage = "zh"
 title = "Hugo Hermit"
 theme = "hermit"
 # enableGitInfo = true
