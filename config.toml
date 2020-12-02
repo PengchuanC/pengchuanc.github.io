@@ -1,6 +1,6 @@
 baseURL = "https://pengchuanc.github.io/"
 languageCode = "zh-cn"
-defaultContentLanguage = "zh"
+defaultContentLanguage = "en"
 title = "Hugo Hermit"
 theme = "hermit"
 # enableGitInfo = true
