@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Wed, 02 Dec 2020 18:13:44 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 04 Dec 2020 18:06:42 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>发布/订阅模式</title>
+      <link>https://pengchuanc.github.io/posts/pub-sub-model/</link>
+      <pubDate>Fri, 04 Dec 2020 18:06:42 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/pub-sub-model/</guid>
+      <description>发布订阅模式比较常用，近期使用grpc也涉及到连接管理 简单记录一下发布订阅模式的实现，主要使用chan来传输 数据</description>
+    </item>
+    
     <item>
       <title>利用Nginx和Daphne部署Django3.x和Django channels 3.x</title>
       <link>https://pengchuanc.github.io/posts/django-channels-deploy/</link>
