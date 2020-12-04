@@ -14,7 +14,7 @@
       <pubDate>Fri, 04 Dec 2020 18:06:42 +0800</pubDate>
       
       <guid>https://pengchuanc.github.io/posts/pub-sub-model/</guid>
-      <description>发布订阅模式比较常用，近期使用grpc也涉及到连接管理 简单记录一下发布订阅模式的实现，主要使用chan来传输 数据</description>
+      <description>发布订阅模式比较常用，近期使用grpc也涉及到连接管理简单记录一下发布订阅模式的实现，主要使用chan来传输数据 也可以考虑使用回调函数来处理</description>
     </item>
     
     <item>

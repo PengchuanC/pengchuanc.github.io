@@ -15,11 +15,253 @@
 			<pubDate>Fri, 04 Dec 2020 18:06:42 +0800</pubDate>
 			
 			<guid>https://pengchuanc.github.io/posts/pub-sub-model/</guid>
-			<description>发布订阅模式比较常用，近期使用grpc也涉及到连接管理 简单记录一下发布订阅模式的实现，主要使用chan来传输 数据</description>
-			<content type="html"><![CDATA[<p>发布订阅模式比较常用，近期使用grpc也涉及到连接管理
-简单记录一下发布订阅模式的实现，主要使用chan来传输
-数据</p>
-]]></content>
+			<description>发布订阅模式比较常用，近期使用grpc也涉及到连接管理简单记录一下发布订阅模式的实现，主要使用chan来传输数据 也可以考虑使用回调函数来处理</description>
+			<content type="html"><![CDATA[<p>发布订阅模式比较常用，近期使用grpc也涉及到连接管理简单记录一下发布订阅模式的实现，主要使用chan来传输数据</p>
+<p>也可以考虑使用回调函数来处理publish的内容</p>
+<h2 id="定义publisher">定义Publisher</h2>
+<p>首先定义一个Publish的struct，主要包含Subscribers属性来管理订阅者，订阅者必须使用指针来保证数据传递</p>
+<div class="highlight"><pre class="chroma"><code class="language-golang" data-lang="golang"><span class="c1">// Publisher 发布者
+</span><span class="c1">// 管理订阅者
+</span><span class="c1">// 发布内容
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Publisher</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">sync</span><span class="p">.</span><span class="nx">RWMutex</span>
+	<span class="nx">Subscribers</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="o">*</span><span class="nx">Subscriber</span>
+	<span class="nx">waitGroup</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">NewPublisher</span><span class="p">()</span> <span class="o">*</span><span class="nx">Publisher</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Publisher</span><span class="p">{</span>
+		<span class="nx">Subscribers</span><span class="p">:</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="o">*</span><span class="nx">Subscriber</span><span class="p">),</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p>接下来实现Publisher的基础功能</p>
+<div class="highlight"><pre class="chroma"><code class="language-golang" data-lang="golang">
+<span class="c1">// 发布者的功能
+</span><span class="c1">// 添加订阅者
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Publisher</span><span class="p">)</span> <span class="nf">AddSubscriber</span><span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">Subscriber</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nf">Lock</span><span class="p">()</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">Subscribers</span><span class="p">[</span><span class="nx">s</span><span class="p">.</span><span class="nx">Name</span><span class="p">]</span> <span class="p">=</span> <span class="nx">s</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;添加订阅者%s成功\n&#34;</span><span class="p">,</span> <span class="nx">s</span><span class="p">.</span><span class="nx">Name</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// 删除订阅者
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Publisher</span><span class="p">)</span> <span class="nf">RemoveSubscriber</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nf">Lock</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Subscribers</span><span class="p">[</span><span class="nx">name</span><span class="p">];</span> <span class="nx">ok</span> <span class="p">{</span>
+		<span class="nb">delete</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">Subscribers</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;移除订阅者%s成功\n&#34;</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// 发布内容
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Publisher</span><span class="p">)</span> <span class="nf">Publish</span><span class="p">(</span><span class="nx">msg</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nf">RLock</span><span class="p">()</span>
+	<span class="k">defer</span> <span class="nx">p</span><span class="p">.</span><span class="nf">RUnlock</span><span class="p">()</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">waitGroup</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">Subscribers</span><span class="p">))</span>
+	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">s</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Subscribers</span> <span class="p">{</span>
+		<span class="nx">d_</span> <span class="o">:=</span> <span class="nx">msg</span>
+		<span class="nx">s_</span> <span class="o">:=</span> <span class="nx">s</span>
+		<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+			<span class="nx">s_</span><span class="p">.</span><span class="nf">Run</span><span class="p">(</span><span class="nx">d_</span><span class="p">)</span>
+			<span class="nx">p</span><span class="p">.</span><span class="nx">waitGroup</span><span class="p">.</span><span class="nf">Done</span><span class="p">()</span>
+		<span class="p">}()</span>
+	<span class="p">}</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">waitGroup</span><span class="p">.</span><span class="nf">Wait</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div><h2 id="定义subscriber">定义Subscriber</h2>
+<p>订阅者主要是接受发布者推送的数据，当然也应该包含一个唯一的标识符，可采用uuid，本文简单采用一个name(string)</p>
+<div class="highlight"><pre class="chroma"><code class="language-golang" data-lang="golang"><span class="kd">type</span> <span class="nx">Subscriber</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">sync</span><span class="p">.</span><span class="nx">RWMutex</span>
+	<span class="nx">Name</span> <span class="kt">string</span>
+	<span class="nx">Data</span> <span class="kd">chan</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">NewSubscriber</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="o">*</span><span class="nx">Subscriber</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Subscriber</span><span class="p">{</span><span class="nx">Name</span><span class="p">:</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">Data</span><span class="p">:</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">string</span><span class="p">)}</span>
+<span class="p">}</span>
+</code></pre></div><p>订阅者应当实现的功能</p>
+<div class="highlight"><pre class="chroma"><code class="language-golang" data-lang="golang"><span class="c1">// 订阅者功能
+</span><span class="c1">// 订阅内容
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">Subscriber</span><span class="p">)</span> <span class="nf">Subscribe</span><span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Publisher</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nf">AddSubscriber</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// 取消订阅
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">Subscriber</span><span class="p">)</span> <span class="nf">UnSubscribe</span><span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Publisher</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nf">RemoveSubscriber</span><span class="p">(</span><span class="nx">s</span><span class="p">.</span><span class="nx">Name</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// 处理发布的内容
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">Subscriber</span><span class="p">)</span> <span class="nf">Run</span><span class="p">(</span><span class="nx">msg</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">s</span><span class="p">.</span><span class="nf">Lock</span><span class="p">()</span>
+	<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">s</span><span class="p">.</span><span class="nx">Data</span> <span class="o">&lt;-</span> <span class="nx">msg</span>
+		<span class="nx">s</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span>
+	<span class="p">}()</span>
+<span class="p">}</span>
+</code></pre></div><p>完整代码</p>
+<div class="highlight"><pre class="chroma"><code class="language-golang" data-lang="golang"><span class="c1">// demo/subscribe/publisher.go
+</span><span class="c1"></span><span class="kn">package</span> <span class="nx">subscribe</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;fmt&#34;</span>
+	<span class="s">&#34;sync&#34;</span>
+<span class="p">)</span>
+
+<span class="c1">// Publisher 发布者
+</span><span class="c1">// 管理订阅者
+</span><span class="c1">// 发布内容
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Publisher</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">sync</span><span class="p">.</span><span class="nx">RWMutex</span>
+	<span class="nx">Subscribers</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="o">*</span><span class="nx">Subscriber</span>
+	<span class="nx">waitGroup</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">NewPublisher</span><span class="p">()</span> <span class="o">*</span><span class="nx">Publisher</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Publisher</span><span class="p">{</span>
+		<span class="nx">Subscribers</span><span class="p">:</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="o">*</span><span class="nx">Subscriber</span><span class="p">),</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 发布者的功能
+</span><span class="c1">// 添加订阅者
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Publisher</span><span class="p">)</span> <span class="nf">AddSubscriber</span><span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">Subscriber</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nf">Lock</span><span class="p">()</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">Subscribers</span><span class="p">[</span><span class="nx">s</span><span class="p">.</span><span class="nx">Name</span><span class="p">]</span> <span class="p">=</span> <span class="nx">s</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;添加订阅者%s成功\n&#34;</span><span class="p">,</span> <span class="nx">s</span><span class="p">.</span><span class="nx">Name</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// 删除订阅者
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Publisher</span><span class="p">)</span> <span class="nf">RemoveSubscriber</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nf">Lock</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Subscribers</span><span class="p">[</span><span class="nx">name</span><span class="p">];</span> <span class="nx">ok</span> <span class="p">{</span>
+		<span class="nb">delete</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">Subscribers</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;移除订阅者%s成功\n&#34;</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// 发布者事件处理 - 产生数据
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Publisher</span><span class="p">)</span> <span class="nf">Update</span><span class="p">(){</span>
+
+<span class="p">}</span>
+
+<span class="c1">// 发布内容
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Publisher</span><span class="p">)</span> <span class="nf">Publish</span><span class="p">(</span><span class="nx">msg</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nf">RLock</span><span class="p">()</span>
+	<span class="k">defer</span> <span class="nx">p</span><span class="p">.</span><span class="nf">RUnlock</span><span class="p">()</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">waitGroup</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">Subscribers</span><span class="p">))</span>
+	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">s</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Subscribers</span> <span class="p">{</span>
+		<span class="nx">d_</span> <span class="o">:=</span> <span class="nx">msg</span>
+		<span class="nx">s_</span> <span class="o">:=</span> <span class="nx">s</span>
+		<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+			<span class="nx">s_</span><span class="p">.</span><span class="nf">Run</span><span class="p">(</span><span class="nx">d_</span><span class="p">)</span>
+			<span class="nx">p</span><span class="p">.</span><span class="nx">waitGroup</span><span class="p">.</span><span class="nf">Done</span><span class="p">()</span>
+		<span class="p">}()</span>
+	<span class="p">}</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">waitGroup</span><span class="p">.</span><span class="nf">Wait</span><span class="p">()</span>
+<span class="p">}</span>
+
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-golang" data-lang="golang"><span class="c1">// demo/subscribe/subscriber.go
+</span><span class="c1"></span><span class="kn">package</span> <span class="nx">subscribe</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;sync&#34;</span>
+<span class="p">)</span>
+
+<span class="c1">// Subscriber 订阅者
+</span><span class="c1">// 订阅内容，等待发布者发布内容
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Subscriber</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">sync</span><span class="p">.</span><span class="nx">RWMutex</span>
+	<span class="nx">Name</span> <span class="kt">string</span>
+	<span class="nx">Data</span> <span class="kd">chan</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">NewSubscriber</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="o">*</span><span class="nx">Subscriber</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Subscriber</span><span class="p">{</span><span class="nx">Name</span><span class="p">:</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">Data</span><span class="p">:</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">string</span><span class="p">)}</span>
+<span class="p">}</span>
+
+
+<span class="c1">// 订阅者功能
+</span><span class="c1">// 订阅内容
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">Subscriber</span><span class="p">)</span> <span class="nf">Subscribe</span><span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Publisher</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nf">AddSubscriber</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// 取消订阅
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">Subscriber</span><span class="p">)</span> <span class="nf">UnSubscribe</span><span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Publisher</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nf">RemoveSubscriber</span><span class="p">(</span><span class="nx">s</span><span class="p">.</span><span class="nx">Name</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// 处理发布的内容
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">Subscriber</span><span class="p">)</span> <span class="nf">Run</span><span class="p">(</span><span class="nx">msg</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">s</span><span class="p">.</span><span class="nf">Lock</span><span class="p">()</span>
+	<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">s</span><span class="p">.</span><span class="nx">Data</span> <span class="o">&lt;-</span> <span class="kt">string</span>
+		<span class="nx">s</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span>
+	<span class="p">}()</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-golang" data-lang="golang"><span class="c1">// demo/main.go
+</span><span class="c1"></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+  <span class="s">&#34;fmt&#34;</span>
+  <span class="s">&#34;time&#34;</span>
+  <span class="s">&#34;demo/subscribe&#34;</span>
+  <span class="s">&#34;strconv&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">(){</span>
+  <span class="kd">var</span> <span class="p">(</span>
+    <span class="nx">pub</span> <span class="o">*</span><span class="nx">subscribe</span><span class="p">.</span><span class="nx">Publiser</span>
+    <span class="nx">sub1</span> <span class="o">*</span><span class="nx">subscribe</span><span class="p">.</span><span class="nx">Subscriber</span>
+    <span class="nx">sub2</span> <span class="o">*</span><span class="nx">subscribe</span><span class="p">.</span><span class="nx">Subscriber</span>
+  <span class="p">)</span>
+
+  <span class="nx">pub</span> <span class="p">=</span> <span class="nx">subscibe</span><span class="p">.</span><span class="nf">NewPublisher</span><span class="p">()</span>
+
+  <span class="nx">sub1</span> <span class="p">=</span> <span class="nx">subscribe</span><span class="p">.</span><span class="nf">NewSubscriber</span><span class="p">(</span><span class="s">&#34;pub1&#34;</span><span class="p">)</span>
+  <span class="nx">sub2</span> <span class="p">=</span> <span class="nx">subscribe</span><span class="p">.</span><span class="nf">NewSubscriber</span><span class="p">(</span><span class="s">&#34;pub2&#34;</span><span class="p">)</span>
+  <span class="nx">sub1</span><span class="p">.</span><span class="nf">Subscribe</span><span class="p">(</span><span class="nx">pub</span><span class="p">)</span>
+  <span class="nx">sub2</span><span class="p">.</span><span class="nf">Subscribe</span><span class="p">(</span><span class="nx">pub</span><span class="p">)</span>
+
+  <span class="k">go</span> <span class="kd">func</span><span class="p">(){</span>
+    <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">100</span> <span class="p">{</span>
+        <span class="k">break</span>
+      <span class="p">}</span>
+      <span class="nx">pub</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="nx">strconv</span><span class="p">.</span><span class="nf">Itoa</span><span class="p">(</span><span class="nx">i</span><span class="p">))</span>
+      <span class="nx">i</span> <span class="o">++</span>
+    <span class="p">}</span>
+  <span class="p">}()</span>
+
+  <span class="k">go</span> <span class="kd">func</span><span class="p">(){</span>
+    <span class="k">for</span><span class="p">{</span>
+      <span class="nx">d1</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="o">&lt;-</span> <span class="nx">sub1</span><span class="p">.</span><span class="nx">Data</span>
+      <span class="k">if</span> <span class="p">!</span><span class="nx">ok</span> <span class="p">{</span>
+        <span class="k">continue</span>
+      <span class="p">}</span>
+      <span class="nx">fmt</span><span class="p">.</span><span class="nf">Print</span><span class="p">(</span><span class="nx">d1</span><span class="p">)</span>
+    <span class="p">}</span>
+  <span class="p">}()</span>
+
+    <span class="k">go</span> <span class="kd">func</span><span class="p">(){</span>
+    <span class="k">for</span><span class="p">{</span>
+      <span class="nx">d2</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="o">&lt;-</span> <span class="nx">sub2</span><span class="p">.</span><span class="nx">Data</span>
+      <span class="k">if</span> <span class="p">!</span><span class="nx">ok</span> <span class="p">{</span>
+        <span class="k">continue</span>
+      <span class="p">}</span>
+      <span class="nx">fmt</span><span class="p">.</span><span class="nf">Print</span><span class="p">(</span><span class="nx">d2</span><span class="p">)</span>
+    <span class="p">}</span>
+  <span class="p">}()</span>
+
+  <span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="mi">10</span><span class="o">*</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>]]></content>
 		</item>
 		
 		<item>
