@@ -8,23 +8,23 @@
 	<meta name="theme-color" content="#494f5c">
 	<meta name="msapplication-TileColor" content="#494f5c">
 <meta itemprop="name" content="通过grpc服务上传下载大型文件(Python)">
-<meta itemprop="description" content="传统大型文件的发送方式主要使用socket服务，这种功能同样可以使用grpc的stream来实现， 通过使用流(streaming)，你可以向">
+<meta itemprop="description" content="传统大型文件的发送方式主要使用socket服务，这种功能同样可以使用grpc的stream来实现， 通过使用流(streaming)，可以向服">
 <meta itemprop="datePublished" content="2020-12-09T15:49:54+08:00" />
 <meta itemprop="dateModified" content="2020-12-09T15:49:54+08:00" />
-<meta itemprop="wordCount" content="1663">
+<meta itemprop="wordCount" content="1662">
 
 
 
 <meta itemprop="keywords" content="grpc,python," />
 <meta property="og:title" content="通过grpc服务上传下载大型文件(Python)" />
-<meta property="og:description" content="传统大型文件的发送方式主要使用socket服务，这种功能同样可以使用grpc的stream来实现， 通过使用流(streaming)，你可以向" />
+<meta property="og:description" content="传统大型文件的发送方式主要使用socket服务，这种功能同样可以使用grpc的stream来实现， 通过使用流(streaming)，可以向服" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://pengchuanc.github.io/posts/grpc_stream_python/" />
 <meta property="article:published_time" content="2020-12-09T15:49:54+08:00" />
 <meta property="article:modified_time" content="2020-12-09T15:49:54+08:00" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="通过grpc服务上传下载大型文件(Python)"/>
-<meta name="twitter:description" content="传统大型文件的发送方式主要使用socket服务，这种功能同样可以使用grpc的stream来实现， 通过使用流(streaming)，你可以向"/>
+<meta name="twitter:description" content="传统大型文件的发送方式主要使用socket服务，这种功能同样可以使用grpc的stream来实现， 通过使用流(streaming)，可以向服"/>
 
 	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -74,7 +74,7 @@
 			</header>
 			<div class="content">
 				<p>传统大型文件的发送方式主要使用socket服务，这种功能同样可以使用grpc的stream来实现，
-通过使用流(streaming)，你可以向服务器或者客户端发送批量的数据。</p>
+通过使用流(streaming)，可以向服务器或者客户端发送批量的数据。</p>
 <h2 id="1创建项目">1.创建项目<a href="#1创建项目" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>整个项目位于desktop目录下，首先新建必要的目录及文件。</p>
 <div class="highlight"><pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="n">desktop</span><span class="p">&gt;</span> <span class="n">mkdir</span> <span class="n">file_server</span>
@@ -339,7 +339,7 @@ import file_server.fileserver_pb2 as fileserver__pb2
 				<p>
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://pengchuanc.github.io/tags/grpc">grpc</a></span><span class="tag"><a href="https://pengchuanc.github.io/tags/python">python</a></span>
 				</p>
-				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>1663 Words</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>1662 Words</p>
 				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2020-12-09 15:49 &#43;0800</p>
 			</footer>
 		</article>
