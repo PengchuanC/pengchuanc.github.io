@@ -12,6 +12,8 @@ tags:
 传统大型文件的发送方式主要使用socket服务，这种功能同样可以使用grpc的stream来实现，
 通过使用流(streaming)，可以向服务器或者客户端发送批量的数据。
 
+Python中使用stream的要点在于灵活运用generator，发送数据使用yield，数据传输完成使用return而非break。
+
 ## 1.创建项目
 
 整个项目位于desktop目录下，首先新建必要的目录及文件。
