@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="theme-color" content="#494f5c">
+	<meta name="msapplication-TileColor" content="#494f5c">
+<meta itemprop="name" content="通过grpc服务上传下载大型文件(Python)">
+<meta itemprop="description" content="传统大型文件的发送方式主要使用socket服务，这种功能同样可以使用grpc的stream来实现， 通过使用流(streaming)，你可以向">
+<meta itemprop="datePublished" content="2020-12-09T15:49:54+08:00" />
+<meta itemprop="dateModified" content="2020-12-09T15:49:54+08:00" />
+<meta itemprop="wordCount" content="1663">
+
+
+
+<meta itemprop="keywords" content="grpc,python," />
+<meta property="og:title" content="通过grpc服务上传下载大型文件(Python)" />
+<meta property="og:description" content="传统大型文件的发送方式主要使用socket服务，这种功能同样可以使用grpc的stream来实现， 通过使用流(streaming)，你可以向" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://pengchuanc.github.io/posts/grpc_stream_python/" />
+<meta property="article:published_time" content="2020-12-09T15:49:54+08:00" />
+<meta property="article:modified_time" content="2020-12-09T15:49:54+08:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="通过grpc服务上传下载大型文件(Python)"/>
+<meta name="twitter:description" content="传统大型文件的发送方式主要使用socket服务，这种功能同样可以使用grpc的stream来实现， 通过使用流(streaming)，你可以向"/>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+	<title>通过grpc服务上传下载大型文件(Python)</title>
+	<link rel="stylesheet" href="https://pengchuanc.github.io/css/style.min.eac77496566fd7d5768fd650ddb0b2b181ca6a2d7c5fdd6fe6b8ba4bf47e566f.css" integrity="sha256-6sd0llZv19V2j9ZQ3bCysYHKai18X91v5ri6S/R+Vm8=" crossorigin="anonymous">
+	
+</head>
+
+<body id="page">
+	
+	<header id="site-header" class="animated slideInUp">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://pengchuanc.github.io/">Learn to Code</a>
+				</div>
+				<nav class="site-nav hide-in-mobile">
+					
+				<a href="https://pengchuanc.github.io/posts/">文章</a>
+				<a href="https://pengchuanc.github.io/about/">关于</a>
+
+				</nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<span class="hdr-social hide-in-mobile"><a href="https://twitter.com/" target="_blank" rel="noopener me" title="Twitter"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a><a href="https://qq.com/" target="_blank" rel="noopener me" title="Qq"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path transform="scale(0.04) translate(75 40)" stroke-width="50" d="M433.754 420.445c-11.526 1.393-44.86-52.741-44.86-52.741 0 31.345-16.136 72.247-51.051 101.786 16.842 5.192 54.843 19.167 45.803 34.421-7.316 12.343-125.51 7.881-159.632 4.037-34.122 3.844-152.316 8.306-159.632-4.037-9.045-15.25 28.918-29.214 45.783-34.415-34.92-29.539-51.059-70.445-51.059-101.792 0 0-33.334 54.134-44.859 52.741-5.37-.65-12.424-29.644 9.347-99.704 10.261-33.024 21.995-60.478 40.144-105.779C60.683 98.063 108.982.006 224 0c113.737.006 163.156 96.133 160.264 214.963 18.118 45.223 29.912 72.85 40.144 105.778 21.768 70.06 14.716 99.053 9.346 99.704z"></path></svg></a><a href="https://github.com/PengchuanC/" target="_blank" rel="noopener me" title="Github"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a></span><button id="menu-btn" class="hdr-btn" title="Menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://pengchuanc.github.io/posts/">文章</a></li>
+			<li><a href="https://pengchuanc.github.io/about/">关于</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner animated fadeIn faster">
+		<article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>Dec 9, 2020</span></div>
+				<h1>通过grpc服务上传下载大型文件(Python)</h1>
+			</header>
+			<div class="content">
+				<p>传统大型文件的发送方式主要使用socket服务，这种功能同样可以使用grpc的stream来实现，
+通过使用流(streaming)，你可以向服务器或者客户端发送批量的数据。</p>
+<h2 id="1创建项目">1.创建项目<a href="#1创建项目" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>整个项目位于desktop目录下，首先新建必要的目录及文件。</p>
+<div class="highlight"><pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="n">desktop</span><span class="p">&gt;</span> <span class="n">mkdir</span> <span class="n">file_server</span>
+<span class="n">desktop</span><span class="p">&gt;</span> <span class="n">mkdir</span> <span class="n">file_server</span><span class="p">/</span><span class="n">proto</span>
+<span class="n">desktop</span><span class="p">&gt;</span> <span class="n">mkdir</span> <span class="n">file_server</span><span class="p">/</span><span class="n">send</span>
+<span class="n">desktop</span><span class="p">&gt;</span> <span class="n">mkdir</span> <span class="n">file_server</span><span class="p">/</span><span class="n">download</span>
+</code></pre></div><p>在<code>file_server</code>目录下添加<code>__init__.py</code>文件，保证<code>file_sever</code>为一个python package</p>
+<p>在<code>file_server/send</code>目录下新建<code>send.xlsx</code>文件，测试下载文件，可以在文件中写入一些数据方便检查是否下载成功。</p>
+<p>在<code>file_server/download</code>目录下新建文件<code>download.docx</code>文件，测试上传文件，同样可以写入一些内容来测试是否上传成功。</p>
+<h2 id="2创建proto文件">2.创建proto文件<a href="#2创建proto文件" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>在<code>file_server</code>目录下创建<code>fileserver.proto</code>文件来定义grpc服务，文件内容如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-protobuf" data-lang="protobuf"><span class="n">syntax</span> <span class="o">=</span> <span class="s">&#34;proto3&#34;</span><span class="p">;</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="kn">package</span> <span class="nn">file_server</span><span class="p">;</span><span class="err">
+</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="c1">// 文件传输服务
+</span><span class="c1"></span><span class="kd">service</span> <span class="n">FileTransfer</span> <span class="p">{</span><span class="err">
+</span><span class="err"></span>  <span class="c1">// 上传文件
+</span><span class="c1"></span>  <span class="k">rpc</span> <span class="n">SendFile</span><span class="p">(</span><span class="n">stream</span> <span class="n">RequestSend</span><span class="p">)</span> <span class="k">returns</span> <span class="p">(</span><span class="n">ResponseStatus</span><span class="p">);</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span>  <span class="c1">// 下载文件
+</span><span class="c1"></span>  <span class="k">rpc</span> <span class="n">DownloadFile</span><span class="p">(</span><span class="n">RequestFile</span><span class="p">)</span> <span class="k">returns</span> <span class="p">(</span><span class="n">stream</span> <span class="n">ResponseStream</span><span class="p">);</span><span class="err">
+</span><span class="err"></span><span class="p">}</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="c1">// 文件上传数据流
+</span><span class="c1"></span><span class="kd">message</span> <span class="nc">RequestSend</span> <span class="p">{</span><span class="err">
+</span><span class="err"></span>  <span class="kt">bytes</span> <span class="n">data</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="err">
+</span><span class="err"></span><span class="p">}</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="c1">// 上传结果状态
+</span><span class="c1"></span><span class="kd">message</span> <span class="nc">ResponseStatus</span> <span class="p">{</span><span class="err">
+</span><span class="err"></span>  <span class="kt">bool</span> <span class="n">ok</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="err">
+</span><span class="err"></span><span class="p">}</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="c1">// 文件下载请求
+</span><span class="c1"></span><span class="kd">message</span> <span class="nc">RequestFile</span> <span class="p">{</span><span class="err">
+</span><span class="err"></span>  <span class="kt">string</span> <span class="n">name</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="err">
+</span><span class="err"></span><span class="p">}</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="c1">// 文件下载数据流
+</span><span class="c1"></span><span class="kd">message</span> <span class="nc">ResponseStream</span> <span class="p">{</span><span class="err">
+</span><span class="err"></span>  <span class="kt">bytes</span> <span class="n">data</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="err">
+</span><span class="err"></span><span class="p">}</span><span class="err">
+</span></code></pre></div><p>然后编译<code>fileserver.proto</code>文件为python文件</p>
+<div class="highlight"><pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="n">python</span> <span class="n">-m</span> <span class="n">grpc_tools</span><span class="p">.</span><span class="n">protoc</span> <span class="p">-</span><span class="n">-python_out</span><span class="p">=./</span><span class="n">file_server</span> <span class="p">-</span><span class="n">-grpc_python_out</span><span class="p">=./</span><span class="n">file_server</span> <span class="n">-I</span> <span class="p">./</span><span class="n">file_server</span><span class="p">/</span><span class="n">proto</span> <span class="n">fileserver</span><span class="p">.</span><span class="n">proto</span>
+</code></pre></div><p>相关参数解释：</p>
+<ul>
+<li>&ndash;python-out: <code>fileserver_pb.py</code>文件的输出目录</li>
+<li>&ndash;grpc_python_out：<code>fileserver_pb_grpc.py</code>文件输出目录</li>
+<li>-I: protobuf源文件所在目录</li>
+</ul>
+<p>修改生成的<code>filesever_pb_grpc.py</code>的<code>import</code>部分代码:</p>
+<pre><code class="language-pyth" data-lang="pyth"># Generated by the gRPC Python protocol compiler plugin. DO NOT EDIT!
+&quot;&quot;&quot;Client and server classes corresponding to protobuf-defined services.&quot;&quot;&quot;
+import grpc
+
+import file_server.fileserver_pb2 as fileserver__pb2
+</code></pre><p>修改原因是package方式组织的python代码引入模块的方式与单文件脚本的引入方式不同，直接引入<code>fileserver__pb2</code>模块的话会提示无法找到该模块。</p>
+<h2 id="3创建server端">3.创建server端<a href="#3创建server端" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>在<code>file_server</code>目录下新建<code>server.py</code>文件，内容如下:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">import</span> <span class="nn">grpc</span>
+<span class="kn">from</span> <span class="nn">concurrent</span> <span class="kn">import</span> <span class="n">futures</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span> <span class="nn">file_server.fileserver_pb2</span> <span class="kn">as</span> <span class="nn">fp</span>
+<span class="kn">import</span> <span class="nn">file_server.fileserver_pb2_grpc</span> <span class="kn">as</span> <span class="nn">fpg</span>
+
+
+<span class="n">base_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span>
+
+
+<span class="k">def</span> <span class="nf">file_read</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;读取待发送的文件的内容
+</span><span class="s2">
+</span><span class="s2">    由于是测试脚本，直接读取待下载的文件，即 ./file_server/send.xlsx
+</span><span class="s2">    模拟大文件需要分块读取，持续发送
+</span><span class="s2">    Args:
+</span><span class="s2">        name: 文件名
+</span><span class="s2">    Returns:
+</span><span class="s2">
+</span><span class="s2">    &#34;&#34;&#34;</span>
+    <span class="n">send_file_path</span> <span class="o">=</span> <span class="n">base_path</span> <span class="o">/</span> <span class="s1">&#39;send&#39;</span> <span class="o">/</span> <span class="n">name</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="mi">1024</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">send_file_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="nb">file</span><span class="p">:</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="nb">file</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+            <span class="n">read</span> <span class="o">=</span> <span class="nb">file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">read</span><span class="p">:</span>
+                <span class="k">return</span>
+            <span class="k">yield</span> <span class="n">fp</span><span class="o">.</span><span class="n">ResponseStream</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">read</span><span class="p">)</span>
+            <span class="n">start</span> <span class="o">+=</span> <span class="n">size</span>
+
+
+<span class="k">class</span> <span class="nc">FileTransferServer</span><span class="p">(</span><span class="n">fpg</span><span class="o">.</span><span class="n">FileTransferServicer</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;文件传输服务&#34;&#34;&#34;</span>
+
+    <span class="k">def</span> <span class="nf">SendFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_iterator</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="s2">&#34;&#34;&#34;文件发送服务
+</span><span class="s2">
+</span><span class="s2">        继承定义好的文件发送服务
+</span><span class="s2">        Args:
+</span><span class="s2">            request_iterator: 上传的文件流 : Generator[byte]
+</span><span class="s2">            context: 上下文
+</span><span class="s2">
+</span><span class="s2">        Returns:
+</span><span class="s2">            文件上传的状态 :ResponseStatus
+</span><span class="s2">        &#34;&#34;&#34;</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;接受到文件上传请求&#39;</span><span class="p">)</span>
+        <span class="n">send_file</span> <span class="o">=</span> <span class="n">base_path</span> <span class="o">/</span> <span class="s1">&#39;send&#39;</span> <span class="o">/</span> <span class="s1">&#39;download.docx&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">send_file</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">request_iterator</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">fp</span><span class="o">.</span><span class="n">ResponseStatus</span><span class="p">(</span><span class="n">ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">fp</span><span class="o">.</span><span class="n">ResponseStatus</span><span class="p">(</span><span class="n">ok</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">DownloadFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="s2">&#34;&#34;&#34;文件下载服务
+</span><span class="s2">
+</span><span class="s2">        继承定义好的文件下载服务
+</span><span class="s2">        Args:
+</span><span class="s2">            request: 请求需要下载的文件名 :RequestFile
+</span><span class="s2">            context: 上下文管理
+</span><span class="s2">
+</span><span class="s2">        Returns:
+</span><span class="s2">            文件下载的数据流 :ResponseStream
+</span><span class="s2">        &#34;&#34;&#34;</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">name</span>
+        <span class="nb">file</span> <span class="o">=</span> <span class="n">file_read</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">file_name</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">response</span> <span class="ow">in</span> <span class="nb">file</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">response</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">serve</span><span class="p">():</span>
+        <span class="s2">&#34;&#34;&#34;启动服务
+</span><span class="s2">
+</span><span class="s2">        Returns:
+</span><span class="s2">
+</span><span class="s2">        &#34;&#34;&#34;</span>
+        <span class="n">server</span> <span class="o">=</span> <span class="n">grpc</span><span class="o">.</span><span class="n">server</span><span class="p">(</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+        <span class="n">fpg</span><span class="o">.</span><span class="n">add_FileTransferServicer_to_server</span><span class="p">(</span><span class="n">FileTransferServer</span><span class="p">(),</span> <span class="n">server</span><span class="p">)</span>
+        <span class="n">server</span><span class="o">.</span><span class="n">add_insecure_port</span><span class="p">(</span><span class="s2">&#34;[::]:50051&#34;</span><span class="p">)</span>
+        <span class="n">server</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s2">&#34;start server&#34;</span><span class="p">)</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">24</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="n">server</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">FileTransferServer</span><span class="o">.</span><span class="n">serve</span><span class="p">()</span>
+
+</code></pre></div><h2 id="4创建client端">4.创建client端<a href="#4创建client端" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>在<code>file_server</code>目录下新建<code>client.py</code>文件，内容如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">grpc</span>
+
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span> <span class="nn">file_server</span> <span class="kn">import</span> <span class="n">fileserver_pb2</span> <span class="k">as</span> <span class="n">fp</span><span class="p">,</span> <span class="n">fileserver_pb2_grpc</span> <span class="k">as</span> <span class="n">fpg</span>
+
+
+<span class="n">base_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span>
+
+
+<span class="k">def</span> <span class="nf">send_file</span><span class="p">():</span>
+    <span class="s2">&#34;&#34;&#34;上传文件
+</span><span class="s2">
+</span><span class="s2">    模拟大文件，分块发送
+</span><span class="s2">    Returns:
+</span><span class="s2">
+</span><span class="s2">    &#34;&#34;&#34;</span>
+    <span class="n">file_path</span> <span class="o">=</span> <span class="n">base_path</span> <span class="o">/</span> <span class="s1">&#39;download&#39;</span> <span class="o">/</span> <span class="s1">&#39;download.docx&#39;</span>
+    <span class="c1"># 模拟大文件，分块读取发送</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="mi">1024</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+            <span class="n">read</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">read</span><span class="p">:</span>
+                <span class="k">return</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">RequestSend</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">read</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">request</span>
+            <span class="n">start</span> <span class="o">+=</span> <span class="n">size</span>
+
+
+<span class="k">class</span> <span class="nc">Client</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">stub</span><span class="p">:</span> <span class="n">fpg</span><span class="o">.</span><span class="n">FileTransferStub</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">50051</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;127.0.0.1:{port}&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stub</span> <span class="o">=</span> <span class="n">fpg</span><span class="o">.</span><span class="n">FileTransferStub</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;send.xlsx&#39;</span><span class="p">):</span>
+        <span class="s2">&#34;&#34;&#34;文件下载
+</span><span class="s2">
+</span><span class="s2">        会将send.xlsx文件下载到 ./file_sever/download目录
+</span><span class="s2">        Args:
+</span><span class="s2">            name: 下载文件名，默认为 send.xlsx
+</span><span class="s2">
+</span><span class="s2">        Returns:
+</span><span class="s2">
+</span><span class="s2">        &#34;&#34;&#34;</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">RequestFile</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">DownloadFile</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="n">download</span> <span class="o">=</span> <span class="n">base_path</span> <span class="o">/</span> <span class="s1">&#39;download&#39;</span> <span class="o">/</span> <span class="n">name</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">download</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">&#34;&#34;&#34;上传文件
+</span><span class="s2">
+</span><span class="s2">        默认将上传 ./file_server/download/download.docx
+</span><span class="s2">        Returns:
+</span><span class="s2">
+</span><span class="s2">        &#34;&#34;&#34;</span>
+        <span class="nb">file</span> <span class="o">=</span> <span class="n">send_file</span><span class="p">()</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">SendFile</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">Client</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+        <span class="c1"># 上传文件</span>
+        <span class="n">resp_status</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">send</span><span class="p">()</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">resp_status</span><span class="p">)</span>
+
+        <span class="c1"># 下载文件</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">download</span><span class="p">()</span>
+
+</code></pre></div><h2 id="5运行服务">5.运行服务<a href="#5运行服务" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>打开两个控制台窗口，cd到<code>desktop</code>目录下，分别运行</p>
+<pre><code class="language-pow" data-lang="pow">desktop&gt; python -m file_sever.server
+</code></pre><div class="highlight"><pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="n">desktop</span><span class="p">&gt;</span> <span class="n">python</span> <span class="n">-m</span> <span class="n">file_sever</span><span class="p">.</span><span class="n">client</span>
+</code></pre></div><p>可以看到<code>send.xlsx</code>文件下载到了<code>file_server/download</code>目录，<code>download.docx</code>文件上传到了<code>file_server/send</code>目录。</p>
+
+			</div>
+			<hr class="post-end">
+			<footer class="post-info">
+				<p>
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://pengchuanc.github.io/tags/grpc">grpc</a></span><span class="tag"><a href="https://pengchuanc.github.io/tags/python">python</a></span>
+				</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>1663 Words</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2020-12-09 15:49 &#43;0800</p>
+			</footer>
+		</article>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://pengchuanc.github.io/posts/pub-sub-model/">
+				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span><br><span>发布/订阅模式</span>
+			</a>
+		</div>
+		<div id="comments" class="thin">
+</div>
+	</main>
+
+	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+		<p>&copy; 2020 <a href="https://pengchuanc.github.io/">Asin</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>
+			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://pengchuanc.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+		</p>
+	</footer>
+
+
+
+	<script src="https://pengchuanc.github.io/js/bundle.min.4a9a0ac3d2217822c7865b4161e6c2a71de1d70492264337755427898dd718f6.js" integrity="sha256-SpoKw9IheCLHhltBYebCpx3h1wSSJkM3dVQniY3XGPY=" crossorigin="anonymous"></script>
+	
+
+</body>
+
+</html>
