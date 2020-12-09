@@ -303,11 +303,11 @@ if __name__ == '__main__':
 打开两个控制台窗口，cd到`desktop`目录下，分别运行
 
 ```pow
-desktop> python -m file_sever.server
+desktop> python -m file_server.server
 ```
 
 ```powershell
-desktop> python -m file_sever.client
+desktop> python -m file_server.client
 ```
 
 可以看到`send.xlsx`文件下载到了`file_server/download`目录，`download.docx`文件上传到了`file_server/send`目录。

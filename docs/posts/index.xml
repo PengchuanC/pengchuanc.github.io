@@ -272,8 +272,8 @@ import file_server.fileserver_pb2 as fileserver__pb2
 
 </code></pre></div><h2 id="5运行服务">5.运行服务</h2>
 <p>打开两个控制台窗口，cd到<code>desktop</code>目录下，分别运行</p>
-<pre><code class="language-pow" data-lang="pow">desktop&gt; python -m file_sever.server
-</code></pre><div class="highlight"><pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="n">desktop</span><span class="p">&gt;</span> <span class="n">python</span> <span class="n">-m</span> <span class="n">file_sever</span><span class="p">.</span><span class="n">client</span>
+<pre><code class="language-pow" data-lang="pow">desktop&gt; python -m file_server.server
+</code></pre><div class="highlight"><pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="n">desktop</span><span class="p">&gt;</span> <span class="n">python</span> <span class="n">-m</span> <span class="n">file_server</span><span class="p">.</span><span class="n">client</span>
 </code></pre></div><p>可以看到<code>send.xlsx</code>文件下载到了<code>file_server/download</code>目录，<code>download.docx</code>文件上传到了<code>file_server/send</code>目录。</p>
 ]]></content>
 		</item>
