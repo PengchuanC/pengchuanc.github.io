@@ -6,8 +6,38 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>zh-cn</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Wed, 09 Dec 2020 15:49:54 +0800</lastBuildDate>
+		<lastBuildDate>Thu, 10 Dec 2020 09:42:59 +0800</lastBuildDate>
 		<atom:link href="https://pengchuanc.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Python中的str类型和int数组类型转换</title>
+			<link>https://pengchuanc.github.io/posts/python-bytes-str/</link>
+			<pubDate>Thu, 10 Dec 2020 09:42:59 +0800</pubDate>
+			
+			<guid>https://pengchuanc.github.io/posts/python-bytes-str/</guid>
+			<description>在编程语言中，string类型往往是通过int数组来实现的，在python中，str和int[]同样可以转换 1.str转bytes 将字符串转</description>
+			<content type="html"><![CDATA[<p>在编程语言中，string类型往往是通过int数组来实现的，在python中，str和int[]同样可以转换</p>
+<h3 id="1str转bytes">1.str转bytes</h3>
+<p>将字符串转化为bytes类型，即int数组</p>
+<pre><code class="language-pow" data-lang="pow">&gt;&gt;&gt; a = 'abc'
+
+&gt;&gt;&gt; # 将a转为bytes类型
+&gt;&gt;&gt; a.encode()
+b'abc'
+
+&gt;&gt;&gt; # 转为List[int]
+&gt;&gt;&gt; [x for x in a.encode()]
+[97, 98, 99]
+</code></pre><h3 id="2将int数组转化为str">2.将int数组转化为str</h3>
+<pre><code class="language-po" data-lang="po">&gt;&gt;&gt; a = [97, 98, 99]
+
+&gt;&gt;&gt; # 先转为bytes
+&gt;&gt;&gt; bytes(a)
+b'abc'
+&gt;&gt;&gt; bytes(a).decode()
+'abc'
+</code></pre>]]></content>
+		</item>
 		
 		<item>
 			<title>通过grpc服务上传下载大型文件(Python)</title>
