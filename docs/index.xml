@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Thu, 10 Dec 2020 09:42:59 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 11 Dec 2020 16:41:32 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Python中使用UDP来推送数据</title>
+      <link>https://pengchuanc.github.io/posts/python-udp/</link>
+      <pubDate>Fri, 11 Dec 2020 16:41:32 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/python-udp/</guid>
+      <description>1.UDP简介 UDP协议（User Datagram Protocol）中文名称是用户数据报协议，是OSI（Open System Interconnection，开放式系</description>
+    </item>
+    
     <item>
       <title>Python中的str类型和int数组类型转换</title>
       <link>https://pengchuanc.github.io/posts/python-bytes-str/</link>

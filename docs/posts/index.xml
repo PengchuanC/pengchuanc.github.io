@@ -6,8 +6,148 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>zh-cn</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Thu, 10 Dec 2020 09:42:59 +0800</lastBuildDate>
+		<lastBuildDate>Fri, 11 Dec 2020 16:41:32 +0800</lastBuildDate>
 		<atom:link href="https://pengchuanc.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Python中使用UDP来推送数据</title>
+			<link>https://pengchuanc.github.io/posts/python-udp/</link>
+			<pubDate>Fri, 11 Dec 2020 16:41:32 +0800</pubDate>
+			
+			<guid>https://pengchuanc.github.io/posts/python-udp/</guid>
+			<description>1.UDP简介 UDP协议（User Datagram Protocol）中文名称是用户数据报协议，是OSI（Open System Interconnection，开放式系</description>
+			<content type="html"><![CDATA[<h2 id="1udp简介">1.UDP简介</h2>
+<p>UDP协议（User Datagram Protocol）中文名称是用户数据报协议，是OSI（Open System Interconnection，开放式系统互联）参考模型中一种无连接的传输层协议，不需要建立连接就能直接进行数据发送和接收，属于不可靠的、没有时序的通信，但是UDP协议的实时性比较好，通常用于视频直播相关领域。</p>
+<p>使用UDP推送数据时，不会考虑客户端是否会接受到数据，因此并不能保证它们能到达目的地。但由于UDP在传输数据报前不用在客户和服务器之间建立一个连接，且没有超时重发等机制，故而传输速度很快。</p>
+<p>接下来简单写个demo来尝试写一个推送服务。</p>
+<h2 id="2服务端">2.服务端</h2>
+<p>服务端代码如下</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># server.py</span>
+<span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+
+<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
+
+
+<span class="n">pool</span> <span class="o">=</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;客户端管理
+</span><span class="s2">    &#34;&#34;&#34;</span>
+    <span class="n">_clients</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">server</span><span class="p">:</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="s2">&#34;&#34;&#34;Manager instance
+</span><span class="s2">
+</span><span class="s2">        Args:
+</span><span class="s2">            address: 地址
+</span><span class="s2">            port: 端口
+</span><span class="s2">        &#34;&#34;&#34;</span>
+        <span class="n">server_socket</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_DGRAM</span><span class="p">)</span>
+        <span class="n">address</span> <span class="o">=</span> <span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+        <span class="n">server_socket</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">=</span> <span class="n">server_socket</span>
+
+    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
+        <span class="s2">&#34;&#34;&#34;注册客户端
+</span><span class="s2">
+</span><span class="s2">        Args:
+</span><span class="s2">            name: 客户端名称
+</span><span class="s2">            client: 客户端ip
+</span><span class="s2">        &#34;&#34;&#34;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clients</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">name</span><span class="p">:</span> <span class="n">client</span><span class="p">})</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;用户 {name} 成功注册&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">unregister</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="s2">&#34;&#34;&#34;取消注册
+</span><span class="s2">
+</span><span class="s2">        Args:
+</span><span class="s2">            name: 客户端名称
+</span><span class="s2">        &#34;&#34;&#34;</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clients</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_clients</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">broadcast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="s2">&#34;&#34;&#34;为每一个注册的客户端推送消息
+</span><span class="s2">
+</span><span class="s2">        Args:
+</span><span class="s2">            msg: 消息内容
+</span><span class="s2">        &#34;&#34;&#34;</span>
+        <span class="k">for</span> <span class="n">client</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clients</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">sendto</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">client</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">check_register</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">&#34;&#34;&#34;监听注册事件&#34;&#34;&#34;</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">client_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">recvfrom</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">decode</span><span class="p">(),</span> <span class="n">client_address</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">do</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">&#34;&#34;&#34;模拟推送业务&#34;&#34;&#34;</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">serve</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="n">port</span><span class="p">):</span>
+        <span class="n">manager</span> <span class="o">=</span> <span class="n">Manager</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+        <span class="n">pool</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">manager</span><span class="o">.</span><span class="n">check_register</span><span class="p">)</span>
+        <span class="n">pool</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">manager</span><span class="o">.</span><span class="n">do</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">Manager</span><span class="o">.</span><span class="n">serve</span><span class="p">(</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="mi">9000</span><span class="p">)</span>
+
+</code></pre></div><p>server端每隔10秒会向订阅的客户端推送一次数据，数据内容用当前时间模拟。发现订阅和推送数据放入线程池中处理，避免堵塞。</p>
+<h2 id="3客户端">3.客户端</h2>
+<div class="highlight"><pre class="chroma"><code class="language-py" data-lang="py"><span class="c1"># client.py</span>
+<span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
+
+
+<span class="n">pool</span> <span class="o">=</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Client</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;客户端&#34;&#34;&#34;</span>
+
+    <span class="n">_server</span><span class="p">:</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span>
+    <span class="n">_address</span><span class="p">:</span> <span class="nb">tuple</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">port</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_address</span> <span class="o">=</span> <span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_server</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_DGRAM</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_server</span><span class="o">.</span><span class="n">sendto</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">receive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">receive</span><span class="p">,</span> <span class="n">sender</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_server</span><span class="o">.</span><span class="n">recvfrom</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+            <span class="n">receive</span> <span class="o">=</span> <span class="n">receive</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;{self.name} 收到数据 {receive}&#39;</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">addr</span> <span class="o">=</span> <span class="s1">&#39;127.0.0.1&#39;</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="mi">9000</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">]</span>
+
+    <span class="c1"># 模拟5个用户去订阅数据</span>
+    <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">addr</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
+        <span class="n">pool</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">receive</span><span class="p">)</span>
+
+</code></pre></div><p>客户端模拟5个用户去订阅数据，订阅后会持续收到服务端推送的数据。取消注册的方法暂未实现，原理类似。</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>Python中的str类型和int数组类型转换</title>
