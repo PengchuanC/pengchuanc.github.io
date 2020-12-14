@@ -8,7 +8,7 @@
 	<meta name="theme-color" content="#494f5c">
 	<meta name="msapplication-TileColor" content="#494f5c">
 <meta itemprop="name" content="通过grpc服务上传下载大型文件(Python)">
-<meta itemprop="description" content="传统文件的下载方式主要使用tcp服务，这种功能同样可以使用grpc的stream来实现， 通过使用流(streaming)，可以向服务器或者客">
+<meta itemprop="description" content="传统文件的下载方式主要使用tcp服务，这种功能同样可以使用grpc的stream来实现，通过使用流(streaming)，可以向服务器或者客">
 <meta itemprop="datePublished" content="2020-12-09T15:49:54+08:00" />
 <meta itemprop="dateModified" content="2020-12-09T15:49:54+08:00" />
 <meta itemprop="wordCount" content="1738">
@@ -17,14 +17,14 @@
 
 <meta itemprop="keywords" content="grpc,python," />
 <meta property="og:title" content="通过grpc服务上传下载大型文件(Python)" />
-<meta property="og:description" content="传统文件的下载方式主要使用tcp服务，这种功能同样可以使用grpc的stream来实现， 通过使用流(streaming)，可以向服务器或者客" />
+<meta property="og:description" content="传统文件的下载方式主要使用tcp服务，这种功能同样可以使用grpc的stream来实现，通过使用流(streaming)，可以向服务器或者客" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://pengchuanc.github.io/posts/grpc_stream_python/" />
 <meta property="article:published_time" content="2020-12-09T15:49:54+08:00" />
 <meta property="article:modified_time" content="2020-12-09T15:49:54+08:00" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="通过grpc服务上传下载大型文件(Python)"/>
-<meta name="twitter:description" content="传统文件的下载方式主要使用tcp服务，这种功能同样可以使用grpc的stream来实现， 通过使用流(streaming)，可以向服务器或者客"/>
+<meta name="twitter:description" content="传统文件的下载方式主要使用tcp服务，这种功能同样可以使用grpc的stream来实现，通过使用流(streaming)，可以向服务器或者客"/>
 
 	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -73,8 +73,7 @@
 				<h1>通过grpc服务上传下载大型文件(Python)</h1>
 			</header>
 			<div class="content">
-				<p>传统文件的下载方式主要使用tcp服务，这种功能同样可以使用grpc的stream来实现，
-通过使用流(streaming)，可以向服务器或者客户端持续发送数据，来达到上传和下载文件的目的。</p>
+				<p>传统文件的下载方式主要使用tcp服务，这种功能同样可以使用grpc的stream来实现，通过使用流(streaming)，可以向服务器或者客户端持续发送数据，来达到上传和下载文件的目的。</p>
 <p>Python中使用stream的要点在于灵活运用generator，发送数据使用yield，数据传输完成使用return而非break。</p>
 <h2 id="1创建项目">1.创建项目<a href="#1创建项目" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>整个项目位于desktop目录下，首先新建必要的目录及文件。</p>

@@ -185,9 +185,8 @@ b'abc'
 			<pubDate>Wed, 09 Dec 2020 15:49:54 +0800</pubDate>
 			
 			<guid>https://pengchuanc.github.io/posts/grpc_stream_python/</guid>
-			<description>传统文件的下载方式主要使用tcp服务，这种功能同样可以使用grpc的stream来实现， 通过使用流(streaming)，可以向服务器或者客</description>
-			<content type="html"><![CDATA[<p>传统文件的下载方式主要使用tcp服务，这种功能同样可以使用grpc的stream来实现，
-通过使用流(streaming)，可以向服务器或者客户端持续发送数据，来达到上传和下载文件的目的。</p>
+			<description>传统文件的下载方式主要使用tcp服务，这种功能同样可以使用grpc的stream来实现，通过使用流(streaming)，可以向服务器或者客</description>
+			<content type="html"><![CDATA[<p>传统文件的下载方式主要使用tcp服务，这种功能同样可以使用grpc的stream来实现，通过使用流(streaming)，可以向服务器或者客户端持续发送数据，来达到上传和下载文件的目的。</p>
 <p>Python中使用stream的要点在于灵活运用generator，发送数据使用yield，数据传输完成使用return而非break。</p>
 <h2 id="1创建项目">1.创建项目</h2>
 <p>整个项目位于desktop目录下，首先新建必要的目录及文件。</p>

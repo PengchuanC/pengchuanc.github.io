@@ -9,8 +9,7 @@ tags:
   - python
 ---
 
-传统文件的下载方式主要使用tcp服务，这种功能同样可以使用grpc的stream来实现，
-通过使用流(streaming)，可以向服务器或者客户端持续发送数据，来达到上传和下载文件的目的。
+传统文件的下载方式主要使用tcp服务，这种功能同样可以使用grpc的stream来实现，通过使用流(streaming)，可以向服务器或者客户端持续发送数据，来达到上传和下载文件的目的。
 
 Python中使用stream的要点在于灵活运用generator，发送数据使用yield，数据传输完成使用return而非break。
 
