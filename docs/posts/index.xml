@@ -35,17 +35,16 @@
 
 <span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="s2">&#34;&#34;&#34;客户端管理
+</span><span class="s2">
+</span><span class="s2">    Attributes:
+</span><span class="s2">        address: 地址
+</span><span class="s2">        port: 端口
 </span><span class="s2">    &#34;&#34;&#34;</span>
     <span class="n">_clients</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">server</span><span class="p">:</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="s2">&#34;&#34;&#34;Manager instance
-</span><span class="s2">
-</span><span class="s2">        Args:
-</span><span class="s2">            address: 地址
-</span><span class="s2">            port: 端口
-</span><span class="s2">        &#34;&#34;&#34;</span>
+        <span class="s2">&#34;&#34;&#34;Inits manager&#34;&#34;&#34;</span>
         <span class="n">server_socket</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_DGRAM</span><span class="p">)</span>
         <span class="n">address</span> <span class="o">=</span> <span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
         <span class="n">server_socket</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
@@ -114,12 +113,19 @@
 
 
 <span class="k">class</span> <span class="nc">Client</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="s2">&#34;&#34;&#34;客户端&#34;&#34;&#34;</span>
+    <span class="s2">&#34;&#34;&#34;客户端
+</span><span class="s2">
+</span><span class="s2">    Attributes:
+</span><span class="s2">        name: 用于注册的唯一标识，通常使用uuid
+</span><span class="s2">        address: 远程服务器地址
+</span><span class="s2">        port: 远程服务器端口
+</span><span class="s2">    &#34;&#34;&#34;</span>
 
     <span class="n">_server</span><span class="p">:</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span>
     <span class="n">_address</span><span class="p">:</span> <span class="nb">tuple</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">port</span><span class="p">):</span>
+        <span class="s2">&#34;&#34;&#34;Inits client&#34;&#34;&#34;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_address</span> <span class="o">=</span> <span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_server</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_DGRAM</span><span class="p">)</span>

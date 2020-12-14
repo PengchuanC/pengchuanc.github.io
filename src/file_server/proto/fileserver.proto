@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package file_server;
+
+
+// 文件传输服务
+service FileTransfer {
+  // 上传文件
+  rpc SendFile(stream RequestSend) returns (ResponseStatus);
+
+  // 下载文件
+  rpc DownloadFile(RequestFile) returns (stream ResponseStream);
+}
+
+// 文件上传数据流
+message RequestSend {
+  bytes data = 1;
+}
+
+// 上传结果状态
+message ResponseStatus {
+  bool ok = 1;
+}
+
+// 文件下载请求
+message RequestFile {
+  string name = 1;
+}
+
+// 文件下载数据流
+message ResponseStream {
+  bytes data = 1;
+}
