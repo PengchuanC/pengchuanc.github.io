@@ -6,8 +6,107 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>zh-cn</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Fri, 11 Dec 2020 16:41:32 +0800</lastBuildDate>
+		<lastBuildDate>Tue, 15 Dec 2020 10:09:06 +0800</lastBuildDate>
 		<atom:link href="https://pengchuanc.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Python使用装饰器来实现重试</title>
+			<link>https://pengchuanc.github.io/posts/python-class-decorator/</link>
+			<pubDate>Tue, 15 Dec 2020 10:09:06 +0800</pubDate>
+			
+			<guid>https://pengchuanc.github.io/posts/python-class-decorator/</guid>
+			<description>在之前使用grpc的项目中偶尔会遇到连接时间过久，tcp连接断掉的情况，于是尝试写一个装饰器来实现自动重连3次，即最大尝试4次连接。 主要使用</description>
+			<content type="html"><![CDATA[<p>在之前使用grpc的项目中偶尔会遇到连接时间过久，tcp连接断掉的情况，于是尝试写一个装饰器来实现自动重连3次，即最大尝试4次连接。</p>
+<p>主要使用了python中class的魔术方法<code>__call__</code>和递归函数。</p>
+<h2 id="1python中的__call__方法">1.Python中的<code>__call__</code>方法</h2>
+<p><code>__call__</code>函数的作用是将一个类变为<code>callable</code>对象，即可用用<code>()</code>来调用一个已经实例化的对象，这也是将<code>class</code>作为装饰器的关键。</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Test</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;调用init&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;调用new&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;调用call&#39;</span><span class="p">)</span>
+</code></pre></div><p>python中对象实例化时，会一次调用<code>__new__</code>和<code>__init__</code>函数，然后调用实例化后的对象，会调用<code>__call__</code>函数，比如：</p>
+<pre><code class="language-pow" data-lang="pow">&gt;&gt;&gt; t = Test()
+调用new
+调用init
+
+&gt;&gt; t()
+调用call
+</code></pre><h2 id="2实现装饰器">2.实现装饰器</h2>
+<p>了解<code>__call__</code>运行的机制后，便可以利用它的特性来实现装饰器了。</p>
+<div class="highlight"><pre class="chroma"><code class="language-py" data-lang="py"><span class="k">class</span> <span class="nc">Reconnect</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;网络访问自动重连
+</span><span class="s2">
+</span><span class="s2">    Attributes:
+</span><span class="s2">        func: 被装饰的函数
+</span><span class="s2">        calls: 函数被调用的次数
+</span><span class="s2">    &#34;&#34;&#34;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calls</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">reconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="s2">&#34;&#34;&#34;重新连接
+</span><span class="s2">
+</span><span class="s2">        当次数达到第四次时，直接返回函数，不论是否成功，不再进行重连
+</span><span class="s2">        当次数小于四次时，如果是ConnectionError则递归调用重连函数
+</span><span class="s2">        如果是其他错误，则直接抛出错误
+</span><span class="s2">        &#34;&#34;&#34;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calls</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">calls</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ConnectionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reconnect</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">e</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">&#34;&#34;&#34;尝试还原函数本身签名&#34;&#34;&#34;</span>
+        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reconnect</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+</code></pre></div><p>初始化装饰器时，会需要传入一个被装饰的函数和生成一个内部用来记录重试次数的变量<code>calls</code>，重试的逻辑主要在<code>reconnect</code>函数中实现，重试逻辑中只捕获<code>ConnectionError</code>并进行重试，接下来模拟网络连接中会发生的错误。</p>
+<h2 id="3模拟网络访问中的错误">3.模拟网络访问中的错误</h2>
+<pre><code>@Reconnect
+def add(a, b):
+    # 模拟不稳定的网络
+    net_state = random.randint(0, 10)
+    if net_state &gt; 9:
+        raise ConnectionRefusedError(f'connection refuse, net state {net_state}')
+    elif net_state &gt; 5:
+        raise ConnectionError(f'connection error, net state {net_state}')
+    return a+b
+</code></pre><p>利用<code>random</code>库产生的随机数来模拟网络环境，调用<code>add</code>检验装饰器是否生效：</p>
+<pre><code class="language-pow" data-lang="pow">&gt;&gt;&gt; add(5, 2)
+7
+
+&gt;&gt;&gt; add(5, 2)
+connection error, net state 6
+connection error, net state 8
+connection refuse, net state 10
+7
+</code></pre><p>可用看到，装饰器已经生效。</p>
+<h2 id="4关于函数签名">4.关于函数签名</h2>
+<p>在定义装饰器时，使用到了<code>__repr__</code>方法，该方法主要定义对象的输出内容，当函数经过装饰器的装饰，其实际签名信息已经被覆盖，在日志中已经无法定位到具体函数的信息，如果在上例中，注释掉<code>__repr__</code>相关内容，我们可以看到：</p>
+<pre><code>&gt;&gt;&gt; add
+&lt;Reconnect object at 0x000001A80CE48FD0&gt;
+</code></pre><p>实际上<code>add</code>函数自身信息已经丢失，如果使用了<code>__repr__</code>后，则可用看到：</p>
+<pre><code>&gt;&gt;&gt; add
+&lt;function add at 0x0000021862BAE040&gt;
+</code></pre><p>在函数型装饰器中，可用使用<code>collections</code>模块下的<code>wraps</code>对象来实现函数的反签名，在装饰器类中尚未尝试，可以作为后续研究内容。</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>Python中使用UDP来推送数据</title>
