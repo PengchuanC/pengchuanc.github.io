@@ -118,7 +118,7 @@
         <span class="n">tasks</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">producer</span><span class="p">())</span>
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
-</code></pre></div><p>首先创建一个全局的<code>queue</code>来存放数据，模拟实际业务中产生的数据的容器，如存放爬虫获取到的媒体文件的url，供其他进程获取。</p>
+</code></pre></div><p>首先创建一个全局的<code>queue</code>来存放数据(注意<code>queue</code>的特点是先进先出(FIFO)，当从一个空的<code>queue</code>获取数据时会发生堵塞)，模拟实际业务中产生的数据的容器，如存放爬虫获取到的媒体文件的url，供其他进程获取。</p>
 <p>然后为创建的数据容器提供一个获取方法，然后注册到<code>BaseManager</code>，注册后其他进程便可以注册相同的名字来获取到这个方法，然后获取到数据容器。</p>
 <p>在服务端实例化<code>BaseManager</code>对象，传入服务器地址，并调用<code>start</code>对象开启服务。</p>
 <p>最后在循环事件中模拟生产过程。</p>
