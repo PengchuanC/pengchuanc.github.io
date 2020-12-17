@@ -11,7 +11,7 @@
 <meta itemprop="description" content="在具有亲缘的多进程程序中，通常可用使用queue、pipe等数据结构来进行数据共享和传递消息，但在分布式进程中，进程间的通信还需要依靠网络来">
 <meta itemprop="datePublished" content="2020-12-17T11:01:25+08:00" />
 <meta itemprop="dateModified" content="2020-12-17T11:01:25+08:00" />
-<meta itemprop="wordCount" content="1950">
+<meta itemprop="wordCount" content="1952">
 
 
 
@@ -78,58 +78,60 @@
 <h2 id="1basemanager对象">1.BaseManager对象<a href="#1basemanager对象" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>官网文档对BaseManager的描述：</p>
 <div class="highlight"><pre class="chroma"><code class="language-py" data-lang="py"><span class="k">class</span> <span class="nc">multiprocessing</span><span class="o">.</span><span class="n">managers</span><span class="o">.</span><span class="n">BaseManager</span><span class="p">([</span><span class="n">address</span><span class="p">[,</span> <span class="n">authkey</span><span class="p">]])</span>
-	<span class="err">创建一个</span> <span class="n">BaseManager</span> <span class="err">对象。</span>
-	<span class="err">一旦创建，应该及时调用</span> <span class="n">start</span><span class="p">()</span> <span class="err">或者</span> <span class="n">get_server</span><span class="p">()</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span> <span class="err">以确保管理器对象对应的管理进程已经启动。</span>
-
-	<span class="n">address</span> <span class="err">是管理器服务进程监听的地址。如果</span> <span class="n">address</span> <span class="err">是</span> <span class="bp">None</span> <span class="p">,</span><span class="err">则允许和任意主机的请求建立连接。</span>
-
-	<span class="n">authkey</span> <span class="err">是认证标识，用于检查连接服务进程的请求合法性。如果</span> <span class="n">authkey</span> <span class="err">是</span> <span class="bp">None</span><span class="p">,</span> <span class="err">则会使用</span> <span class="n">current_process</span><span class="p">()</span><span class="o">.</span><span class="n">authkey</span> <span class="p">,</span> <span class="err">否则，就使用</span> <span class="n">authkey</span> <span class="p">,</span> <span class="err">需要保证它必须是</span> <span class="n">byte</span> <span class="err">类型的字符串。</span>
-
-	<span class="n">start</span><span class="p">([</span><span class="n">initializer</span><span class="p">[,</span> <span class="n">initargs</span><span class="p">]])</span>
-		<span class="err">为管理器开启一个子进程，如果</span> <span class="n">initializer</span> <span class="err">不是</span> <span class="bp">None</span> <span class="p">,</span> <span class="err">子进程在启动时将会调用</span><span class="n">initializer</span><span class="p">(</span><span class="o">*</span><span class="n">initargs</span><span class="p">)</span> <span class="err">。</span>
-
-    <span class="n">get_server</span><span class="p">()</span>
-    	<span class="err">返回一个</span> <span class="n">Server对象</span><span class="err">，它是管理器在后台控制的真实的服务。</span> <span class="n">Server对象拥有serve_forever</span><span class="p">()</span> <span class="err">方法。</span>
-
-        <span class="o">&gt;&gt;&gt;</span>
-        <span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">multiprocessing.managers</span> <span class="kn">import</span> <span class="n">BaseManager</span>
-        <span class="o">&gt;&gt;&gt;</span> <span class="n">manager</span> <span class="o">=</span> <span class="n">BaseManager</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">50000</span><span class="p">),</span> <span class="n">authkey</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;abc&#39;</span><span class="p">)</span>
-        <span class="o">&gt;&gt;&gt;</span> <span class="n">server</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_server</span><span class="p">()</span>
-        <span class="o">&gt;&gt;&gt;</span> <span class="n">server</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
-        <span class="n">Server</span> <span class="err">额外拥有一个</span> <span class="n">address</span> <span class="err">属性。</span>
-
-    <span class="n">connect</span><span class="p">()</span>
-    	<span class="err">将本地管理器对象连接到一个远程管理器进程</span><span class="p">:</span>
-
-        <span class="o">&gt;&gt;&gt;</span>
-        <span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">multiprocessing.managers</span> <span class="kn">import</span> <span class="n">BaseManager</span>
-        <span class="o">&gt;&gt;&gt;</span> <span class="n">m</span> <span class="o">=</span> <span class="n">BaseManager</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">50000</span><span class="p">),</span> <span class="n">authkey</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;abc&#39;</span><span class="p">)</span>
-        <span class="o">&gt;&gt;&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
-        
-    <span class="n">shutdown</span><span class="p">()</span>
-        <span class="err">停止管理器的进程。这个方法只能用于已经使用</span> <span class="n">start</span><span class="p">()</span> <span class="err">启动的服务进程。</span>
-
-        <span class="err">它可以被多次调用。</span>
-
-    <span class="n">register</span><span class="p">(</span><span class="n">typeid</span><span class="p">[,</span> <span class="nb">callable</span><span class="p">[,</span> <span class="n">proxytype</span><span class="p">[,</span> <span class="n">exposed</span><span class="p">[,</span> <span class="n">method_to_typeid</span><span class="p">[,</span> <span class="n">create_method</span><span class="p">]]]]])</span>
-    	<span class="err">一个</span> <span class="nb">classmethod</span><span class="err">，可以将一个类型或者可调用对象注册到管理器类。</span>
-
-    	<span class="n">typeid</span> <span class="err">是一种</span> <span class="s2">&#34;类型标识符&#34;</span><span class="err">，用于唯一表示某种共享对象类型，必须是一个字符串。</span>
-
-        <span class="nb">callable</span> <span class="err">是一个用来为此类型标识符创建对象的可调用对象。如果一个管理器实例将使用</span> <span class="n">connect</span><span class="p">()</span> <span class="err">方法连接到服务器，或者</span> <span class="n">create_method</span> <span class="err">参数为</span> <span class="bp">False</span><span class="err">，那么这里可留下</span> <span class="bp">None</span><span class="err">。</span>
-
-        <span class="n">proxytype</span> <span class="err">是</span> <span class="n">BaseProxy</span>  <span class="err">的子类，可以根据</span> <span class="n">typeid</span> <span class="err">为共享对象创建一个代理，如果是</span> <span class="bp">None</span> <span class="p">,</span> <span class="err">则会自动创建一个代理类。</span>
-
-        <span class="n">exposed</span> <span class="err">是一个函数名组成的序列，用来指明只有这些方法可以使用</span> <span class="n">BaseProxy</span><span class="o">.</span><span class="n">_callmethod</span><span class="p">()</span> <span class="err">代理。</span><span class="p">(</span><span class="err">如果</span> <span class="n">exposed</span> <span class="err">是</span> <span class="bp">None</span><span class="p">,</span> <span class="err">则会在</span> <span class="n">proxytype</span><span class="o">.</span><span class="n">_exposed_</span> <span class="err">存在的情况下转而使用它</span><span class="p">)</span> <span class="err">当暴露的方法列表没有指定的时候，共享对象的所有</span> <span class="err">“公共方法”</span> <span class="err">都会被代理。（这里的“公共方法”是指所有拥有</span> <span class="fm">__call__</span><span class="p">()</span> <span class="err">方法并且不是以</span> <span class="s1">&#39;_&#39;</span> <span class="err">开头的属性）</span>
-
-        <span class="n">method_to_typeid</span> <span class="err">是一个映射，用来指定那些应该返回代理对象的暴露方法所返回的类型。（如果</span> <span class="n">method_to_typeid</span> <span class="err">是</span> <span class="bp">None</span><span class="p">,</span> <span class="err">则</span> <span class="n">proxytype</span><span class="o">.</span><span class="n">_method_to_typeid_</span> <span class="err">会在存在的情况下被使用）如果方法名称不在这个映射中或者映射是</span> <span class="bp">None</span> <span class="p">,</span><span class="err">则方法返回的对象会是一个值拷贝。</span>
-
-        <span class="n">create_method</span> <span class="err">指明，是否要创建一个以</span> <span class="n">typeid</span> <span class="err">命名并返回一个代理对象的方法，这个函数会被服务进程用于创建共享对象，默认为</span> <span class="bp">True</span> <span class="err">。</span>
-
-    <span class="n">BaseManager</span> <span class="err">实例也有一个只读属性。</span>
-
-    <span class="n">address</span>
-    	<span class="err">管理器所用的地址。</span>
+	<span class="s2">&#34;&#34;&#34;
+</span><span class="s2">	创建一个 BaseManager 对象。
+</span><span class="s2">	一旦创建，应该及时调用 start() 或者 get_server().serve_forever() 以确保管理器对象对应的管理进程已经启动。
+</span><span class="s2">
+</span><span class="s2">	address 是管理器服务进程监听的地址。如果 address 是 None ,则允许和任意主机的请求建立连接。
+</span><span class="s2">
+</span><span class="s2">	authkey 是认证标识，用于检查连接服务进程的请求合法性。如果 authkey 是 None, 则会使用 current_process().authkey , 否则，就使用 authkey , 需要保证它必须是 byte 类型的字符串。
+</span><span class="s2">
+</span><span class="s2">	start([initializer[, initargs]])
+</span><span class="s2">		为管理器开启一个子进程，如果 initializer 不是 None , 子进程在启动时将会调用initializer(*initargs) 。
+</span><span class="s2">
+</span><span class="s2">    get_server()
+</span><span class="s2">    	返回一个 Server对象，它是管理器在后台控制的真实的服务。 Server对象拥有serve_forever() 方法。
+</span><span class="s2">
+</span><span class="s2">        &gt;&gt;&gt;
+</span><span class="s2">        &gt;&gt;&gt; from multiprocessing.managers import BaseManager
+</span><span class="s2">        &gt;&gt;&gt; manager = BaseManager(address=(&#39;&#39;, 50000), authkey=b&#39;abc&#39;)
+</span><span class="s2">        &gt;&gt;&gt; server = manager.get_server()
+</span><span class="s2">        &gt;&gt;&gt; server.serve_forever()
+</span><span class="s2">        Server 额外拥有一个 address 属性。
+</span><span class="s2">
+</span><span class="s2">    connect()
+</span><span class="s2">    	将本地管理器对象连接到一个远程管理器进程:
+</span><span class="s2">
+</span><span class="s2">        &gt;&gt;&gt;
+</span><span class="s2">        &gt;&gt;&gt; from multiprocessing.managers import BaseManager
+</span><span class="s2">        &gt;&gt;&gt; m = BaseManager(address=(&#39;127.0.0.1&#39;, 50000), authkey=b&#39;abc&#39;)
+</span><span class="s2">        &gt;&gt;&gt; m.connect()
+</span><span class="s2">        
+</span><span class="s2">    shutdown()
+</span><span class="s2">        停止管理器的进程。这个方法只能用于已经使用 start() 启动的服务进程。
+</span><span class="s2">
+</span><span class="s2">        它可以被多次调用。
+</span><span class="s2">
+</span><span class="s2">    register(typeid[, callable[, proxytype[, exposed[, method_to_typeid[, create_method]]]]])
+</span><span class="s2">    	一个 classmethod，可以将一个类型或者可调用对象注册到管理器类。
+</span><span class="s2">
+</span><span class="s2">    	typeid 是一种 &#34;类型标识符&#34;，用于唯一表示某种共享对象类型，必须是一个字符串。
+</span><span class="s2">
+</span><span class="s2">        callable 是一个用来为此类型标识符创建对象的可调用对象。如果一个管理器实例将使用 connect() 方法连接到服务器，或者 create_method 参数为 False，那么这里可留下 None。
+</span><span class="s2">
+</span><span class="s2">        proxytype 是 BaseProxy  的子类，可以根据 typeid 为共享对象创建一个代理，如果是 None , 则会自动创建一个代理类。
+</span><span class="s2">
+</span><span class="s2">        exposed 是一个函数名组成的序列，用来指明只有这些方法可以使用 BaseProxy._callmethod() 代理。(如果 exposed 是 None, 则会在 proxytype._exposed_ 存在的情况下转而使用它) 当暴露的方法列表没有指定的时候，共享对象的所有 “公共方法” 都会被代理。（这里的“公共方法”是指所有拥有 __call__() 方法并且不是以 &#39;_&#39; 开头的属性）
+</span><span class="s2">
+</span><span class="s2">        method_to_typeid 是一个映射，用来指定那些应该返回代理对象的暴露方法所返回的类型。（如果 method_to_typeid 是 None, 则 proxytype._method_to_typeid_ 会在存在的情况下被使用）如果方法名称不在这个映射中或者映射是 None ,则方法返回的对象会是一个值拷贝。
+</span><span class="s2">
+</span><span class="s2">        create_method 指明，是否要创建一个以 typeid 命名并返回一个代理对象的方法，这个函数会被服务进程用于创建共享对象，默认为 True 。
+</span><span class="s2">
+</span><span class="s2">    BaseManager 实例也有一个只读属性。
+</span><span class="s2">
+</span><span class="s2">    address
+</span><span class="s2">    	管理器所用的地址。
+</span><span class="s2">    &#34;&#34;&#34;</span>
 </code></pre></div><p>接下来尝试使用<code>BaseManager</code>来进行分布式进程间的通信，由于是在本机多个<code>cmd</code>窗口下模拟分布式，故ip地址均使用<code>127.0.0.1:5000</code>。</p>
 <h2 id="2server端">2.Server端<a href="#2server端" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>代码如下：</p>
@@ -280,7 +282,7 @@
 				<p>
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://pengchuanc.github.io/tags/python">python</a></span><span class="tag"><a href="https://pengchuanc.github.io/tags/manager">manager</a></span><span class="tag"><a href="https://pengchuanc.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F">分布式</a></span><span class="tag"><a href="https://pengchuanc.github.io/tags/%E5%A4%9A%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1">多进程通信</a></span>
 				</p>
-				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>1950 Words</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>1952 Words</p>
 				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2020-12-17 11:01 &#43;0800</p>
 			</footer>
 		</article>

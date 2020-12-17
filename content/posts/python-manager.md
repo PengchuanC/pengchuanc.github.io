@@ -21,6 +21,7 @@ tags:
 
 ```py
 class multiprocessing.managers.BaseManager([address[, authkey]])
+	"""
 	创建一个 BaseManager 对象。
 	一旦创建，应该及时调用 start() 或者 get_server().serve_forever() 以确保管理器对象对应的管理进程已经启动。
 
@@ -73,6 +74,7 @@ class multiprocessing.managers.BaseManager([address[, authkey]])
 
     address
     	管理器所用的地址。
+    """
 ```
 
 接下来尝试使用`BaseManager`来进行分布式进程间的通信，由于是在本机多个`cmd`窗口下模拟分布式，故ip地址均使用`127.0.0.1:5000`。
