@@ -6,8 +6,218 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>zh-cn</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Tue, 15 Dec 2020 10:09:06 +0800</lastBuildDate>
+		<lastBuildDate>Thu, 17 Dec 2020 11:01:25 +0800</lastBuildDate>
 		<atom:link href="https://pengchuanc.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Python利用Manager在分布式进程间进行通信</title>
+			<link>https://pengchuanc.github.io/posts/python-manager/</link>
+			<pubDate>Thu, 17 Dec 2020 11:01:25 +0800</pubDate>
+			
+			<guid>https://pengchuanc.github.io/posts/python-manager/</guid>
+			<description>在具有亲缘的多进程程序中，通常可用使用queue、pipe等数据结构来进行数据共享和传递消息，但在分布式进程中，进程间的通信还需要依靠网络来</description>
+			<content type="html"><![CDATA[<p>在具有亲缘的多进程程序中，通常可用使用<code>queue</code>、<code>pipe</code>等数据结构来进行数据共享和传递消息，但在分布式进程中，进程间的通信还需要依靠网络来进行传输。</p>
+<p>在之前的文章中，我们通过grpc服务来传输数据，实际上在Python标准库<code>multiprocessing</code>的<code>managers</code>模块已经包含了分布式进程通信的功能，主要使用<code>BaseManager</code>对象。</p>
+<h2 id="1basemanager对象">1.BaseManager对象</h2>
+<p>官网文档对BaseManager的描述：</p>
+<div class="highlight"><pre class="chroma"><code class="language-py" data-lang="py"><span class="k">class</span> <span class="nc">multiprocessing</span><span class="o">.</span><span class="n">managers</span><span class="o">.</span><span class="n">BaseManager</span><span class="p">([</span><span class="n">address</span><span class="p">[,</span> <span class="n">authkey</span><span class="p">]])</span>
+	<span class="err">创建一个</span> <span class="n">BaseManager</span> <span class="err">对象。</span>
+	<span class="err">一旦创建，应该及时调用</span> <span class="n">start</span><span class="p">()</span> <span class="err">或者</span> <span class="n">get_server</span><span class="p">()</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span> <span class="err">以确保管理器对象对应的管理进程已经启动。</span>
+
+	<span class="n">address</span> <span class="err">是管理器服务进程监听的地址。如果</span> <span class="n">address</span> <span class="err">是</span> <span class="bp">None</span> <span class="p">,</span><span class="err">则允许和任意主机的请求建立连接。</span>
+
+	<span class="n">authkey</span> <span class="err">是认证标识，用于检查连接服务进程的请求合法性。如果</span> <span class="n">authkey</span> <span class="err">是</span> <span class="bp">None</span><span class="p">,</span> <span class="err">则会使用</span> <span class="n">current_process</span><span class="p">()</span><span class="o">.</span><span class="n">authkey</span> <span class="p">,</span> <span class="err">否则，就使用</span> <span class="n">authkey</span> <span class="p">,</span> <span class="err">需要保证它必须是</span> <span class="n">byte</span> <span class="err">类型的字符串。</span>
+
+	<span class="n">start</span><span class="p">([</span><span class="n">initializer</span><span class="p">[,</span> <span class="n">initargs</span><span class="p">]])</span>
+		<span class="err">为管理器开启一个子进程，如果</span> <span class="n">initializer</span> <span class="err">不是</span> <span class="bp">None</span> <span class="p">,</span> <span class="err">子进程在启动时将会调用</span><span class="n">initializer</span><span class="p">(</span><span class="o">*</span><span class="n">initargs</span><span class="p">)</span> <span class="err">。</span>
+
+    <span class="n">get_server</span><span class="p">()</span>
+    	<span class="err">返回一个</span> <span class="n">Server对象</span><span class="err">，它是管理器在后台控制的真实的服务。</span> <span class="n">Server对象拥有serve_forever</span><span class="p">()</span> <span class="err">方法。</span>
+
+        <span class="o">&gt;&gt;&gt;</span>
+        <span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">multiprocessing.managers</span> <span class="kn">import</span> <span class="n">BaseManager</span>
+        <span class="o">&gt;&gt;&gt;</span> <span class="n">manager</span> <span class="o">=</span> <span class="n">BaseManager</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">50000</span><span class="p">),</span> <span class="n">authkey</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;abc&#39;</span><span class="p">)</span>
+        <span class="o">&gt;&gt;&gt;</span> <span class="n">server</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_server</span><span class="p">()</span>
+        <span class="o">&gt;&gt;&gt;</span> <span class="n">server</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
+        <span class="n">Server</span> <span class="err">额外拥有一个</span> <span class="n">address</span> <span class="err">属性。</span>
+
+    <span class="n">connect</span><span class="p">()</span>
+    	<span class="err">将本地管理器对象连接到一个远程管理器进程</span><span class="p">:</span>
+
+        <span class="o">&gt;&gt;&gt;</span>
+        <span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">multiprocessing.managers</span> <span class="kn">import</span> <span class="n">BaseManager</span>
+        <span class="o">&gt;&gt;&gt;</span> <span class="n">m</span> <span class="o">=</span> <span class="n">BaseManager</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">50000</span><span class="p">),</span> <span class="n">authkey</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;abc&#39;</span><span class="p">)</span>
+        <span class="o">&gt;&gt;&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+        
+    <span class="n">shutdown</span><span class="p">()</span>
+        <span class="err">停止管理器的进程。这个方法只能用于已经使用</span> <span class="n">start</span><span class="p">()</span> <span class="err">启动的服务进程。</span>
+
+        <span class="err">它可以被多次调用。</span>
+
+    <span class="n">register</span><span class="p">(</span><span class="n">typeid</span><span class="p">[,</span> <span class="nb">callable</span><span class="p">[,</span> <span class="n">proxytype</span><span class="p">[,</span> <span class="n">exposed</span><span class="p">[,</span> <span class="n">method_to_typeid</span><span class="p">[,</span> <span class="n">create_method</span><span class="p">]]]]])</span>
+    	<span class="err">一个</span> <span class="nb">classmethod</span><span class="err">，可以将一个类型或者可调用对象注册到管理器类。</span>
+
+    	<span class="n">typeid</span> <span class="err">是一种</span> <span class="s2">&#34;类型标识符&#34;</span><span class="err">，用于唯一表示某种共享对象类型，必须是一个字符串。</span>
+
+        <span class="nb">callable</span> <span class="err">是一个用来为此类型标识符创建对象的可调用对象。如果一个管理器实例将使用</span> <span class="n">connect</span><span class="p">()</span> <span class="err">方法连接到服务器，或者</span> <span class="n">create_method</span> <span class="err">参数为</span> <span class="bp">False</span><span class="err">，那么这里可留下</span> <span class="bp">None</span><span class="err">。</span>
+
+        <span class="n">proxytype</span> <span class="err">是</span> <span class="n">BaseProxy</span>  <span class="err">的子类，可以根据</span> <span class="n">typeid</span> <span class="err">为共享对象创建一个代理，如果是</span> <span class="bp">None</span> <span class="p">,</span> <span class="err">则会自动创建一个代理类。</span>
+
+        <span class="n">exposed</span> <span class="err">是一个函数名组成的序列，用来指明只有这些方法可以使用</span> <span class="n">BaseProxy</span><span class="o">.</span><span class="n">_callmethod</span><span class="p">()</span> <span class="err">代理。</span><span class="p">(</span><span class="err">如果</span> <span class="n">exposed</span> <span class="err">是</span> <span class="bp">None</span><span class="p">,</span> <span class="err">则会在</span> <span class="n">proxytype</span><span class="o">.</span><span class="n">_exposed_</span> <span class="err">存在的情况下转而使用它</span><span class="p">)</span> <span class="err">当暴露的方法列表没有指定的时候，共享对象的所有</span> <span class="err">“公共方法”</span> <span class="err">都会被代理。（这里的“公共方法”是指所有拥有</span> <span class="fm">__call__</span><span class="p">()</span> <span class="err">方法并且不是以</span> <span class="s1">&#39;_&#39;</span> <span class="err">开头的属性）</span>
+
+        <span class="n">method_to_typeid</span> <span class="err">是一个映射，用来指定那些应该返回代理对象的暴露方法所返回的类型。（如果</span> <span class="n">method_to_typeid</span> <span class="err">是</span> <span class="bp">None</span><span class="p">,</span> <span class="err">则</span> <span class="n">proxytype</span><span class="o">.</span><span class="n">_method_to_typeid_</span> <span class="err">会在存在的情况下被使用）如果方法名称不在这个映射中或者映射是</span> <span class="bp">None</span> <span class="p">,</span><span class="err">则方法返回的对象会是一个值拷贝。</span>
+
+        <span class="n">create_method</span> <span class="err">指明，是否要创建一个以</span> <span class="n">typeid</span> <span class="err">命名并返回一个代理对象的方法，这个函数会被服务进程用于创建共享对象，默认为</span> <span class="bp">True</span> <span class="err">。</span>
+
+    <span class="n">BaseManager</span> <span class="err">实例也有一个只读属性。</span>
+
+    <span class="n">address</span>
+    	<span class="err">管理器所用的地址。</span>
+</code></pre></div><p>接下来尝试使用<code>BaseManager</code>来进行分布式进程间的通信，由于是在本机多个<code>cmd</code>窗口下模拟分布式，故ip地址均使用<code>127.0.0.1:5000</code>。</p>
+<h2 id="2server端">2.Server端</h2>
+<p>代码如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-py" data-lang="py"><span class="c1"># server.py</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">queue</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">multiprocessing.managers</span> <span class="kn">import</span> <span class="n">BaseManager</span>
+
+
+<span class="c1"># 全局变量，存放产生的数据</span>
+<span class="n">products</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">task_queue</span><span class="p">():</span>
+    <span class="s2">&#34;&#34;&#34;获取任务队列
+</span><span class="s2">
+</span><span class="s2">    用于注册到BaseManager的任务队列
+</span><span class="s2">    Returns:
+</span><span class="s2">        queue.Queue: 获取进程安全的任务队列
+</span><span class="s2">
+</span><span class="s2">    &#34;&#34;&#34;</span>
+    <span class="k">return</span> <span class="n">products</span>
+
+
+<span class="k">def</span> <span class="nf">producer</span><span class="p">():</span>
+    <span class="s2">&#34;&#34;&#34;模拟生产者，生产数据
+</span><span class="s2">
+</span><span class="s2">    Returns:
+</span><span class="s2">        int: 将产生的随机数当作产品
+</span><span class="s2">
+</span><span class="s2">    &#34;&#34;&#34;</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">p</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">BaseManager</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;task_queue&#39;</span><span class="p">,</span> <span class="n">task_queue</span><span class="p">)</span>
+    <span class="n">manager</span> <span class="o">=</span> <span class="n">BaseManager</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">5000</span><span class="p">),</span> <span class="n">authkey</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;producer&#39;</span><span class="p">)</span>
+    <span class="n">manager</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="n">tasks</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">task_queue</span><span class="p">()</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">tasks</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">producer</span><span class="p">())</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+</code></pre></div><p>首先创建一个全局的<code>queue</code>来存放数据，模拟实际业务中产生的数据的容器，如存放爬虫获取到的媒体文件的url，供其他进程获取。</p>
+<p>然后为创建的数据容器提供一个获取方法，然后注册到<code>BaseManager</code>，注册后其他进程便可以注册相同的名字来获取到这个方法，然后获取到数据容器。</p>
+<p>在服务端实例化<code>BaseManager</code>对象，传入服务器地址，并调用<code>start</code>对象开启服务。</p>
+<p>最后在循环事件中模拟生产过程。</p>
+<h2 id="3client端">3.Client端</h2>
+<p>client端模拟消费过程，代码如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-py" data-lang="py"><span class="c1"># client.py</span>
+<span class="kn">from</span> <span class="nn">multiprocessing.managers</span> <span class="kn">import</span> <span class="n">BaseManager</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">BaseManager</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;task_queue&#39;</span><span class="p">)</span>
+    <span class="n">manager</span> <span class="o">=</span> <span class="n">BaseManager</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">5000</span><span class="p">),</span> <span class="n">authkey</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;producer&#39;</span><span class="p">)</span>
+    <span class="n">manager</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+    <span class="n">tasks</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">task_queue</span><span class="p">()</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">tasks</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
+
+</code></pre></div><p>这样便实现了分布式进程间的通信和数据共享。</p>
+<h2 id="4进一步拆分">4.进一步拆分</h2>
+<p>在实际业务中，可能会有多个生产者和多个消费者，这种情况下需要把负责通信的模块剥离出来，只作为通信的管理部分，即生产者向管理者写入数据，消费者从管理者读取数据。</p>
+<h3 id="41-manager">4.1 Manager</h3>
+<div class="highlight"><pre class="chroma"><code class="language-py" data-lang="py"><span class="c1"># manager.py</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">queue</span>
+<span class="kn">from</span> <span class="nn">multiprocessing.managers</span> <span class="kn">import</span> <span class="n">BaseManager</span>
+
+
+<span class="c1"># 全局变量，存放产生的数据</span>
+<span class="n">products</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">task_queue</span><span class="p">():</span>
+    <span class="s2">&#34;&#34;&#34;获取任务队列
+</span><span class="s2">
+</span><span class="s2">    用于注册到BaseManager的任务队列
+</span><span class="s2">    Returns:
+</span><span class="s2">        queue.Queue: 获取进程安全的任务队列
+</span><span class="s2">
+</span><span class="s2">    &#34;&#34;&#34;</span>
+    <span class="k">return</span> <span class="n">products</span>
+
+
+<span class="k">def</span> <span class="nf">close</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;收到请求，结束进程&#39;</span><span class="p">)</span>
+    <span class="nb">exit</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">BaseManager</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;task_queue&#39;</span><span class="p">,</span> <span class="n">task_queue</span><span class="p">)</span>
+    <span class="n">BaseManager</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;close&#39;</span><span class="p">,</span> <span class="n">close</span><span class="p">)</span>
+    <span class="n">manager</span> <span class="o">=</span> <span class="n">BaseManager</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">5000</span><span class="p">),</span> <span class="n">authkey</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;producer&#39;</span><span class="p">)</span>
+    <span class="n">manager</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="n">tasks</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">task_queue</span><span class="p">()</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="k">continue</span>
+
+</code></pre></div><h3 id="42-server">4.2 Server</h3>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># server.py</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">multiprocessing.managers</span> <span class="kn">import</span> <span class="n">BaseManager</span>
+
+
+<span class="k">def</span> <span class="nf">producer</span><span class="p">():</span>
+    <span class="s2">&#34;&#34;&#34;模拟生产者，生产数据
+</span><span class="s2">
+</span><span class="s2">    Returns:
+</span><span class="s2">        int: 将产生的随机数当作产品
+</span><span class="s2">
+</span><span class="s2">    &#34;&#34;&#34;</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">p</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">BaseManager</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;task_queue&#39;</span><span class="p">)</span>
+    <span class="n">manager</span> <span class="o">=</span> <span class="n">BaseManager</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">5000</span><span class="p">),</span> <span class="n">authkey</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;producer&#39;</span><span class="p">)</span>
+    <span class="n">manager</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+    <span class="n">tasks</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">task_queue</span><span class="p">()</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">tasks</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">producer</span><span class="p">())</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+</code></pre></div><h3 id="43-client">4.3 Client</h3>
+<div class="highlight"><pre class="chroma"><code class="language-py" data-lang="py"><span class="c1"># client.py</span>
+<span class="kn">from</span> <span class="nn">multiprocessing.managers</span> <span class="kn">import</span> <span class="n">BaseManager</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">BaseManager</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;task_queue&#39;</span><span class="p">)</span>
+    <span class="n">manager</span> <span class="o">=</span> <span class="n">BaseManager</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">5000</span><span class="p">),</span> <span class="n">authkey</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;producer&#39;</span><span class="p">)</span>
+    <span class="n">manager</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+    <span class="n">tasks</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">task_queue</span><span class="p">()</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">tasks</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
+
+</code></pre></div><p>这样<code>Manager</code>便可以只用于管理通信，与业务剥离。</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>Python使用装饰器来实现重试</title>
