@@ -6,8 +6,68 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>zh-cn</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Thu, 17 Dec 2020 11:01:25 +0800</lastBuildDate>
+		<lastBuildDate>Mon, 21 Dec 2020 11:18:59 +0800</lastBuildDate>
 		<atom:link href="https://pengchuanc.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Python中使用JWT</title>
+			<link>https://pengchuanc.github.io/posts/python-jwt/</link>
+			<pubDate>Mon, 21 Dec 2020 11:18:59 +0800</pubDate>
+			
+			<guid>https://pengchuanc.github.io/posts/python-jwt/</guid>
+			<description>在前后端分离的web项目中，后端一般采用Restful Api，这种模式的后端是无状态的， 不便再使用Session这种传统的认证方式，一般采用</description>
+			<content type="html"><![CDATA[<p>在前后端分离的web项目中，后端一般采用Restful Api，这种模式的后端是无状态的，</p>
+<p>不便再使用Session这种传统的认证方式，一般采用<strong>JWT</strong>。</p>
+<p>基于jwt的鉴权机制也是无状态的，因此不需要在服务端去保留用户的认证信息或者会话信息，jwt是存储在客户端的，服务器端不需要存储jwt的，客户端每次发送请求时会携带该token，然后到服务器端会验证token是否正确，是否过期了，来验证token的有效性。</p>
+<p>再Django中，使用restframework便可以很方便的使用jwt进行认证了，我们也可以通过标准库<code>jwt</code>来简单实现jwt加解密过程。</p>
+<h2 id="1jwt加密">1.JWT加密</h2>
+<p>jwt加密一般采用<code>HS256</code>的加密方式，为了保证jwt的安全，需要设置一个仅提供者可知的<code>secret key</code>，然后再对用户信息进行打包，代码如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">jwt</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+
+<span class="kn">from</span> <span class="nn">itsdangerous</span> <span class="kn">import</span> <span class="n">JSONWebSignatureSerializer</span>
+
+
+<span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="s1">&#39;iencj58^&amp;/.+_@#%$jnckn&#39;</span>
+
+<span class="c1"># token超时时间</span>
+<span class="n">expire_at</span> <span class="o">=</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">15</span><span class="p">))</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span>
+<span class="n">payload</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="s1">&#39;Asin&#39;</span><span class="p">,</span> <span class="s1">&#39;expireAt&#39;</span><span class="p">:</span> <span class="n">expire_at</span><span class="p">}</span>
+
+<span class="n">token</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">SECRET_KEY</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;HS256&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+<span class="c1">#b&#39;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IkFzaW4iLCJleHBpcmVBdCI6MTYwODUyMjI1Mi44MTU5NzV9.psXYOLOgzo1mzAHzDCk2hcocMaq_D84yOoXPMhk3W8U&#39;</span>
+</code></pre></div><h2 id="2jwt解密">2.JWT解密</h2>
+<p>解密的关键就在于<code>secret key</code>和加密方式，知道这两条信息后，解密过程就很简单了，代码如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">jwt</span>
+
+<span class="n">token</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IkFzaW4iLCJleHBpcmVBdCI6MTYwODUyMjI1Mi44MTU5NzV9.psXYOLOgzo1mzAHzDCk2hcocMaq_D84yOoXPMhk3W8U&#39;</span>
+
+<span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="s1">&#39;iencj58^&amp;/.+_@#%$jnckn&#39;</span>
+
+<span class="n">info</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">SECRET_KEY</span><span class="p">,</span> <span class="n">algorithms</span><span class="o">=</span><span class="s1">&#39;HS256&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+<span class="c1"># {&#39;username&#39;: &#39;Asin&#39;, &#39;expireAt&#39;: 1608522252.815975}</span>
+</code></pre></div><h3 id="3使用itsdangerous包">3.使用<code>itsdangerous</code>包</h3>
+<p><code>itesdangerous</code>是flask中推荐使用的签名工具，使用方式也相当简单。</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">itsdangerous</span> <span class="kn">import</span> <span class="n">TimedJSONWebSignatureSerializer</span>
+
+
+<span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="s1">&#39;iencj58^&amp;/.+_@#%$jnckn&#39;</span>
+
+
+<span class="n">serializer</span> <span class="o">=</span> <span class="n">TimedJSONWebSignatureSerializer</span><span class="p">(</span><span class="n">secret_key</span><span class="o">=</span><span class="n">SECRET_KEY</span><span class="p">,</span> <span class="n">algorithm_name</span><span class="o">=</span><span class="s1">&#39;HS256&#39;</span><span class="p">)</span>
+<span class="c1"># 设置超时时间为15分组</span>
+<span class="n">serializer</span><span class="o">.</span><span class="n">DEFAULT_EXPIRES_IN</span> <span class="o">=</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">15</span>
+<span class="n">token</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="s1">&#39;Asin&#39;</span><span class="p">})</span>
+<span class="k">print</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+
+<span class="n">info</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+</code></pre></div><h2 id="4在项目中使用">4.在项目中使用</h2>
+<p>在项目中使用jwt时，一般还需要包含令牌的签发者及签发日期等信息，用于加强安全性和token超时后的刷新机制，因此认证后返回的除了token外还应该包含一条用于刷新的token，避免token频繁超时。</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>Python利用Manager在分布式进程间进行通信</title>

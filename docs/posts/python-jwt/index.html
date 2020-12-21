@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="theme-color" content="#494f5c">
+	<meta name="msapplication-TileColor" content="#494f5c">
+<meta itemprop="name" content="Python中使用JWT">
+<meta itemprop="description" content="在前后端分离的web项目中，后端一般采用Restful Api，这种模式的后端是无状态的， 不便再使用Session这种传统的认证方式，一般采用">
+<meta itemprop="datePublished" content="2020-12-21T11:18:59+08:00" />
+<meta itemprop="dateModified" content="2020-12-21T11:18:59+08:00" />
+<meta itemprop="wordCount" content="665">
+
+
+
+<meta itemprop="keywords" content="python,jwt,authorization," />
+<meta property="og:title" content="Python中使用JWT" />
+<meta property="og:description" content="在前后端分离的web项目中，后端一般采用Restful Api，这种模式的后端是无状态的， 不便再使用Session这种传统的认证方式，一般采用" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://pengchuanc.github.io/posts/python-jwt/" />
+<meta property="article:published_time" content="2020-12-21T11:18:59+08:00" />
+<meta property="article:modified_time" content="2020-12-21T11:18:59+08:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Python中使用JWT"/>
+<meta name="twitter:description" content="在前后端分离的web项目中，后端一般采用Restful Api，这种模式的后端是无状态的， 不便再使用Session这种传统的认证方式，一般采用"/>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+	<title>Python中使用JWT</title>
+	<link rel="stylesheet" href="https://pengchuanc.github.io/css/style.min.eac77496566fd7d5768fd650ddb0b2b181ca6a2d7c5fdd6fe6b8ba4bf47e566f.css" integrity="sha256-6sd0llZv19V2j9ZQ3bCysYHKai18X91v5ri6S/R+Vm8=" crossorigin="anonymous">
+	
+</head>
+
+<body id="page">
+	
+	<header id="site-header" class="animated slideInUp">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://pengchuanc.github.io/">Learn to Code</a>
+				</div>
+				<nav class="site-nav hide-in-mobile">
+					
+				<a href="https://pengchuanc.github.io/posts/">文章</a>
+				<a href="https://pengchuanc.github.io/about/">关于</a>
+
+				</nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<span class="hdr-social hide-in-mobile"><a href="https://twitter.com/" target="_blank" rel="noopener me" title="Twitter"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a><a href="https://qq.com/" target="_blank" rel="noopener me" title="Qq"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path transform="scale(0.04) translate(75 40)" stroke-width="50" d="M433.754 420.445c-11.526 1.393-44.86-52.741-44.86-52.741 0 31.345-16.136 72.247-51.051 101.786 16.842 5.192 54.843 19.167 45.803 34.421-7.316 12.343-125.51 7.881-159.632 4.037-34.122 3.844-152.316 8.306-159.632-4.037-9.045-15.25 28.918-29.214 45.783-34.415-34.92-29.539-51.059-70.445-51.059-101.792 0 0-33.334 54.134-44.859 52.741-5.37-.65-12.424-29.644 9.347-99.704 10.261-33.024 21.995-60.478 40.144-105.779C60.683 98.063 108.982.006 224 0c113.737.006 163.156 96.133 160.264 214.963 18.118 45.223 29.912 72.85 40.144 105.778 21.768 70.06 14.716 99.053 9.346 99.704z"></path></svg></a><a href="https://github.com/PengchuanC/" target="_blank" rel="noopener me" title="Github"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a></span><button id="menu-btn" class="hdr-btn" title="Menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://pengchuanc.github.io/posts/">文章</a></li>
+			<li><a href="https://pengchuanc.github.io/about/">关于</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner animated fadeIn faster">
+		<article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>Dec 21, 2020</span></div>
+				<h1>Python中使用JWT</h1>
+			</header>
+			<div class="content">
+				<p>在前后端分离的web项目中，后端一般采用Restful Api，这种模式的后端是无状态的，</p>
+<p>不便再使用Session这种传统的认证方式，一般采用<strong>JWT</strong>。</p>
+<p>基于jwt的鉴权机制也是无状态的，因此不需要在服务端去保留用户的认证信息或者会话信息，jwt是存储在客户端的，服务器端不需要存储jwt的，客户端每次发送请求时会携带该token，然后到服务器端会验证token是否正确，是否过期了，来验证token的有效性。</p>
+<p>再Django中，使用restframework便可以很方便的使用jwt进行认证了，我们也可以通过标准库<code>jwt</code>来简单实现jwt加解密过程。</p>
+<h2 id="1jwt加密">1.JWT加密<a href="#1jwt加密" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>jwt加密一般采用<code>HS256</code>的加密方式，为了保证jwt的安全，需要设置一个仅提供者可知的<code>secret key</code>，然后再对用户信息进行打包，代码如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">jwt</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+
+<span class="kn">from</span> <span class="nn">itsdangerous</span> <span class="kn">import</span> <span class="n">JSONWebSignatureSerializer</span>
+
+
+<span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="s1">&#39;iencj58^&amp;/.+_@#%$jnckn&#39;</span>
+
+<span class="c1"># token超时时间</span>
+<span class="n">expire_at</span> <span class="o">=</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">15</span><span class="p">))</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span>
+<span class="n">payload</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="s1">&#39;Asin&#39;</span><span class="p">,</span> <span class="s1">&#39;expireAt&#39;</span><span class="p">:</span> <span class="n">expire_at</span><span class="p">}</span>
+
+<span class="n">token</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">SECRET_KEY</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;HS256&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+<span class="c1">#b&#39;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IkFzaW4iLCJleHBpcmVBdCI6MTYwODUyMjI1Mi44MTU5NzV9.psXYOLOgzo1mzAHzDCk2hcocMaq_D84yOoXPMhk3W8U&#39;</span>
+</code></pre></div><h2 id="2jwt解密">2.JWT解密<a href="#2jwt解密" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>解密的关键就在于<code>secret key</code>和加密方式，知道这两条信息后，解密过程就很简单了，代码如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">jwt</span>
+
+<span class="n">token</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IkFzaW4iLCJleHBpcmVBdCI6MTYwODUyMjI1Mi44MTU5NzV9.psXYOLOgzo1mzAHzDCk2hcocMaq_D84yOoXPMhk3W8U&#39;</span>
+
+<span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="s1">&#39;iencj58^&amp;/.+_@#%$jnckn&#39;</span>
+
+<span class="n">info</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">SECRET_KEY</span><span class="p">,</span> <span class="n">algorithms</span><span class="o">=</span><span class="s1">&#39;HS256&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+<span class="c1"># {&#39;username&#39;: &#39;Asin&#39;, &#39;expireAt&#39;: 1608522252.815975}</span>
+</code></pre></div><h3 id="3使用itsdangerous包">3.使用<code>itsdangerous</code>包<a href="#3使用itsdangerous包" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p><code>itesdangerous</code>是flask中推荐使用的签名工具，使用方式也相当简单。</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">itsdangerous</span> <span class="kn">import</span> <span class="n">TimedJSONWebSignatureSerializer</span>
+
+
+<span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="s1">&#39;iencj58^&amp;/.+_@#%$jnckn&#39;</span>
+
+
+<span class="n">serializer</span> <span class="o">=</span> <span class="n">TimedJSONWebSignatureSerializer</span><span class="p">(</span><span class="n">secret_key</span><span class="o">=</span><span class="n">SECRET_KEY</span><span class="p">,</span> <span class="n">algorithm_name</span><span class="o">=</span><span class="s1">&#39;HS256&#39;</span><span class="p">)</span>
+<span class="c1"># 设置超时时间为15分组</span>
+<span class="n">serializer</span><span class="o">.</span><span class="n">DEFAULT_EXPIRES_IN</span> <span class="o">=</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">15</span>
+<span class="n">token</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="s1">&#39;Asin&#39;</span><span class="p">})</span>
+<span class="k">print</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+
+<span class="n">info</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+</code></pre></div><h2 id="4在项目中使用">4.在项目中使用<a href="#4在项目中使用" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>在项目中使用jwt时，一般还需要包含令牌的签发者及签发日期等信息，用于加强安全性和token超时后的刷新机制，因此认证后返回的除了token外还应该包含一条用于刷新的token，避免token频繁超时。</p>
+
+			</div>
+			<hr class="post-end">
+			<footer class="post-info">
+				<p>
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://pengchuanc.github.io/tags/python">python</a></span><span class="tag"><a href="https://pengchuanc.github.io/tags/jwt">jwt</a></span><span class="tag"><a href="https://pengchuanc.github.io/tags/authorization">authorization</a></span>
+				</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>665 Words</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2020-12-21 11:18 &#43;0800</p>
+			</footer>
+		</article>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://pengchuanc.github.io/posts/python-manager/">
+				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span><br><span>Python利用Manager在分布式进程间进行通信</span>
+			</a>
+		</div>
+		<div id="comments" class="thin">
+</div>
+	</main>
+
+	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+		<p>&copy; 2020 <a href="https://pengchuanc.github.io/">Asin</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>
+			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://pengchuanc.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+		</p>
+	</footer>
+
+
+
+	<script src="https://pengchuanc.github.io/js/bundle.min.4a9a0ac3d2217822c7865b4161e6c2a71de1d70492264337755427898dd718f6.js" integrity="sha256-SpoKw9IheCLHhltBYebCpx3h1wSSJkM3dVQniY3XGPY=" crossorigin="anonymous"></script>
+	
+
+</body>
+
+</html>

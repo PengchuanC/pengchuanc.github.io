@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Thu, 17 Dec 2020 11:01:25 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 21 Dec 2020 11:18:59 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Python中使用JWT</title>
+      <link>https://pengchuanc.github.io/posts/python-jwt/</link>
+      <pubDate>Mon, 21 Dec 2020 11:18:59 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/python-jwt/</guid>
+      <description>在前后端分离的web项目中，后端一般采用Restful Api，这种模式的后端是无状态的， 不便再使用Session这种传统的认证方式，一般采用</description>
+    </item>
+    
     <item>
       <title>Python利用Manager在分布式进程间进行通信</title>
       <link>https://pengchuanc.github.io/posts/python-manager/</link>
