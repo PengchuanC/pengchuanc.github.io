@@ -14,7 +14,7 @@ tags:
 
 假设任务名为 `qcluster`
 
-![image-20210106152455606](C:\Users\chuanchao.peng\AppData\Roaming\Typora\typora-user-images\image-20210106152455606.png)
+![image-20210106152455606](https://ftp.bmp.ovh/imgs/2021/01/2b430b0b3618f0d9.png)
 
 ```sh
 ps aux|grep qcluster|grep -v grep|cut -c 9-15|xargs kill -9

@@ -76,7 +76,7 @@
 				<h1 id="任务中止">任务中止<a href="#任务中止" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
 <h2 id="1中止多进程任务">1.中止多进程任务<a href="#1中止多进程任务" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>假设任务名为 <code>qcluster</code></p>
-<p><img src="C:%5CUsers%5Cchuanchao.peng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20210106152455606.png" alt="image-20210106152455606"></p>
+<p><img src="https://ftp.bmp.ovh/imgs/2021/01/2b430b0b3618f0d9.png" alt="image-20210106152455606"></p>
 <div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">ps aux<span class="p">|</span>grep qcluster<span class="p">|</span>grep -v grep<span class="p">|</span>cut -c 9-15<span class="p">|</span>xargs <span class="nb">kill</span> -9
 </code></pre></div>
 			</div>
