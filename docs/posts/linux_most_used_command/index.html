@@ -7,16 +7,24 @@
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<meta name="theme-color" content="#494f5c">
 	<meta name="msapplication-TileColor" content="#494f5c">
-<meta itemprop="name" content="标签">
-<meta itemprop="description" content="">
-<meta property="og:title" content="标签" />
-<meta property="og:description" content="" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://pengchuanc.github.io/%E6%A0%87%E7%AD%BE/" />
+<meta itemprop="name" content="常用Linux命令">
+<meta itemprop="description" content="任务中止 1.中止多进程任务 假设任务名为 qcluster ps aux|grep qcluster|grep -v grep|cut -c 9-15|xargs kill -9">
+<meta itemprop="datePublished" content="2021-01-06T15:22:11+08:00" />
+<meta itemprop="dateModified" content="2021-01-06T15:22:11+08:00" />
+<meta itemprop="wordCount" content="29">
 
+
+
+<meta itemprop="keywords" content="Linux," />
+<meta property="og:title" content="常用Linux命令" />
+<meta property="og:description" content="任务中止 1.中止多进程任务 假设任务名为 qcluster ps aux|grep qcluster|grep -v grep|cut -c 9-15|xargs kill -9" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://pengchuanc.github.io/posts/linux_most_used_command/" />
+<meta property="article:published_time" content="2021-01-06T15:22:11+08:00" />
+<meta property="article:modified_time" content="2021-01-06T15:22:11+08:00" />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="标签"/>
-<meta name="twitter:description" content=""/>
+<meta name="twitter:title" content="常用Linux命令"/>
+<meta name="twitter:description" content="任务中止 1.中止多进程任务 假设任务名为 qcluster ps aux|grep qcluster|grep -v grep|cut -c 9-15|xargs kill -9"/>
 
 	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -25,9 +33,9 @@
 	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
 	<link rel="shortcut icon" href="/favicon.ico">
 
-	<title>标签</title>
-	<link rel="alternate" type="application/rss+xml" href="https://pengchuanc.github.io/%E6%A0%87%E7%AD%BE/index.xml" title="标签" />
+	<title>常用Linux命令</title>
 	<link rel="stylesheet" href="https://pengchuanc.github.io/css/style.min.eac77496566fd7d5768fd650ddb0b2b181ca6a2d7c5fdd6fe6b8ba4bf47e566f.css" integrity="sha256-6sd0llZv19V2j9ZQ3bCysYHKai18X91v5ri6S/R+Vm8=" crossorigin="anonymous">
+	
 </head>
 
 <body id="page">
@@ -58,8 +66,36 @@
 	</div>
 
 
-	<main class="site-main section-inner thin animated fadeIn faster">
-		<h1>标签</h1>
+	<main class="site-main section-inner animated fadeIn faster">
+		<article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>Jan 6, 2021</span></div>
+				<h1>常用Linux命令</h1>
+			</header>
+			<div class="content">
+				<h1 id="任务中止">任务中止<a href="#任务中止" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<h2 id="1中止多进程任务">1.中止多进程任务<a href="#1中止多进程任务" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>假设任务名为 <code>qcluster</code></p>
+<p><img src="C:%5CUsers%5Cchuanchao.peng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20210106152455606.png" alt="image-20210106152455606"></p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">ps aux<span class="p">|</span>grep qcluster<span class="p">|</span>grep -v grep<span class="p">|</span>cut -c 9-15<span class="p">|</span>xargs <span class="nb">kill</span> -9
+</code></pre></div>
+			</div>
+			<hr class="post-end">
+			<footer class="post-info">
+				<p>
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://pengchuanc.github.io/tags/linux">Linux</a></span>
+				</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>29 Words</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2021-01-06 15:22 &#43;0800</p>
+			</footer>
+		</article>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://pengchuanc.github.io/posts/python-jwt/">
+				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span><br><span>Python中使用JWT</span>
+			</a>
+		</div>
+		<div id="comments" class="thin">
+</div>
 	</main>
 
 	<footer id="site-footer" class="section-inner thin animated fadeIn faster">

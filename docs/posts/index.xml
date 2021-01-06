@@ -6,8 +6,23 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>zh-cn</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Mon, 21 Dec 2020 11:18:59 +0800</lastBuildDate>
+		<lastBuildDate>Wed, 06 Jan 2021 15:22:11 +0800</lastBuildDate>
 		<atom:link href="https://pengchuanc.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>常用Linux命令</title>
+			<link>https://pengchuanc.github.io/posts/linux_most_used_command/</link>
+			<pubDate>Wed, 06 Jan 2021 15:22:11 +0800</pubDate>
+			
+			<guid>https://pengchuanc.github.io/posts/linux_most_used_command/</guid>
+			<description>任务中止 1.中止多进程任务 假设任务名为 qcluster ps aux|grep qcluster|grep -v grep|cut -c 9-15|xargs kill -9</description>
+			<content type="html"><![CDATA[<h1 id="任务中止">任务中止</h1>
+<h2 id="1中止多进程任务">1.中止多进程任务</h2>
+<p>假设任务名为 <code>qcluster</code></p>
+<p><img src="C:%5CUsers%5Cchuanchao.peng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20210106152455606.png" alt="image-20210106152455606"></p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">ps aux<span class="p">|</span>grep qcluster<span class="p">|</span>grep -v grep<span class="p">|</span>cut -c 9-15<span class="p">|</span>xargs <span class="nb">kill</span> -9
+</code></pre></div>]]></content>
+		</item>
 		
 		<item>
 			<title>Python中使用JWT</title>

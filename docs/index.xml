@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Mon, 21 Dec 2020 11:18:59 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 06 Jan 2021 15:22:11 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>常用Linux命令</title>
+      <link>https://pengchuanc.github.io/posts/linux_most_used_command/</link>
+      <pubDate>Wed, 06 Jan 2021 15:22:11 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/linux_most_used_command/</guid>
+      <description>任务中止 1.中止多进程任务 假设任务名为 qcluster ps aux|grep qcluster|grep -v grep|cut -c 9-15|xargs kill -9</description>
+    </item>
+    
     <item>
       <title>Python中使用JWT</title>
       <link>https://pengchuanc.github.io/posts/python-jwt/</link>
