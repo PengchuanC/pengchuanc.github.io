@@ -19,7 +19,7 @@
 			<content type="html"><![CDATA[<h1 id="任务中止">任务中止</h1>
 <h2 id="1中止多进程任务">1.中止多进程任务</h2>
 <p>假设任务名为 <code>qcluster</code></p>
-<p><img src="https://ftp.bmp.ovh/imgs/2021/01/2b430b0b3618f0d9.png" alt="image-20210106152455606"></p>
+<p><img src="/images/linux-ps.png" alt="image-20210106152455606"></p>
 <div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">ps aux<span class="p">|</span>grep qcluster<span class="p">|</span>grep -v grep<span class="p">|</span>cut -c 9-15<span class="p">|</span>xargs <span class="nb">kill</span> -9
 </code></pre></div>]]></content>
 		</item>
