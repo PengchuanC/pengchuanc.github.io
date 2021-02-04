@@ -6,8 +6,50 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>zh-cn</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Wed, 06 Jan 2021 15:22:11 +0800</lastBuildDate>
+		<lastBuildDate>Thu, 04 Feb 2021 17:05:55 +0800</lastBuildDate>
 		<atom:link href="https://pengchuanc.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Mariadb(MySQL)初始配置</title>
+			<link>https://pengchuanc.github.io/posts/mariadb-init/</link>
+			<pubDate>Thu, 04 Feb 2021 17:05:55 +0800</pubDate>
+			
+			<guid>https://pengchuanc.github.io/posts/mariadb-init/</guid>
+			<description>数据库各项配置主要在/etc/my.cnf文件中修改。 1.数据库存放位置 安装完MariaDB后，数据资源一般默认存放在/var/lib/my</description>
+			<content type="html"><![CDATA[<p>数据库各项配置主要在<code>/etc/my.cnf</code>文件中修改。</p>
+<h1 id="1数据库存放位置">1.数据库存放位置</h1>
+<p>安装完MariaDB后，数据资源一般默认存放在<code>/var/lib/mysql</code>目录下，该目录空间一般不大，可修改<code>datadir</code>项目来更改数据保存位置，对于开启<strong>SELinux</strong>的发行版来说，修改数据保存位置可能导致数据库启动失败，可以通过<code>setenforce 0</code>来关闭SELinux。</p>
+<p>一般建议移动整个<code>/var/lib/mysql</code>目录，如果这样操作，记得修改<code>socket</code>条目的位置。</p>
+<div class="highlight"><pre class="chroma"><code class="language-plain" data-lang="plain"># 初始配置
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+
+# 修改后
+datadir=/root/mysql
+socket=/root/mysql/mysql.sock
+</code></pre></div><h1 id="2影响到数据库超时的设置">2.影响到数据库超时的设置</h1>
+<pre><code class="language-cnf" data-lang="cnf"># 服务器关闭非交互连接之前等待活动的秒数
+wait_timeout=28800
+
+# 服务器关闭交互式连接之前等待活动的秒数
+interactive_timeout=28800
+</code></pre><h1 id="3缓冲区大小">3.缓冲区大小</h1>
+<pre><code class="language-cnf" data-lang="cnf"># 索引的缓冲区大小，增加它可得到更好的索引处理性能
+key_buffer_size=256M
+
+# 单次连接最大数据量
+max_allowed_packet=768M
+
+# 排序、读查询、join操作所能使用的缓冲区大小，每一个连接独享
+read_buffer_size=4M
+sort_buffer_size=4M
+join_buffer_size=8M
+</code></pre><h1 id="4连接数量管理">4.连接数量管理</h1>
+<pre><code class="language-cnf" data-lang="cnf"># 最大连接进程数
+max_connections=768
+max_connect_errors=1000
+</code></pre>]]></content>
+		</item>
 		
 		<item>
 			<title>常用Linux命令</title>

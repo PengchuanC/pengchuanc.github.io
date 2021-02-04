@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Wed, 06 Jan 2021 15:22:11 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 04 Feb 2021 17:05:55 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Mariadb(MySQL)初始配置</title>
+      <link>https://pengchuanc.github.io/posts/mariadb-init/</link>
+      <pubDate>Thu, 04 Feb 2021 17:05:55 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/mariadb-init/</guid>
+      <description>数据库各项配置主要在/etc/my.cnf文件中修改。 1.数据库存放位置 安装完MariaDB后，数据资源一般默认存放在/var/lib/my</description>
+    </item>
+    
     <item>
       <title>常用Linux命令</title>
       <link>https://pengchuanc.github.io/posts/linux_most_used_command/</link>
@@ -87,15 +96,6 @@
       
       <guid>https://pengchuanc.github.io/posts/django-channels-deploy/</guid>
       <description>Django在3.0正式引入asgi，部署方式与2.x略有不同 仅部署http网站 如果仅部署http网站，可采用uvicorn来进行部署，然后</description>
-    </item>
-    
-    <item>
-      <title>记录GRPC在各种语言下的编译方式</title>
-      <link>https://pengchuanc.github.io/posts/rpc-complie/</link>
-      <pubDate>Wed, 02 Dec 2020 17:42:12 +0800</pubDate>
-      
-      <guid>https://pengchuanc.github.io/posts/rpc-complie/</guid>
-      <description>Python Python中的编译方式 假设当前工作目录为protobuf，待编译文件为hello.proto &amp;gt; cd protobuf &amp;gt; python -m grpc_tools.protoc --python_out=. --grpc_python_out=. -I. hello.proto Go Golang中的编译</description>
     </item>
     
   </channel>
