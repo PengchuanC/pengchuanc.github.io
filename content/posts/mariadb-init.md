@@ -64,3 +64,17 @@ max_connections=768
 max_connect_errors=1000
 ```
 
+
+
+# 5.重启
+
+```sh
+# centos6 redhat6
+service restart mariadb.service
+
+# centos7+ redhat7+
+systemctl restart mariadb.service
+```
+
+
+

@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Thu, 04 Feb 2021 17:05:55 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 24 Feb 2021 10:15:21 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MariaDB 升级后无法运行</title>
+      <link>https://pengchuanc.github.io/posts/mariadb-upgrade/</link>
+      <pubDate>Wed, 24 Feb 2021 10:15:21 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/mariadb-upgrade/</guid>
+      <description>1.事情起因 在redhat每次执行完yun update后，MariaDB也会升级，但我之前更换过MariaDB的数据存储目录，将数据保存在了</description>
+    </item>
+    
     <item>
       <title>Mariadb(MySQL)初始配置</title>
       <link>https://pengchuanc.github.io/posts/mariadb-init/</link>
@@ -87,15 +96,6 @@
       
       <guid>https://pengchuanc.github.io/posts/pub-sub-model/</guid>
       <description>发布订阅模式比较常用，近期使用grpc也涉及到连接管理简单记录一下发布订阅模式的实现，主要使用chan来传输数据 也可以考虑使用回调函数来处理</description>
-    </item>
-    
-    <item>
-      <title>利用Nginx和Daphne部署Django3.x和Django channels 3.x</title>
-      <link>https://pengchuanc.github.io/posts/django-channels-deploy/</link>
-      <pubDate>Wed, 02 Dec 2020 18:13:44 +0800</pubDate>
-      
-      <guid>https://pengchuanc.github.io/posts/django-channels-deploy/</guid>
-      <description>Django在3.0正式引入asgi，部署方式与2.x略有不同 仅部署http网站 如果仅部署http网站，可采用uvicorn来进行部署，然后</description>
     </item>
     
   </channel>

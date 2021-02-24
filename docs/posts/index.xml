@@ -6,8 +6,51 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>zh-cn</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Thu, 04 Feb 2021 17:05:55 +0800</lastBuildDate>
+		<lastBuildDate>Wed, 24 Feb 2021 10:15:21 +0800</lastBuildDate>
 		<atom:link href="https://pengchuanc.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>MariaDB 升级后无法运行</title>
+			<link>https://pengchuanc.github.io/posts/mariadb-upgrade/</link>
+			<pubDate>Wed, 24 Feb 2021 10:15:21 +0800</pubDate>
+			
+			<guid>https://pengchuanc.github.io/posts/mariadb-upgrade/</guid>
+			<description>1.事情起因 在redhat每次执行完yun update后，MariaDB也会升级，但我之前更换过MariaDB的数据存储目录，将数据保存在了</description>
+			<content type="html"><![CDATA[<h1 id="1事情起因">1.事情起因</h1>
+<p>在redhat每次执行完<code>yun update</code>后，MariaDB也会升级，但我之前更换过MariaDB的数据存储目录，将数据保存在了<code>/home/mysql</code>目录下，导致每次升级完MariaDB后，无法启动server。</p>
+<h1 id="2解决方案">2.解决方案</h1>
+<h2 id="21-更换目录">2.1 更换目录</h2>
+<p>更换目录后，需要对目录重新授权，因为默认情况下，MariaDB的用户和用户组为<code>mysql:mysql</code>，授权代码为：</p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">~ chown -R mysql:mysql /home/mysql
+~ chown <span class="m">775</span> /home/mysql
+</code></pre></div><h2 id="22-关闭selinux">2.2 关闭selinux</h2>
+<p>通过一下命令可以临时关闭selinux：</p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">~ setenforce <span class="m">0</span>
+</code></pre></div><p>要永久禁用selinux，可以使用文本编辑器打开<code>/etc/sysconfig/selinux</code>文件，如下所示：</p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">~ vi /etc/sysconfig/selinux
+</code></pre></div><p>然后将配置selinux=enforcing改为selinux=disabled，如下图所示。</p>
+<div class="highlight"><pre class="chroma"><code class="language-plain" data-lang="plain">SELINUX=disabled
+</code></pre></div><p>然后，按<code>esc</code>按键后，输入<code>:wq</code>保存并退出文件，为了使配置生效，需要重新启动系统，然后使用sestatus命令检查selinux的状态，如下所示：</p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">sestatus
+</code></pre></div><h2 id="23-修改mariadbservice">2.3 修改<code>mariadb.service</code></h2>
+<p>systemd 默认配置了对<code>/root</code>和<code>/home</code>等目录的限制，<code>ProtectHome=true</code>配置意味着启动时应用对这些目录不可写，mariaDB同样有这个限制。</p>
+<p>通过以下命令可以找到<code>mriadb.service</code>的位置:</p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">~ find / -name <span class="s2">&#34;mariadb.service&#34;</span>
+</code></pre></div><p>然后使用<code>vi</code> 编辑文件，通过以下命令可以找到<code>ProtectHome</code>的位置:</p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">: /ProtectHome*
+</code></pre></div><p>找到配置位置后，将<code>ProtectHome=true</code>修改为<code>ProtectHome=false</code>，保存并退出。</p>
+<p>执行一下命令来重启MariaDB：</p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">~ systemctl daemon-reload
+~ systemctl restart mariadb.servic
+</code></pre></div><h1 id="3-总结">3. 总结</h1>
+<p>实际上问题的出现来源于三个方面</p>
+<ul>
+<li>更换mariadb目录没有对目录进行授权</li>
+<li>selinux</li>
+<li>systemd 默认配置了对<code>/root</code>和<code>/home</code>等目录的限制</li>
+</ul>
+]]></content>
+		</item>
 		
 		<item>
 			<title>Mariadb(MySQL)初始配置</title>
@@ -48,7 +91,13 @@ join_buffer_size=8M
 <pre><code class="language-cnf" data-lang="cnf"># 最大连接进程数
 max_connections=768
 max_connect_errors=1000
-</code></pre>]]></content>
+</code></pre><h1 id="5重启">5.重启</h1>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh"><span class="c1"># centos6 redhat6</span>
+service restart mariadb.service
+
+<span class="c1"># centos7+ redhat7+</span>
+systemctl restart mariadb.service
+</code></pre></div>]]></content>
 		</item>
 		
 		<item>
