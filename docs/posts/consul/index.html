@@ -87,7 +87,7 @@ $ unzip consul_1.9.5_linux_amd64.zip
 <p>以刚刚下载的文件为例：</p>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ ./consul agent -server -bootstrap-expect <span class="m">1</span> -data-dir<span class="o">=</span>/tmp/consul -node<span class="o">=</span>n1 -bind<span class="o">=</span>127.0.0.1 -client<span class="o">=</span>0.0.0.0 -ui
 </code></pre></div><p>默认使用端口<code>8500</code>，在浏览器中输入服务器<code>{ip}:8500</code>即可通过web查看注册的服务了，当然目前只有一个默认的健康检测服务。</p>
-<p><img src="/images/conul-start.png" alt="启动页面"></p>
+<p><img src="/images/consul-start.png" alt="启动页面"></p>
 <h1 id="3在python中使用">3.在Python中使用<a href="#3在python中使用" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
 <p>首先需要安装<code>python-consul</code>库：</p>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ pip3 install python-consul
@@ -129,7 +129,7 @@ $ unzip consul_1.9.5_linux_amd64.zip
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ python3 test.py
 <span class="o">((</span><span class="s1">&#39;10.170.139.10&#39;</span>, 50051<span class="o">)</span>, True<span class="o">)</span>
 </code></pre></div><p>查看web页面可以看到：</p>
-<p><img src="/images/consul-regiter.png" alt="注册服务"></p>
+<p><img src="/images/consul-register.png" alt="注册服务"></p>
 
 			</div>
 			<hr class="post-end">
