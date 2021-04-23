@@ -45,6 +45,8 @@ $ ./consul agent -server -bootstrap-expect 1 -data-dir=/tmp/consul -node=n1 -bin
 
 默认使用端口`8500`，在浏览器中输入服务器`{ip}:8500`即可通过web查看注册的服务了，当然目前只有一个默认的健康检测服务。
 
+![启动页面](/images/conul-start.png)
+
 
 
 # 3.在Python中使用
@@ -100,3 +102,6 @@ $ python3 test.py
 (('10.170.139.10', 50051), True)
 ```
 
+查看web页面可以看到：
+
+![注册服务](/images/consul-regiter.png)
