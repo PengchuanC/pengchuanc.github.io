@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Wed, 24 Feb 2021 10:15:21 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 23 Apr 2021 14:17:25 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Python利用Consul实现服务发现</title>
+      <link>https://pengchuanc.github.io/posts/consul/</link>
+      <pubDate>Fri, 23 Apr 2021 14:17:25 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/consul/</guid>
+      <description>1.背景 由于基金筛选系统和组合管理系统间存在一些互相需要使用到的基础数据，但又不想重复创建数据库表单和同步数据，因此在两个项目中使用了grp</description>
+    </item>
+    
     <item>
       <title>MariaDB 升级后无法运行</title>
       <link>https://pengchuanc.github.io/posts/mariadb-upgrade/</link>
@@ -87,15 +96,6 @@
       
       <guid>https://pengchuanc.github.io/posts/grpc_stream_python/</guid>
       <description>传统文件的下载方式主要使用tcp服务，这种功能同样可以使用grpc的stream来实现，通过使用流(streaming)，可以向服务器或者客</description>
-    </item>
-    
-    <item>
-      <title>发布/订阅模式</title>
-      <link>https://pengchuanc.github.io/posts/pub-sub-model/</link>
-      <pubDate>Fri, 04 Dec 2020 18:06:42 +0800</pubDate>
-      
-      <guid>https://pengchuanc.github.io/posts/pub-sub-model/</guid>
-      <description>发布订阅模式比较常用，近期使用grpc也涉及到连接管理简单记录一下发布订阅模式的实现，主要使用chan来传输数据 也可以考虑使用回调函数来处理</description>
     </item>
     
   </channel>

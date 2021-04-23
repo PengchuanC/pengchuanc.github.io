@@ -6,8 +6,72 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>zh-cn</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Wed, 24 Feb 2021 10:15:21 +0800</lastBuildDate>
+		<lastBuildDate>Fri, 23 Apr 2021 14:17:25 +0800</lastBuildDate>
 		<atom:link href="https://pengchuanc.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Python利用Consul实现服务发现</title>
+			<link>https://pengchuanc.github.io/posts/consul/</link>
+			<pubDate>Fri, 23 Apr 2021 14:17:25 +0800</pubDate>
+			
+			<guid>https://pengchuanc.github.io/posts/consul/</guid>
+			<description>1.背景 由于基金筛选系统和组合管理系统间存在一些互相需要使用到的基础数据，但又不想重复创建数据库表单和同步数据，因此在两个项目中使用了grp</description>
+			<content type="html"><![CDATA[<h1 id="1背景">1.背景</h1>
+<p>由于基金筛选系统和组合管理系统间存在一些互相需要使用到的基础数据，但又不想重复创建数据库表单和同步数据，因此在两个项目中使用了grpc来实现数据调用；早期实现的grpc版本中直接使用对方的IP和端口，每次调整或部署到其他地方都需要修改代码，因此考虑使用服务注册和发现来解决这个问题。</p>
+<p>对比了<strong>etcd</strong>和<strong>consul</strong>两个方案，由于后端使用的语言是python，而etcd的版本比较多，导致相关的库也需要对应版本，使用起来比较麻烦，因此最终使用consul和对应的库<code>python-consul</code>。</p>
+<h1 id="2安装与启动">2.安装与启动</h1>
+<h2 id="21安装">2.1安装</h2>
+<p>直接前往 <a href="https://www.consul.io/">Consul by HashiCorp</a> 官网下载对应系统的可执行文件即可，以Linux为例</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ <span class="nb">cd</span>  /home/downloads
+$ mkdir consul <span class="o">&amp;&amp;</span> <span class="nb">cd</span> consul
+$ wget https://releases.hashicorp.com/consul/1.9.5/consul_1.9.5_linux_amd64.zip
+$ unzip consul_1.9.5_linux_amd64.zip
+</code></pre></div><h2 id="22启动">2.2启动</h2>
+<p>以刚刚下载的文件为例：</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ ./consul agent -server -bootstrap-expect <span class="m">1</span> -data-dir<span class="o">=</span>/tmp/consul -node<span class="o">=</span>n1 -bind<span class="o">=</span>127.0.0.1 -client<span class="o">=</span>0.0.0.0 -ui
+</code></pre></div><p>默认使用端口<code>8500</code>，在浏览器中输入服务器<code>{ip}:8500</code>即可通过web查看注册的服务了，当然目前只有一个默认的健康检测服务。</p>
+<h1 id="3在python中使用">3.在Python中使用</h1>
+<p>首先需要安装<code>python-consul</code>库：</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ pip3 install python-consul
+</code></pre></div><p>简单示例：</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1">#test.py</span>
+<span class="kn">import</span> <span class="nn">consul</span>
+
+
+<span class="k">class</span> <span class="nc">Consul</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;10.170.139.10&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8500</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_consul</span> <span class="o">=</span> <span class="n">consul</span><span class="o">.</span><span class="n">Consul</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">):</span>
+        <span class="s2">&#34;&#34;&#34;注册服务&#34;&#34;&#34;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_consul</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">register</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">service_id</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">address</span><span class="o">=</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span>
+            <span class="n">check</span><span class="o">=</span><span class="n">consul</span><span class="o">.</span><span class="n">Check</span><span class="p">()</span><span class="o">.</span><span class="n">tcp</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="s1">&#39;5s&#39;</span><span class="p">,</span>
+                                     <span class="n">timeout</span><span class="o">=</span><span class="s1">&#39;30s&#39;</span><span class="p">,</span> <span class="n">deregister</span><span class="o">=</span><span class="s1">&#39;30s&#39;</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="s2">&#34;&#34;&#34;发现服务&#34;&#34;&#34;</span>
+        <span class="n">services</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_consul</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">services</span><span class="p">()</span>
+        <span class="n">server</span> <span class="o">=</span> <span class="n">services</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">server</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">False</span>
+        <span class="n">addr</span> <span class="o">=</span> <span class="n">server</span><span class="p">[</span><span class="s1">&#39;Address&#39;</span><span class="p">]</span>
+        <span class="n">port</span> <span class="o">=</span> <span class="n">server</span><span class="p">[</span><span class="s1">&#39;Port&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">port</span><span class="p">),</span> <span class="bp">True</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">Consul</span><span class="p">()</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;fund_filter_django&#39;</span><span class="p">,</span> <span class="s1">&#39;10.170.139.10&#39;</span><span class="p">,</span> <span class="mi">50051</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;fund_filter_django&#39;</span><span class="p">))</span>
+
+</code></pre></div><p>执行文件可以看到：</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ python3 test.py
+<span class="o">((</span><span class="s1">&#39;10.170.139.10&#39;</span>, 50051<span class="o">)</span>, True<span class="o">)</span>
+</code></pre></div>]]></content>
+		</item>
 		
 		<item>
 			<title>MariaDB 升级后无法运行</title>
