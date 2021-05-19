@@ -6,8 +6,48 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>zh-cn</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Fri, 23 Apr 2021 14:17:25 +0800</lastBuildDate>
+		<lastBuildDate>Wed, 19 May 2021 10:07:04 +0800</lastBuildDate>
 		<atom:link href="https://pengchuanc.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Vue3解决数组改变界面没有重新刷新的问题</title>
+			<link>https://pengchuanc.github.io/posts/vue_force_update/</link>
+			<pubDate>Wed, 19 May 2021 10:07:04 +0800</pubDate>
+			
+			<guid>https://pengchuanc.github.io/posts/vue_force_update/</guid>
+			<description>解决方法 在使用vue3或vue2时，时常遇到数组或对象更新，但在列表渲染的UI却没有随数据改变而刷新，这是由于 JavaScript 的限制，Vue 不能检测数组的</description>
+			<content type="html"><![CDATA[<h3 id="解决方法">解决方法</h3>
+<p>在使用vue3或vue2时，时常遇到数组或对象更新，但在列表渲染的UI却没有随数据改变而刷新，这是由于 JavaScript 的限制，Vue 不能检测数组的变动，如果要更新数组，可以采用<code>push</code>、<code>splice</code>、<code>concat</code>等方法，对象可以使用<code>assign</code>方法，如果以上方法不生效，可以强制刷新页面，主要是通过修改列表渲染的<code>key</code>来实现，vue在修改<code>key</code>时，会强制刷新页面。</p>
+<h4 id="1简单解决">1.简单解决</h4>
+<div class="highlight"><pre class="chroma"><code class="language-vue" data-lang="vue"><span class="p">&lt;</span><span class="nt">template</span><span class="p">&gt;</span>
+	<span class="p">&lt;</span><span class="nt">div</span> <span class="nt">:key</span><span class="s">=&#34;state.updateKey&#34;</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+            <span class="p">...</span>
+    	<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">template</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">javascript</span><span class="p">&gt;</span>
+    <span class="kr">import</span> <span class="p">...</span>
+    
+	<span class="kr">export</span> <span class="k">default</span><span class="p">({</span>
+    	<span class="nx">setup</span><span class="p">(){</span>
+    		<span class="kr">const</span> <span class="nx">state</span> <span class="o">=</span> <span class="nx">reactive</span><span class="p">({</span>
+    			<span class="nx">updateKey</span><span class="o">:</span> <span class="mi">0</span>
+    		<span class="p">})</span>
+    	<span class="p">}</span>
+    
+    	<span class="kr">const</span> <span class="nx">updateArray</span> <span class="o">=</span> <span class="p">()=&gt;{</span>
+    		<span class="p">...</span>
+    		<span class="nx">state</span><span class="p">.</span><span class="nx">updateKey</span> <span class="o">++</span>
+    	<span class="p">}</span>
+    	<span class="k">return</span> <span class="p">{</span> <span class="nx">state</span> <span class="p">}</span>
+    <span class="p">})</span>
+<span class="p">&lt;/</span><span class="nt">javascript</span><span class="p">&gt;</span>
+</code></pre></div><h4 id="2复杂方式">2.复杂方式</h4>
+<p>在列表渲染时保证每一个tag的<code>key</code>是唯一的，也就是不要直接使用<code>index</code>作为<code>key</code>，这样array变化后，<code>key</code>也会变动，页面自然就刷新了。</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>Python利用Consul实现服务发现</title>

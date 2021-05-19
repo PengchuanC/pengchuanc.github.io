@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Fri, 23 Apr 2021 14:17:25 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 19 May 2021 10:07:04 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Vue3解决数组改变界面没有重新刷新的问题</title>
+      <link>https://pengchuanc.github.io/posts/vue_force_update/</link>
+      <pubDate>Wed, 19 May 2021 10:07:04 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/vue_force_update/</guid>
+      <description>解决方法 在使用vue3或vue2时，时常遇到数组或对象更新，但在列表渲染的UI却没有随数据改变而刷新，这是由于 JavaScript 的限制，Vue 不能检测数组的</description>
+    </item>
+    
     <item>
       <title>Python利用Consul实现服务发现</title>
       <link>https://pengchuanc.github.io/posts/consul/</link>
@@ -87,15 +96,6 @@
       
       <guid>https://pengchuanc.github.io/posts/python-bytes-str/</guid>
       <description>在编程语言中，string类型往往是通过int数组来实现的，在python中，str和int[]同样可以转换 1.str转bytes 将字符串转</description>
-    </item>
-    
-    <item>
-      <title>通过grpc服务上传下载大型文件(Python)</title>
-      <link>https://pengchuanc.github.io/posts/grpc_stream_python/</link>
-      <pubDate>Wed, 09 Dec 2020 15:49:54 +0800</pubDate>
-      
-      <guid>https://pengchuanc.github.io/posts/grpc_stream_python/</guid>
-      <description>传统文件的下载方式主要使用tcp服务，这种功能同样可以使用grpc的stream来实现，通过使用流(streaming)，可以向服务器或者客</description>
     </item>
     
   </channel>
