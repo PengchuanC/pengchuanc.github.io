@@ -31,35 +31,39 @@ tags:
 
 ## 首页
 
-![首页](https://pengchuanc.github.io/images/fund/home.png)
+![首页](/images/fund/home.png)
 
 ## 基金筛选
 
-![筛选](https://pengchuanc.github.io/images/fund/cart.png)
+![筛选](/images/fund/cart.png)
 
 ## 基金看板
 
-![看板主页](https://pengchuanc.github.io/images/fund/dashboard1.png)
+![看板主页](/images/fund/dashboard1.png)
 
-![展开页面](https://pengchuanc.github.io/images/fund/dashboard2.png)
+![展开页面](/images/fund/dashboard2.png)
 
 ## 热点新闻
 
-![热点新闻](https://pengchuanc.github.io/images/fund/news.png)
+![热点新闻](/images/fund/news.png)
 
 ## 个基信息
 
-![总览](https://pengchuanc.github.io/images/fund/info1.png)
+![总览](/images/fund/info1.png)
 
-![风控](https://pengchuanc.github.io/images/fund/info3.png)
+![风控](/images/fund/info3.png)
 
-![资产配置](https://pengchuanc.github.io/images/fund/info2.png)
+![资产配置](/images/fund/info2.png)
 
 ## ETF资金流向
 
-![总览](https://pengchuanc.github.io/images/fund/etf1.png)
+![总览](/images/fund/etf1.png)
 
-![分类型](https://pengchuanc.github.io/images/fund/etf2.png)
+![分类型](/images/fund/etf2.png)
 
-![近况](https://pengchuanc.github.io/images/fund/etf3.png)
+![近况](/images/fund/etf3.png)
 ```
+
+
+
+如果觉得还不错，可以去[项目首页](https://github.com/PengchuanC/fund_vue3)给我一个start！
