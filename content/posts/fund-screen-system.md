@@ -8,8 +8,6 @@ tags:
 ---
 
 
-
-```
 # 野村基金筛选系统第二版
 
 在第一版的基础上优化了布局，重新设计了基金详情页的界面，并且新增了基金筛选功能和基金看板功能
@@ -62,7 +60,6 @@ tags:
 ![by-category](/images/fund/etf2.png)
 
 ![recent](/images/fund/etf3.png)
-```
 
 
 

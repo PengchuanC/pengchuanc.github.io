@@ -15,60 +15,34 @@
 			<pubDate>Thu, 01 Jul 2021 17:06:30 +0800</pubDate>
 			
 			<guid>https://pengchuanc.github.io/posts/fund-screen-system/</guid>
-			<description># 野村基金筛选系统第二版 在第一版的基础上优化了布局，重新设计了基金详情页的界面，并且新增了基金筛选功能和基金看板功能 # 开发框架升级到vue3</description>
-			<content type="html"><![CDATA[<pre><code># 野村基金筛选系统第二版
-
-在第一版的基础上优化了布局，重新设计了基金详情页的界面，并且新增了基金筛选功能和基金看板功能
-
-# 开发框架升级到vue3
-
-开发框架从vue2+view design更改为vue3+element plus
-
-使用typescript开发
-
-使用vite
-
-# 性能优化
-
-性能优化主要是后端框架实现，前端对应调整相应接口
-
-
-# 界面展示
-
-## 首页
-
-![home](/images/fund/home.png)
-
-## 基金筛选
-
-![screen](/images/fund/cart.png)
-
-## 基金看板
-
-![dashboard](/images/fund/dashboard1.png)
-
-![dashboard-expanded](/images/fund/dashboard2.png)
-
-## 热点新闻
-
-![news](/images/fund/news.png)
-
-## 个基信息
-
-![outlook](/images/fund/info1.png)
-
-![risk](/images/fund/info3.png)
-
-![asset-allocate](/images/fund/info2.png)
-
-## ETF资金流向
-
-![etf-outlook](/images/fund/etf1.png)
-
-![by-category](/images/fund/etf2.png)
-
-![recent](/images/fund/etf3.png)
-</code></pre><p>如果觉得还不错，可以去<a href="https://github.com/PengchuanC/fund_vue3">项目首页</a>给我一个start！</p>
+			<description>野村基金筛选系统第二版 在第一版的基础上优化了布局，重新设计了基金详情页的界面，并且新增了基金筛选功能和基金看板功能 开发框架升级到vue3 开发</description>
+			<content type="html"><![CDATA[<h1 id="野村基金筛选系统第二版">野村基金筛选系统第二版</h1>
+<p>在第一版的基础上优化了布局，重新设计了基金详情页的界面，并且新增了基金筛选功能和基金看板功能</p>
+<h1 id="开发框架升级到vue3">开发框架升级到vue3</h1>
+<p>开发框架从vue2+view design更改为vue3+element plus</p>
+<p>使用typescript开发</p>
+<p>使用vite</p>
+<h1 id="性能优化">性能优化</h1>
+<p>性能优化主要是后端框架实现，前端对应调整相应接口</p>
+<h1 id="界面展示">界面展示</h1>
+<h2 id="首页">首页</h2>
+<p><img src="/images/fund/home.png" alt="home"></p>
+<h2 id="基金筛选">基金筛选</h2>
+<p><img src="/images/fund/cart.png" alt="screen"></p>
+<h2 id="基金看板">基金看板</h2>
+<p><img src="/images/fund/dashboard1.png" alt="dashboard"></p>
+<p><img src="/images/fund/dashboard2.png" alt="dashboard-expanded"></p>
+<h2 id="热点新闻">热点新闻</h2>
+<p><img src="/images/fund/news.png" alt="news"></p>
+<h2 id="个基信息">个基信息</h2>
+<p><img src="/images/fund/info1.png" alt="outlook"></p>
+<p><img src="/images/fund/info3.png" alt="risk"></p>
+<p><img src="/images/fund/info2.png" alt="asset-allocate"></p>
+<h2 id="etf资金流向">ETF资金流向</h2>
+<p><img src="/images/fund/etf1.png" alt="etf-outlook"></p>
+<p><img src="/images/fund/etf2.png" alt="by-category"></p>
+<p><img src="/images/fund/etf3.png" alt="recent"></p>
+<p>如果觉得还不错，可以去<a href="https://github.com/PengchuanC/fund_vue3">项目首页</a>给我一个start！</p>
 ]]></content>
 		</item>
 		
