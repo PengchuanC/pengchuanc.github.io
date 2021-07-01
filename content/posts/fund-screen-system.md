@@ -67,4 +67,4 @@ tags:
 
 
 
-如果觉得还不错，可以去[项目首页](https://github.com/PengchuanC/fund_vue3)给我一个start！
+如果觉得还不错，可以去[项目首页](https://github.com/PengchuanC/fund_vue3)给我一个star！
