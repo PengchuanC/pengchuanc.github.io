@@ -31,37 +31,37 @@ tags:
 
 ## 首页
 
-![首页](/images/fund/home.png)
+![home](/images/fund/home.png)
 
 ## 基金筛选
 
-![筛选](/images/fund/cart.png)
+![screen](/images/fund/cart.png)
 
 ## 基金看板
 
-![看板主页](/images/fund/dashboard1.png)
+![dashboard](/images/fund/dashboard1.png)
 
-![展开页面](/images/fund/dashboard2.png)
+![dashboard-expanded](/images/fund/dashboard2.png)
 
 ## 热点新闻
 
-![热点新闻](/images/fund/news.png)
+![news](/images/fund/news.png)
 
 ## 个基信息
 
-![总览](/images/fund/info1.png)
+![outlook](/images/fund/info1.png)
 
-![风控](/images/fund/info3.png)
+![risk](/images/fund/info3.png)
 
-![资产配置](/images/fund/info2.png)
+![asset-allocate](/images/fund/info2.png)
 
 ## ETF资金流向
 
-![总览](/images/fund/etf1.png)
+![etf-outlook](/images/fund/etf1.png)
 
-![分类型](/images/fund/etf2.png)
+![by-category](/images/fund/etf2.png)
 
-![近况](/images/fund/etf3.png)
+![recent](/images/fund/etf3.png)
 ```
 
 
