@@ -45,14 +45,14 @@
 	<span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div><p>文件目录结构如下：</p>
-<p><a href="/images/gin-embed/tree1.png">目录1</a></p>
+<p><img src="/images/gin-embed/tree1.png" alt="目录1"></p>
 <p>启动之后我们访问<code>http://127.0.0.1:5000</code>即可看到如下界面：</p>
-<p><a href="/images/gin-embed/web1.png">初始界面</a></p>
+<p><img src="/images/gin-embed/web1.png" alt="初始界面"></p>
 <h3 id="2在模板语言中使用静态资源">2.在模板语言中使用静态资源</h3>
 <p>加入embed之后，gin使用模板引擎主要通过自带的方法<em>SetHTMLTemplate</em>来加载从embed中解析的模板文件，
 接下来对项目结构进行以下修改以避免路由冲突，然后来渲染一个简单的页面。</p>
 <p>此时项目目录结构如下：</p>
-<p><a href="/images/gin-embed/tree2.png">目录2</a></p>
+<p><img src="/images/gin-embed/tree2.png" alt="目录2"></p>
 <p>新增的<code>statics.go</code>主要是为了加载静态资源时保证路由的名称合理，其内容如下</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">statics</span>
 
@@ -119,7 +119,7 @@
 <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
 <span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
 </code></pre></div><p>此时进入<code>http://127.0.0.1:/5000/layouts</code>我们将能看到：</p>
-<p><a href="/images/gin-embed/web2.png">简单界面</a></p>
+<p><img src="/images/gin-embed/web2.png" alt="简单界面"></p>
 <p>到此，加载静态资源和简单的模板渲染就可以实现了。</p>
 <h3 id="3多模板渲染">3.多模板渲染</h3>
 <p>gin本身是不支持多模板渲染的，要进行多模板渲染，可以查看<a href="https://github.com/gin-contrib/multitemplate">示例代码</a></p>
@@ -234,9 +234,9 @@
 <span class="p">}</span>
 
 </code></pre></div><p>再次启动后进入<code>http://127.0.0.1/first</code>后界面如下：</p>
-<p><a href="/images/gin-embed/web3.png">界面3</a></p>
+<p><img src="/images/gin-embed/web3.png" alt="界面3"></p>
 <p>最终项目结构如下：</p>
-<p><a href="/images/gin-embed/tree3.png">目录3</a></p>
+<p><img src="/images/gin-embed/tree3.png" alt="目录3"></p>
 <p>完整代码可前往我的<a href="https://github.com/PengchuanC/pengchuanc.github.io/tree/main/src">GitHub</a>项目查看.</p>
 ]]></content>
 		</item>

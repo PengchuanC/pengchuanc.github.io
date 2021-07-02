@@ -11,7 +11,7 @@
 <meta itemprop="description" content="在golang1.16加入之前，编译出来的二进制文件默认是不包括非代码文件的，那么开发一个web网站，则需要将html模板文件、配置文件和静">
 <meta itemprop="datePublished" content="2021-07-02T15:14:15+08:00" />
 <meta itemprop="dateModified" content="2021-07-02T15:14:15+08:00" />
-<meta itemprop="wordCount" content="1342">
+<meta itemprop="wordCount" content="1322">
 
 
 
@@ -102,14 +102,14 @@
 	<span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div><p>文件目录结构如下：</p>
-<p><a href="/images/gin-embed/tree1.png">目录1</a></p>
+<p><img src="/images/gin-embed/tree1.png" alt="目录1"></p>
 <p>启动之后我们访问<code>http://127.0.0.1:5000</code>即可看到如下界面：</p>
-<p><a href="/images/gin-embed/web1.png">初始界面</a></p>
+<p><img src="/images/gin-embed/web1.png" alt="初始界面"></p>
 <h3 id="2在模板语言中使用静态资源">2.在模板语言中使用静态资源<a href="#2在模板语言中使用静态资源" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>加入embed之后，gin使用模板引擎主要通过自带的方法<em>SetHTMLTemplate</em>来加载从embed中解析的模板文件，
 接下来对项目结构进行以下修改以避免路由冲突，然后来渲染一个简单的页面。</p>
 <p>此时项目目录结构如下：</p>
-<p><a href="/images/gin-embed/tree2.png">目录2</a></p>
+<p><img src="/images/gin-embed/tree2.png" alt="目录2"></p>
 <p>新增的<code>statics.go</code>主要是为了加载静态资源时保证路由的名称合理，其内容如下</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">statics</span>
 
@@ -176,7 +176,7 @@
 <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
 <span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
 </code></pre></div><p>此时进入<code>http://127.0.0.1:/5000/layouts</code>我们将能看到：</p>
-<p><a href="/images/gin-embed/web2.png">简单界面</a></p>
+<p><img src="/images/gin-embed/web2.png" alt="简单界面"></p>
 <p>到此，加载静态资源和简单的模板渲染就可以实现了。</p>
 <h3 id="3多模板渲染">3.多模板渲染<a href="#3多模板渲染" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>gin本身是不支持多模板渲染的，要进行多模板渲染，可以查看<a href="https://github.com/gin-contrib/multitemplate">示例代码</a></p>
@@ -291,9 +291,9 @@
 <span class="p">}</span>
 
 </code></pre></div><p>再次启动后进入<code>http://127.0.0.1/first</code>后界面如下：</p>
-<p><a href="/images/gin-embed/web3.png">界面3</a></p>
+<p><img src="/images/gin-embed/web3.png" alt="界面3"></p>
 <p>最终项目结构如下：</p>
-<p><a href="/images/gin-embed/tree3.png">目录3</a></p>
+<p><img src="/images/gin-embed/tree3.png" alt="目录3"></p>
 <p>完整代码可前往我的<a href="https://github.com/PengchuanC/pengchuanc.github.io/tree/main/src">GitHub</a>项目查看.</p>
 
 			</div>
@@ -302,7 +302,7 @@
 				<p>
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://pengchuanc.github.io/tags/golang">golang</a></span><span class="tag"><a href="https://pengchuanc.github.io/tags/embed">embed</a></span><span class="tag"><a href="https://pengchuanc.github.io/tags/%E6%A8%A1%E6%9D%BF%E7%BB%A7%E6%89%BF">模板继承</a></span><span class="tag"><a href="https://pengchuanc.github.io/tags/gin">gin</a></span>
 				</p>
-				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>1342 Words</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>1322 Words</p>
 				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2021-07-02 15:14 &#43;0800</p>
 			</footer>
 		</article>

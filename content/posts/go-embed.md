@@ -45,11 +45,11 @@ func main() {
 
 文件目录结构如下：
 
-[目录1](/images/gin-embed/tree1.png)
+![目录1](/images/gin-embed/tree1.png)
 
 启动之后我们访问`http://127.0.0.1:5000`即可看到如下界面：
 
-[初始界面](/images/gin-embed/web1.png)
+![初始界面](/images/gin-embed/web1.png)
 
 ### 2.在模板语言中使用静态资源
 
@@ -58,7 +58,7 @@ func main() {
 
 此时项目目录结构如下：
 
-[目录2](/images/gin-embed/tree2.png)
+![目录2](/images/gin-embed/tree2.png)
 
 新增的`statics.go`主要是为了加载静态资源时保证路由的名称合理，其内容如下
 ```go
@@ -140,7 +140,7 @@ func index(ctx *gin.Context) {
 
 此时进入`http://127.0.0.1:/5000/layouts`我们将能看到：
 
-[简单界面](/images/gin-embed/web2.png)
+![简单界面](/images/gin-embed/web2.png)
 
 到此，加载静态资源和简单的模板渲染就可以实现了。
 
@@ -275,10 +275,10 @@ func second(ctx *gin.Context) {
 
 再次启动后进入`http://127.0.0.1/first`后界面如下：
 
-[界面3](/images/gin-embed/web3.png)
+![界面3](/images/gin-embed/web3.png)
 
 最终项目结构如下：
 
-[目录3](/images/gin-embed/tree3.png)
+![目录3](/images/gin-embed/tree3.png)
 
 完整代码可前往我的[GitHub](https://github.com/PengchuanC/pengchuanc.github.io/tree/main/src)项目查看.
