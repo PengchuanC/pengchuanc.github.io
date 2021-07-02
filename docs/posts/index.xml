@@ -6,8 +6,240 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>zh-cn</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Thu, 01 Jul 2021 17:06:30 +0800</lastBuildDate>
+		<lastBuildDate>Fri, 02 Jul 2021 15:14:15 +0800</lastBuildDate>
 		<atom:link href="https://pengchuanc.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Go 1.16 新特性embed在gin中使用</title>
+			<link>https://pengchuanc.github.io/posts/go-embed/</link>
+			<pubDate>Fri, 02 Jul 2021 15:14:15 +0800</pubDate>
+			
+			<guid>https://pengchuanc.github.io/posts/go-embed/</guid>
+			<description>在golang1.16加入之前，编译出来的二进制文件默认是不包括非代码文件的，那么开发一个web网站，则需要将html模板文件、配置文件和静</description>
+			<content type="html"><![CDATA[<blockquote>
+<p>在golang1.16加入之前，编译出来的二进制文件默认是不包括非代码文件的，那么开发一个web网站，则需要将html模板文件、配置文件和静态资源文件(css、js)始终按照开发时的目录结构放在一起，部署起来很麻烦。</p>
+</blockquote>
+<p>embed是在Go 1.16中新加包。它通过<code>//go:embed</code>指令，可以在编译阶段将静态资源文件打包进编译好的程序中，并提供访问这些文件的能力。</p>
+<h3 id="1使用gin框架构建一个简单的静态资源服务器">1.使用gin框架构建一个简单的静态资源服务器</h3>
+<p>使用gin构建一个web服务非常简单，使用embed加入静态资源也非常简单，代码如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;embed&#34;</span>
+	<span class="s">&#34;fmt&#34;</span>
+	<span class="s">&#34;github.com/gin-gonic/gin&#34;</span>
+	<span class="s">&#34;net/http&#34;</span>
+<span class="p">)</span>
+
+<span class="c1">//go:embed statics/* templates/*
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">Assets</span> <span class="nx">embed</span><span class="p">.</span><span class="nx">FS</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">router</span> <span class="o">:=</span> <span class="nx">gin</span><span class="p">.</span><span class="nf">Default</span><span class="p">()</span>
+	<span class="nx">router</span><span class="p">.</span><span class="nf">StaticFS</span><span class="p">(</span><span class="s">&#34;/&#34;</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nf">FS</span><span class="p">(</span><span class="nx">Assets</span><span class="p">))</span>
+
+	<span class="nx">err</span> <span class="o">:=</span> <span class="nx">router</span><span class="p">.</span><span class="nf">Run</span><span class="p">(</span><span class="s">&#34;0.0.0.0:5000&#34;</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p>文件目录结构如下：</p>
+<p><a href="/images/gin-embed/tree1.png">目录1</a></p>
+<p>启动之后我们访问<code>http://127.0.0.1:5000</code>即可看到如下界面：</p>
+<p><a href="/images/gin-embed/web1.png">初始界面</a></p>
+<h3 id="2在模板语言中使用静态资源">2.在模板语言中使用静态资源</h3>
+<p>加入embed之后，gin使用模板引擎主要通过自带的方法<em>SetHTMLTemplate</em>来加载从embed中解析的模板文件，
+接下来对项目结构进行以下修改以避免路由冲突，然后来渲染一个简单的页面。</p>
+<p>此时项目目录结构如下：</p>
+<p><a href="/images/gin-embed/tree2.png">目录2</a></p>
+<p>新增的<code>statics.go</code>主要是为了加载静态资源时保证路由的名称合理，其内容如下</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">statics</span>
+
+<span class="kn">import</span> <span class="s">&#34;embed&#34;</span>
+
+<span class="c1">//go:embed css/* js/*
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">Statics</span> <span class="nx">embed</span><span class="p">.</span><span class="nx">FS</span>
+</code></pre></div><p><code>main.go</code>文件内容修改后为：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;embed&#34;</span>
+	<span class="s">&#34;fmt&#34;</span>
+	<span class="s">&#34;gin_embed/statics&#34;</span>
+	<span class="s">&#34;github.com/gin-gonic/gin&#34;</span>
+	<span class="s">&#34;html/template&#34;</span>
+	<span class="s">&#34;net/http&#34;</span>
+<span class="p">)</span>
+
+<span class="c1">//go:embed templates/*
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">Templates</span> <span class="nx">embed</span><span class="p">.</span><span class="nx">FS</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">router</span> <span class="o">:=</span> <span class="nx">gin</span><span class="p">.</span><span class="nf">Default</span><span class="p">()</span>
+	<span class="nx">router</span><span class="p">.</span><span class="nf">StaticFS</span><span class="p">(</span><span class="s">&#34;/statics&#34;</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nf">FS</span><span class="p">(</span><span class="nx">statics</span><span class="p">.</span><span class="nx">Statics</span><span class="p">))</span>
+	<span class="nx">tmpl</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">template</span><span class="p">.</span><span class="nf">ParseFS</span><span class="p">(</span><span class="nx">Templates</span><span class="p">,</span> <span class="s">&#34;templates/*&#34;</span><span class="p">)</span>
+
+	<span class="nx">router</span><span class="p">.</span><span class="nf">GET</span><span class="p">(</span><span class="s">&#34;/layout&#34;</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span>
+	<span class="nx">router</span><span class="p">.</span><span class="nf">SetHTMLTemplate</span><span class="p">(</span><span class="nx">tmpl</span><span class="p">)</span>
+
+	<span class="nx">err</span> <span class="o">:=</span> <span class="nx">router</span><span class="p">.</span><span class="nf">Run</span><span class="p">(</span><span class="s">&#34;0.0.0.0:5000&#34;</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">index</span><span class="p">(</span><span class="nx">ctx</span> <span class="o">*</span><span class="nx">gin</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">ctx</span><span class="p">.</span><span class="nf">HTML</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nx">StatusOK</span><span class="p">,</span> <span class="s">&#34;layouts.tmpl&#34;</span><span class="p">,</span> <span class="nx">gin</span><span class="p">.</span><span class="nx">H</span><span class="p">{</span><span class="s">&#34;title&#34;</span><span class="p">:</span> <span class="s">&#34;布局页面&#34;</span><span class="p">})</span>
+<span class="p">}</span>
+
+</code></pre></div><p><code>layouts.tmpl</code>文件内容为：</p>
+<div class="highlight"><pre class="chroma"><code class="language-html" data-lang="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">&#34;zh-CN&#34;</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>{{.title}}<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">link</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;/statics/css/semantic.css&#34;</span> <span class="na">rel</span><span class="o">=</span><span class="s">&#34;stylesheet&#34;</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text/css&#34;</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;/statics/js/jquery-3.6.0.min.js&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;/statics/js/semantic.min.js&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;ui secondary pointing menu&#34;</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;first&#34;</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;item first-menu-item active&#34;</span><span class="p">&gt;</span>
+        第一页
+    <span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">a</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;item&#34;</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;second&#34;</span><span class="p">&gt;</span>
+        第二页
+    <span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;ui container&#34;</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>我是基础页面<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">button</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;ui button primary&#34;</span><span class="p">&gt;</span>按钮<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></pre></div><p>此时进入<code>http://127.0.0.1:/5000/layouts</code>我们将能看到：</p>
+<p><a href="/images/gin-embed/web2.png">简单界面</a></p>
+<p>到此，加载静态资源和简单的模板渲染就可以实现了。</p>
+<h3 id="3多模板渲染">3.多模板渲染</h3>
+<p>gin本身是不支持多模板渲染的，要进行多模板渲染，可以查看<a href="https://github.com/gin-contrib/multitemplate">示例代码</a></p>
+<p>但在引入embed过后，我们需要对官方示例做一些调整来保证正常运行。</p>
+<p>首先在<em>templates/<em>文件目录下新建两个文件</em>first.tmpl</em>、<em>second.tmpl</em>,
+内容分别如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-html" data-lang="html">{{/*first.tmpl*/}}
+
+{{template &#34;layouts&#34; .}}
+{{define &#34;content&#34;}}
+<span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>我是第一页<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+{{end}}
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-html" data-lang="html">{{/*second.tmpl*/}}
+
+{{template &#34;layouts&#34; .}}
+{{define &#34;content&#34;}}
+    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>我是第二页<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+{{end}}
+</code></pre></div><p>修改<strong>layouts.tmpl</strong>,加入block块来实现继承</p>
+<div class="highlight"><pre class="chroma"><code class="language-html" data-lang="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">&#34;zh-CN&#34;</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>{{.title}}<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">link</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;/statics/css/semantic.css&#34;</span> <span class="na">rel</span><span class="o">=</span><span class="s">&#34;stylesheet&#34;</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text/css&#34;</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;/statics/js/jquery-3.6.0.min.js&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;/statics/js/semantic.min.js&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;ui secondary pointing menu&#34;</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;first&#34;</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;item first-menu-item active&#34;</span><span class="p">&gt;</span>
+        第一页
+    <span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">a</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;item&#34;</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;second&#34;</span><span class="p">&gt;</span>
+        第二页
+    <span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;ui container&#34;</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>我是基础页面<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">button</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;ui button primary&#34;</span><span class="p">&gt;</span>按钮<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+    {{block &#34;content&#34; .}}{{end}}
+<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></pre></div><p><strong>main.go</strong>修改如下</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;embed&#34;</span>
+	<span class="s">&#34;fmt&#34;</span>
+	<span class="s">&#34;gin_embed/statics&#34;</span>
+	<span class="s">&#34;github.com/gin-contrib/multitemplate&#34;</span>
+	<span class="s">&#34;github.com/gin-gonic/gin&#34;</span>
+	<span class="s">&#34;html/template&#34;</span>
+	<span class="s">&#34;net/http&#34;</span>
+<span class="p">)</span>
+
+<span class="c1">//go:embed templates/*
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">Templates</span> <span class="nx">embed</span><span class="p">.</span><span class="nx">FS</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">router</span> <span class="o">:=</span> <span class="nx">gin</span><span class="p">.</span><span class="nf">Default</span><span class="p">()</span>
+	<span class="nx">router</span><span class="p">.</span><span class="nf">StaticFS</span><span class="p">(</span><span class="s">&#34;/statics&#34;</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nf">FS</span><span class="p">(</span><span class="nx">statics</span><span class="p">.</span><span class="nx">Statics</span><span class="p">))</span>
+
+	<span class="nx">router</span><span class="p">.</span><span class="nf">GET</span><span class="p">(</span><span class="s">&#34;/first&#34;</span><span class="p">,</span> <span class="nx">first</span><span class="p">)</span>
+	<span class="nx">router</span><span class="p">.</span><span class="nf">GET</span><span class="p">(</span><span class="s">&#34;/second&#34;</span><span class="p">,</span> <span class="nx">second</span><span class="p">)</span>
+	<span class="nx">router</span><span class="p">.</span><span class="nx">HTMLRender</span> <span class="p">=</span> <span class="nf">CreateMyRender</span><span class="p">()</span>
+
+	<span class="nx">err</span> <span class="o">:=</span> <span class="nx">router</span><span class="p">.</span><span class="nf">Run</span><span class="p">(</span><span class="s">&#34;0.0.0.0:5000&#34;</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="kd">type</span> <span class="nx">Render</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">render</span> <span class="nx">multitemplate</span><span class="p">.</span><span class="nx">Render</span>
+	<span class="nx">assets</span> <span class="nx">embed</span><span class="p">.</span><span class="nx">FS</span>
+<span class="p">}</span>
+
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">Render</span><span class="p">)</span> <span class="nf">AddFromEmbed</span> <span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">patterns</span> <span class="o">...</span><span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">tmpl</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">template</span><span class="p">.</span><span class="nf">ParseFS</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">assets</span><span class="p">,</span> <span class="nx">patterns</span><span class="o">...</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+		<span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">r</span><span class="p">.</span><span class="nx">render</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">tmpl</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">CreateMyRender</span><span class="p">()</span> <span class="nx">multitemplate</span><span class="p">.</span><span class="nx">Renderer</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">render</span> <span class="nx">Render</span>
+	<span class="nx">render</span> <span class="p">=</span> <span class="nx">Render</span><span class="p">{</span>
+		<span class="nx">render</span><span class="p">:</span> <span class="nx">multitemplate</span><span class="p">.</span><span class="nf">New</span><span class="p">(),</span>
+		<span class="nx">assets</span><span class="p">:</span> <span class="nx">Templates</span><span class="p">,</span>
+	<span class="p">}</span>
+
+	<span class="nx">render</span><span class="p">.</span><span class="nf">AddFromEmbed</span><span class="p">(</span><span class="s">&#34;layouts&#34;</span><span class="p">,</span> <span class="s">&#34;templates/layouts.tmpl&#34;</span><span class="p">)</span>
+	<span class="nx">render</span><span class="p">.</span><span class="nf">AddFromEmbed</span><span class="p">(</span><span class="s">&#34;first&#34;</span><span class="p">,</span> <span class="s">&#34;templates/layouts.tmpl&#34;</span><span class="p">,</span> <span class="s">&#34;templates/first.tmpl&#34;</span><span class="p">)</span>
+	<span class="nx">render</span><span class="p">.</span><span class="nf">AddFromEmbed</span><span class="p">(</span><span class="s">&#34;second&#34;</span><span class="p">,</span> <span class="s">&#34;templates/layouts.tmpl&#34;</span><span class="p">,</span> <span class="s">&#34;templates/second.tmpl&#34;</span><span class="p">)</span>
+
+	<span class="k">return</span> <span class="nx">render</span><span class="p">.</span><span class="nx">render</span>
+<span class="p">}</span>
+
+
+<span class="kd">func</span> <span class="nf">first</span><span class="p">(</span><span class="nx">ctx</span> <span class="o">*</span><span class="nx">gin</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">ctx</span><span class="p">.</span><span class="nf">HTML</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nx">StatusOK</span><span class="p">,</span> <span class="s">&#34;first&#34;</span><span class="p">,</span> <span class="nx">gin</span><span class="p">.</span><span class="nx">H</span><span class="p">{</span><span class="s">&#34;title&#34;</span><span class="p">:</span> <span class="s">&#34;第一页&#34;</span><span class="p">})</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">second</span><span class="p">(</span><span class="nx">ctx</span> <span class="o">*</span><span class="nx">gin</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">ctx</span><span class="p">.</span><span class="nf">HTML</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nx">StatusOK</span><span class="p">,</span> <span class="s">&#34;second&#34;</span><span class="p">,</span> <span class="nx">gin</span><span class="p">.</span><span class="nx">H</span><span class="p">{</span><span class="s">&#34;title&#34;</span><span class="p">:</span> <span class="s">&#34;第二页&#34;</span><span class="p">})</span>
+<span class="p">}</span>
+
+</code></pre></div><p>再次启动后进入<code>http://127.0.0.1/first</code>后界面如下：</p>
+<p><a href="/images/gin-embed/web3.png">界面3</a></p>
+<p>最终项目结构如下：</p>
+<p><a href="/images/gin-embed/tree3.png">目录3</a></p>
+<p>完整代码可前往我的<a href="https://github.com/PengchuanC/pengchuanc.github.io/tree/main/src">GitHub</a>项目查看.</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>野村基金筛选系统第二版</title>

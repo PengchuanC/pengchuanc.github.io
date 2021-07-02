@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Thu, 01 Jul 2021 17:06:30 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 02 Jul 2021 15:14:15 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Go 1.16 新特性embed在gin中使用</title>
+      <link>https://pengchuanc.github.io/posts/go-embed/</link>
+      <pubDate>Fri, 02 Jul 2021 15:14:15 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/go-embed/</guid>
+      <description>在golang1.16加入之前，编译出来的二进制文件默认是不包括非代码文件的，那么开发一个web网站，则需要将html模板文件、配置文件和静</description>
+    </item>
+    
     <item>
       <title>野村基金筛选系统第二版</title>
       <link>https://pengchuanc.github.io/posts/fund-screen-system/</link>
@@ -87,15 +96,6 @@
       
       <guid>https://pengchuanc.github.io/posts/python-class-decorator/</guid>
       <description>在之前使用grpc的项目中偶尔会遇到连接时间过久，tcp连接断掉的情况，于是尝试写一个装饰器来实现自动重连3次，即最大尝试4次连接。 主要使用</description>
-    </item>
-    
-    <item>
-      <title>Python中使用UDP来推送数据</title>
-      <link>https://pengchuanc.github.io/posts/python-udp/</link>
-      <pubDate>Fri, 11 Dec 2020 16:41:32 +0800</pubDate>
-      
-      <guid>https://pengchuanc.github.io/posts/python-udp/</guid>
-      <description>1.UDP简介 UDP协议（User Datagram Protocol）中文名称是用户数据报协议，是OSI（Open System Interconnection，开放式系</description>
     </item>
     
   </channel>
