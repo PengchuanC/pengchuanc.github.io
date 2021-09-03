@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Fri, 02 Jul 2021 15:14:15 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 03 Sep 2021 11:05:55 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Mariadb意外崩溃数据恢复</title>
+      <link>https://pengchuanc.github.io/posts/mariadb-recovery/</link>
+      <pubDate>Fri, 03 Sep 2021 11:05:55 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/mariadb-recovery/</guid>
+      <description>1.事故还原 优于同时在多个终端执行select、insert和delete操作，数据库意外崩溃 2.数据恢复 2.1 尝试重新启动 执行service mysqld</description>
+    </item>
+    
     <item>
       <title>Go 1.16 新特性embed在gin中使用</title>
       <link>https://pengchuanc.github.io/posts/go-embed/</link>
@@ -87,15 +96,6 @@
       
       <guid>https://pengchuanc.github.io/posts/python-manager/</guid>
       <description>在具有亲缘的多进程程序中，通常可用使用queue、pipe等数据结构来进行数据共享和传递消息，但在分布式进程中，进程间的通信还需要依靠网络来</description>
-    </item>
-    
-    <item>
-      <title>Python使用装饰器来实现重试</title>
-      <link>https://pengchuanc.github.io/posts/python-class-decorator/</link>
-      <pubDate>Tue, 15 Dec 2020 10:09:06 +0800</pubDate>
-      
-      <guid>https://pengchuanc.github.io/posts/python-class-decorator/</guid>
-      <description>在之前使用grpc的项目中偶尔会遇到连接时间过久，tcp连接断掉的情况，于是尝试写一个装饰器来实现自动重连3次，即最大尝试4次连接。 主要使用</description>
     </item>
     
   </channel>

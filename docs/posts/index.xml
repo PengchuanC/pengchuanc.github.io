@@ -6,8 +6,60 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>zh-cn</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Fri, 02 Jul 2021 15:14:15 +0800</lastBuildDate>
+		<lastBuildDate>Fri, 03 Sep 2021 11:05:55 +0800</lastBuildDate>
 		<atom:link href="https://pengchuanc.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Mariadb意外崩溃数据恢复</title>
+			<link>https://pengchuanc.github.io/posts/mariadb-recovery/</link>
+			<pubDate>Fri, 03 Sep 2021 11:05:55 +0800</pubDate>
+			
+			<guid>https://pengchuanc.github.io/posts/mariadb-recovery/</guid>
+			<description>1.事故还原 优于同时在多个终端执行select、insert和delete操作，数据库意外崩溃 2.数据恢复 2.1 尝试重新启动 执行service mysqld</description>
+			<content type="html"><![CDATA[<h1 id="1事故还原">1.事故还原</h1>
+<p>优于同时在多个终端执行select、insert和delete操作，数据库意外崩溃</p>
+<h1 id="2数据恢复">2.数据恢复</h1>
+<h2 id="21-尝试重新启动">2.1 尝试重新启动</h2>
+<p>执行<code>service mysqld restart</code>发现数据库报错，无法启动</p>
+<h2 id="22-进入恢复模式">2.2 进入恢复模式</h2>
+<p>当发现数据无法启动后，尝试进入恢复模式，<code>vi /etc/my.cnf</code></p>
+<p>在配置文件中[mysqld]部分增加以下内容</p>
+<pre><code class="language-cnf" data-lang="cnf">[mysqld]
+innodb_force_recovery=1
+innodb_purge_thread=0
+</code></pre><p>然后执行<code>service mysqld restart</code>重启数据库，如果继续失败则将<code>innodb_force_recovery</code>的值修改为2，其中<code>innodb_force_recovery</code>分为0-6这七个等级，可用逐个尝试，直至数据重新启动</p>
+<h2 id="23-备份数据">2.3 备份数据</h2>
+<p>使用 <code>mysqldump</code>备份数据库</p>
+<p>以我的情况为例</p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">&gt; mysqldump -uroot -p --databases am_sma_third &gt; /home/sma/backup/am_sma_third_20210903.sql
+</code></pre></div><h2 id="24-初始化数据库">2.4 初始化数据库</h2>
+<p>初始化之前，为防止意外，将旧的数据库文件备份一下，文件位置可以从配置文件<code>my.cnf</code>查看</p>
+<pre><code class="language-cnf" data-lang="cnf">[mysqld]
+datadir=/home/mysql/datadir
+socket=/home/mysql/datadir/mysql.sock
+</code></pre><p>其中datadir便是文件位置，进行备份</p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">&gt; <span class="nb">cd</span> /home/mysql
+&gt; mkdir datadirbak <span class="o">&amp;&amp;</span> mkdir datadirbak/20210903
+&gt; mv datadir/* datadirbak/20210903/
+</code></pre></div><p>备份完成后，初始化数据库</p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">&gt; mysql_install_db --user<span class="o">=</span>mysql --basedir<span class="o">=</span>/usr --datadir<span class="o">=</span>/home/mysql/datadir/
+</code></pre></div><p>对文件夹重新授权，防止意外</p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">&gt; chown -R mysql:mysql /home/mysql 
+</code></pre></div><p>注释掉恢复模式</p>
+<pre><code class="language-cnf" data-lang="cnf">[mysqld]
+# innodb_force_recovery=1
+# innodb_purge_thread=0
+</code></pre><p>重启数据库</p>
+<pre><code>&gt; service mysqld restart
+</code></pre><h2 id="25-恢复数据">2.5 恢复数据</h2>
+<p>登陆到数据库</p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">&gt; mysql -uroot -p
+</code></pre></div><p>利用<code>source</code>命令恢复数据，以我的<strong>sm_sma_third</strong>库为例</p>
+<div class="highlight"><pre class="chroma"><code class="language-mysql" data-lang="mysql"><span class="n">mysql</span><span class="o">&gt;</span> <span class="k">create</span> <span class="k">database</span> <span class="n">sm_sma_third</span><span class="p">;</span>
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">source</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">sma</span><span class="o">/</span><span class="n">backup</span><span class="o">/</span><span class="n">sm_sma_third_20210903</span><span class="p">.</span><span class="k">sql</span>
+</code></pre></div><p>等待恢复完成，重新对用户进行授权即可。</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>Go 1.16 新特性embed在gin中使用</title>
