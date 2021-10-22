@@ -33,7 +33,7 @@ tags:
 
 下载并解压
 
-```
+```bash
 # cd ~/Downloads
 # wget https://www.openssl.org/source/openssl-1.1.1l.tar.gz --no-check-certificate
 # tar -xf openssl-1.1.1l.tar.gz && cd openssl-1.1.1l
@@ -41,7 +41,7 @@ tags:
 
 开始编译安装
 
-```
+```bash
 # ./config --prefix=/usr/local/openssl --openssldir=/usr/local/openssl shared zlib
 # make
 # make test
@@ -60,7 +60,7 @@ tags:
 
 重新软链
 
-```
+```bash
 # ln -s /usr/local/openssl/bin/openssl /usr/bin/openssl
 # ln -s /usr/local/openssl/include/openssl /usr/include/openssl
 # ln -s /usr/local/openssl/lib/libssl.so /usr/lib64/libssl.so
@@ -84,7 +84,7 @@ tags:
 
 这里遇到了个大坑，由于Python 3.10刚出，安装资料也比较少，用了很久才把ssl模块编译进去，后来根据编译提示才知道，主要是在编译时没加`--with-openssl-rpath=auto`命令，导致ssl模块编译不进去。
 
-```
+```bash
 # ./configure --prefix=/usr/local/python3 --with-ssl-default-suites=openssl  --with-openssl=/usr/local/openssl --with-openssl-rpath=auto
 # make
 # make install
@@ -104,7 +104,7 @@ tags:
 
 ### 3.1 下载并解压
 
-```b
+```bash
 # wget http://nginx.org/download/nginx-1.21.3.tar.gz --no-check-certificate
 # tar -xf nginx-1.21.3.tar.gz && cd nginx-1.21.3
 ```
@@ -121,20 +121,20 @@ tags:
 
 编译安装
 
-```
+```bash
 # ./configure --prefix=/etc/nginx --sbin-path=/usr/sbin/nginx --modules-path=/usr/lib64/nginx/modules --conf-path=/etc/nginx/nginx.conf --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --pid-path=/var/run/nginx.pid --lock-path=/var/run/nginx.lock --http-client-body-temp-path=/var/cache/nginx/client_temp --http-proxy-temp-path=/var/cache/nginx/proxy_temp --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp --http-scgi-temp-path=/var/cache/nginx/scgi_temp --user=nginx --group=nginx --with-compat --with-file-aio --with-threads --with-http_addition_module --with-http_auth_request_module --with-http_dav_module --with-http_flv_module --with-http_gunzip_module --with-http_gzip_static_module --with-http_mp4_module --with-http_random_index_module --with-http_realip_module --with-http_secure_link_module --with-http_slice_module --with-http_ssl_module --with-http_stub_status_module --with-http_sub_module --with-http_v2_module --with-mail --with-mail_ssl_module --with-stream --with-stream_realip_module --with-stream_ssl_module --with-stream_ssl_preread_module --with-cc-opt='-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -fPIC' --with-ld-opt='-Wl,-z,relro -Wl,-z,now -pie' --with-openssl=/usr/local
 ```
 
-上述指令中部分内容可自行更改，比如log位置，启动用户，pid位置，二进制文件位置等。
+上述指令中部分内容可自行更改，比如log位置，启动用户，pid位置，二进制文件位置等，但要代理grpc，`--with-http_v2_module`和`--with-http_ssl_module`指令是必须的。
 
-```
+```bash
 # make
 # make install
 ```
 
 查看安装结果
 
-```
+```bash
 # nginx -V
 ```
 
