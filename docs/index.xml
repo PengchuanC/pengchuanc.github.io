@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Fri, 03 Sep 2021 11:05:55 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 22 Oct 2021 10:42:05 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Centos7 编译安装Nginx-1.21.3版本呢和Python-3.10</title>
+      <link>https://pengchuanc.github.io/posts/compile_install_nginx_and_python/</link>
+      <pubDate>Fri, 22 Oct 2021 10:42:05 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/compile_install_nginx_and_python/</guid>
+      <description>一、起因 由于生产网段与测试网段隔离，但测试网段也需要数据来进行开发，于是考虑用GRPC来中转数据，并用Nginx来代理端口，需要用到Ngin</description>
+    </item>
+    
     <item>
       <title>Mariadb意外崩溃数据恢复</title>
       <link>https://pengchuanc.github.io/posts/mariadb-recovery/</link>
@@ -87,15 +96,6 @@
       
       <guid>https://pengchuanc.github.io/posts/python-jwt/</guid>
       <description>在前后端分离的web项目中，后端一般采用Restful Api，这种模式的后端是无状态的， 不便再使用Session这种传统的认证方式，一般采用</description>
-    </item>
-    
-    <item>
-      <title>Python利用Manager在分布式进程间进行通信</title>
-      <link>https://pengchuanc.github.io/posts/python-manager/</link>
-      <pubDate>Thu, 17 Dec 2020 11:01:25 +0800</pubDate>
-      
-      <guid>https://pengchuanc.github.io/posts/python-manager/</guid>
-      <description>在具有亲缘的多进程程序中，通常可用使用queue、pipe等数据结构来进行数据共享和传递消息，但在分布式进程中，进程间的通信还需要依靠网络来</description>
     </item>
     
   </channel>
