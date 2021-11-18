@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Fri, 22 Oct 2021 10:42:05 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 18 Nov 2021 15:36:45 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>【FOF】基金筛选系统介绍</title>
+      <link>https://pengchuanc.github.io/posts/introduction-fundscreen/</link>
+      <pubDate>Thu, 18 Nov 2021 15:36:45 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/introduction-fundscreen/</guid>
+      <description>系统介绍 基金筛选系统主要包含6个模块，分别为 基金市场整体统计 基金挑选 基金看板 基金分类筛选入池 ETF每日跟踪 入池基金管理 市场热点资讯 基金详细信</description>
+    </item>
+    
     <item>
       <title>Centos7 编译安装Nginx-1.21.3版本呢和Python-3.10</title>
       <link>https://pengchuanc.github.io/posts/compile_install_nginx_and_python/</link>
@@ -36,7 +45,7 @@
     </item>
     
     <item>
-      <title>野村基金筛选系统第二版</title>
+      <title>【FOF】野村基金筛选系统第二版</title>
       <link>https://pengchuanc.github.io/posts/fund-screen-system/</link>
       <pubDate>Thu, 01 Jul 2021 17:06:30 +0800</pubDate>
       
@@ -87,15 +96,6 @@
       
       <guid>https://pengchuanc.github.io/posts/linux_most_used_command/</guid>
       <description>任务中止 1.中止多进程任务 假设任务名为 qcluster ps aux|grep qcluster|grep -v grep|cut -c 9-15|xargs kill -9</description>
-    </item>
-    
-    <item>
-      <title>Python中使用JWT</title>
-      <link>https://pengchuanc.github.io/posts/python-jwt/</link>
-      <pubDate>Mon, 21 Dec 2020 11:18:59 +0800</pubDate>
-      
-      <guid>https://pengchuanc.github.io/posts/python-jwt/</guid>
-      <description>在前后端分离的web项目中，后端一般采用Restful Api，这种模式的后端是无状态的， 不便再使用Session这种传统的认证方式，一般采用</description>
     </item>
     
   </channel>

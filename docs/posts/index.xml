@@ -6,8 +6,30 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>zh-cn</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Fri, 22 Oct 2021 10:42:05 +0800</lastBuildDate>
+		<lastBuildDate>Thu, 18 Nov 2021 15:36:45 +0800</lastBuildDate>
 		<atom:link href="https://pengchuanc.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>【FOF】基金筛选系统介绍</title>
+			<link>https://pengchuanc.github.io/posts/introduction-fundscreen/</link>
+			<pubDate>Thu, 18 Nov 2021 15:36:45 +0800</pubDate>
+			
+			<guid>https://pengchuanc.github.io/posts/introduction-fundscreen/</guid>
+			<description>系统介绍 基金筛选系统主要包含6个模块，分别为 基金市场整体统计 基金挑选 基金看板 基金分类筛选入池 ETF每日跟踪 入池基金管理 市场热点资讯 基金详细信</description>
+			<content type="html"><![CDATA[<h1 id="系统介绍">系统介绍</h1>
+<p>基金筛选系统主要包含6个模块，分别为</p>
+<ol>
+<li>基金市场整体统计</li>
+<li>基金挑选</li>
+<li>基金看板</li>
+<li>基金分类筛选入池</li>
+<li>ETF每日跟踪</li>
+<li>入池基金管理</li>
+<li>市场热点资讯</li>
+<li>基金详细信息</li>
+</ol>
+]]></content>
+		</item>
 		
 		<item>
 			<title>Centos7 编译安装Nginx-1.21.3版本呢和Python-3.10</title>
@@ -366,7 +388,7 @@ socket=/home/mysql/datadir/mysql.sock
 		</item>
 		
 		<item>
-			<title>野村基金筛选系统第二版</title>
+			<title>【FOF】野村基金筛选系统第二版</title>
 			<link>https://pengchuanc.github.io/posts/fund-screen-system/</link>
 			<pubDate>Thu, 01 Jul 2021 17:06:30 +0800</pubDate>
 			
