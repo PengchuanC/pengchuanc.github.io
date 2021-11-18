@@ -14,7 +14,7 @@ enableEmoji = true  # Shorthand emojis in content files - https://gohugo.io/func
 # disqusShortname = "yourdiscussshortname"
 
 [author]
-  name = "Asin"
+  name = "chuanchao.peng"
 
 [blackfriday]
   # hrefTargetBlank = true
@@ -36,12 +36,12 @@ enableEmoji = true  # Shorthand emojis in content files - https://gohugo.io/func
   # images = [""]
   themeColor = "#494f5c"
 
-  homeSubtitle = "Python、Go和Typescript拾遗."
+  homeSubtitle = "橘生淮北为枳"
   footerCopyright = ' &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
   # bgImg = ""  # Homepage background-image URL
 
   # Prefix of link to the git commit detail page. GitInfo must be enabled.
-  # gitUrl = "https://github.com/username/repository/commit/"
+  gitUrl = "https://github.com/PengchuanC"
 
   # Toggling this option needs to rebuild SCSS, requires Hugo extended version
   justifyContent = false  # Set "text-align: justify" to `.content`.
