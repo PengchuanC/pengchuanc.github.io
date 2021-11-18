@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Learn to Code</title>
+    <title>在我电脑上能跑</title>
     <link>https://pengchuanc.github.io/</link>
-    <description>Recent content on Learn to Code</description>
+    <description>Recent content on 在我电脑上能跑</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
@@ -14,7 +14,7 @@
       <pubDate>Thu, 18 Nov 2021 15:36:45 +0800</pubDate>
       
       <guid>https://pengchuanc.github.io/posts/introduction-fundscreen/</guid>
-      <description>系统介绍 基金筛选系统主要包含6个模块，分别为 基金市场整体统计 基金挑选 基金看板 基金分类筛选入池 ETF每日跟踪 入池基金管理 市场热点资讯 基金详细信</description>
+      <description>一、系统介绍 为了方便基金投资，开发了基金投资相关系统，基金筛选系统为最初开发系统，目前已经过三次迭代。当前基金筛选系统主要包含8个模块，分别</description>
     </item>
     
     <item>

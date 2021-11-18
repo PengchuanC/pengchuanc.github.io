@@ -1,8 +1,8 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
-		<title>文章列表 on Learn to Code</title>
+		<title>文章列表 on 在我电脑上能跑</title>
 		<link>https://pengchuanc.github.io/posts/</link>
-		<description>Recent content in 文章列表 on Learn to Code</description>
+		<description>Recent content in 文章列表 on 在我电脑上能跑</description>
 		<generator>Hugo -- gohugo.io</generator>
 		<language>zh-cn</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
@@ -15,9 +15,9 @@
 			<pubDate>Thu, 18 Nov 2021 15:36:45 +0800</pubDate>
 			
 			<guid>https://pengchuanc.github.io/posts/introduction-fundscreen/</guid>
-			<description>系统介绍 基金筛选系统主要包含6个模块，分别为 基金市场整体统计 基金挑选 基金看板 基金分类筛选入池 ETF每日跟踪 入池基金管理 市场热点资讯 基金详细信</description>
-			<content type="html"><![CDATA[<h1 id="系统介绍">系统介绍</h1>
-<p>基金筛选系统主要包含6个模块，分别为</p>
+			<description>一、系统介绍 为了方便基金投资，开发了基金投资相关系统，基金筛选系统为最初开发系统，目前已经过三次迭代。当前基金筛选系统主要包含8个模块，分别</description>
+			<content type="html"><![CDATA[<h1 id="一系统介绍">一、系统介绍</h1>
+<p>为了方便基金投资，开发了基金投资相关系统，基金筛选系统为最初开发系统，目前已经过三次迭代。当前基金筛选系统主要包含8个模块，分别为</p>
 <ol>
 <li>基金市场整体统计</li>
 <li>基金挑选</li>
@@ -28,6 +28,12 @@
 <li>市场热点资讯</li>
 <li>基金详细信息</li>
 </ol>
+<h1 id="二功能展示">二、功能展示</h1>
+<h2 id="1基金市场统计">1.基金市场统计</h2>
+<p>该模块为整个系统首页，统计截止上个月底的基金市场规模和数量，基金分类为野村东方国际FOF组根据基金发行公告中的投资范围自定义的分类方式。</p>
+<p><img src="/images/fundscreen/1-1.png" alt="home1-1"></p>
+<p><img src="/images/fundscreen/1-2.png" alt="home1-2"></p>
+<p><img src="/images/fundscreen/1-3.png" alt="home1-3"></p>
 ]]></content>
 		</item>
 		
