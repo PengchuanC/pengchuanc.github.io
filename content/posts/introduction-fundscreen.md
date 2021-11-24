@@ -52,14 +52,25 @@ tags:
 
 ![cart2-1](/images/fundscreen/2-1.png)
 
-
-
 执行筛选条件后：
 
 ![cart2-2](/images/fundscreen/2-2.png)
 
-
-
 数据预览表格可全屏，方便查看数据。
 
-![cart2-3](/images/fundscreen/2-2.png)
+![cart2-3](/images/fundscreen/2-3.png)
+
+
+
+## 3.基金看板
+
+根据基金年报和半年报持仓股票，对基金持有股票总市值占比大于60%的基金（多为股票型和偏股混合型基金），可以按市值风格将基金分为成长型、均衡性和价值型，根据股票行业占比，可以确定基金的行业风格。
+
+基金看板模块即是对这些基金的跟踪，基金看板首页将这些基金类型按小卡片形式展示，单个卡片最多不超过5条记录，点击全屏按钮可以查看全部该类型基金。
+
+![outlook3-1](/images/fundscreen/3-1.png)
+
+展开后如下：
+
+![outlook3-2](/images/fundscreen/3-2.png)
+
