@@ -40,7 +40,7 @@ SMA客户服务平台只是针对SMA单一FOF这一类产品，但购买了资�
 
 登录界面2，输入开户登记的手机号码以获取验证码，手机号不一致则不会下发验证码：
 
-![login1-2](/images/client-services/1-1.png)
+![login1-2](/images/client-services/1-2.png)
 
 输入正确的验证码后便可进入客户服务平台的个人中心。
 
