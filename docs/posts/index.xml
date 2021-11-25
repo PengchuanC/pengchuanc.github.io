@@ -6,8 +6,18 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>zh-cn</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Thu, 18 Nov 2021 15:36:45 +0800</lastBuildDate>
+		<lastBuildDate>Thu, 25 Nov 2021 16:55:17 +0800</lastBuildDate>
 		<atom:link href="https://pengchuanc.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>【FOF】SMA业务客户服务系统</title>
+			<link>https://pengchuanc.github.io/posts/introduction-clientservices/</link>
+			<pubDate>Thu, 25 Nov 2021 16:55:17 +0800</pubDate>
+			
+			<guid>https://pengchuanc.github.io/posts/introduction-clientservices/</guid>
+			<description></description>
+			<content type="html"><![CDATA[]]></content>
+		</item>
 		
 		<item>
 			<title>【FOF】基金筛选系统介绍</title>
@@ -142,7 +152,7 @@
 		</item>
 		
 		<item>
-			<title>Centos7 编译安装Nginx-1.21.3版本呢和Python-3.10</title>
+			<title>Centos7 编译安装Nginx-1.21.3版本和Python-3.10</title>
 			<link>https://pengchuanc.github.io/posts/compile_install_nginx_and_python/</link>
 			<pubDate>Fri, 22 Oct 2021 10:42:05 +0800</pubDate>
 			

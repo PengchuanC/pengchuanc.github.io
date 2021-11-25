@@ -1,5 +1,5 @@
 ---
-title: "Centos7 编译安装Nginx-1.21.3版本呢和Python-3.10"
+title: "Centos7 编译安装Nginx-1.21.3版本和Python-3.10"
 date: 2021-10-22T10:42:05+08:00
 draft: false
 toc: false

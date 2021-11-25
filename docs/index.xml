@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Thu, 18 Nov 2021 15:36:45 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 25 Nov 2021 16:55:17 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>【FOF】SMA业务客户服务系统</title>
+      <link>https://pengchuanc.github.io/posts/introduction-clientservices/</link>
+      <pubDate>Thu, 25 Nov 2021 16:55:17 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/introduction-clientservices/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>【FOF】基金筛选系统介绍</title>
       <link>https://pengchuanc.github.io/posts/introduction-fundscreen/</link>
@@ -18,7 +27,7 @@
     </item>
     
     <item>
-      <title>Centos7 编译安装Nginx-1.21.3版本呢和Python-3.10</title>
+      <title>Centos7 编译安装Nginx-1.21.3版本和Python-3.10</title>
       <link>https://pengchuanc.github.io/posts/compile_install_nginx_and_python/</link>
       <pubDate>Fri, 22 Oct 2021 10:42:05 +0800</pubDate>
       
@@ -87,15 +96,6 @@
       
       <guid>https://pengchuanc.github.io/posts/mariadb-init/</guid>
       <description>数据库各项配置主要在/etc/my.cnf文件中修改。 1.数据库存放位置 安装完MariaDB后，数据资源一般默认存放在/var/lib/my</description>
-    </item>
-    
-    <item>
-      <title>常用Linux命令</title>
-      <link>https://pengchuanc.github.io/posts/linux_most_used_command/</link>
-      <pubDate>Wed, 06 Jan 2021 15:22:11 +0800</pubDate>
-      
-      <guid>https://pengchuanc.github.io/posts/linux_most_used_command/</guid>
-      <description>任务中止 1.中止多进程任务 假设任务名为 qcluster ps aux|grep qcluster|grep -v grep|cut -c 9-15|xargs kill -9</description>
     </item>
     
   </channel>
