@@ -10,13 +10,47 @@
 		<atom:link href="https://pengchuanc.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
 		
 		<item>
-			<title>【FOF】SMA业务客户服务系统</title>
+			<title>【FOF】SMA业务客户服务平台</title>
 			<link>https://pengchuanc.github.io/posts/introduction-clientservices/</link>
 			<pubDate>Thu, 25 Nov 2021 16:55:17 +0800</pubDate>
 			
 			<guid>https://pengchuanc.github.io/posts/introduction-clientservices/</guid>
-			<description></description>
-			<content type="html"><![CDATA[]]></content>
+			<description>一、系统介绍 野村东方国际证券资管部FOF团队除了提供集合FOF产品外，还会为高净值客户提供SMA单一资管计划，关于什么是SMA，可以点击这里</description>
+			<content type="html"><![CDATA[<h2 id="一系统介绍">一、系统介绍</h2>
+<p>野村东方国际证券资管部FOF团队除了提供集合FOF产品外，还会为高净值客户提供SMA单一资管计划，关于什么是SMA，可以<a href="https://sma_client.nomuraoi-sec.com">点击这里</a>查看我们的介绍页面。</p>
+<p>对于已经购买SMA单一FOF的客户，我们会每日披露产品的运作情况，由于每日披露信息，传统的短信通知客户净值的方式不仅会打扰到客户，并且无法承载太多的信息，于是开发了<strong>SMA客户服务平台</strong>，目前经过一次迭代升级，初版系统将内容展示为一页纸大小，涵盖产品的业绩分析和持仓、交易流水等信息，由于业务发展需要，我们升级了初代系统，提供更多的信息以及优化的展示方式。</p>
+<p>当前v2版系统主要功能：</p>
+<ol>
+<li>登入登出</li>
+<li>个人中心</li>
+<li>首页</li>
+<li>账户信息</li>
+<li>业绩表现</li>
+<li>投资记录</li>
+<li>关于我们</li>
+</ol>
+<p>对于NOI SMA客户，可前往<a href="https://sma.nomuraoi-sec.com/">SMA客户服务平台</a>查看</p>
+<h2 id="二功能模块介绍">二、功能模块介绍</h2>
+<h3 id="1登入登出">1.登入登出</h3>
+<p>SMA客户服务平台只是针对SMA单一FOF这一类产品，但购买了资管产品的客户可以直接在公司官网查看产品信息，为了方便客户登录，我们采用了与官网相同的登录验证逻辑，即”身份证号码“+”手机号码“+”验证码“的验证流程。</p>
+<p>登录界面1，输入开户登记的有效证件号码：</p>
+<p><img src="/images/client-services/1-1.png" alt="login1-1"></p>
+<p>登录界面2，输入开户登记的手机号码以获取验证码，手机号不一致则不会下发验证码：</p>
+<p><img src="/images/client-services/1-1.png" alt="login1-2"></p>
+<p>输入正确的验证码后便可进入客户服务平台的个人中心。</p>
+<h3 id="2个人中心">2.个人中心</h3>
+<p>对于仅购买了一个单一资管计划的客户，将不会进入个人中心，而是直接定位到首页；对于购买多个单一资管计划的客户，在个人中心选择一个产品，即可进入该产品的首页。</p>
+<p>预览图如下（重要信息不展示）：</p>
+<p><img src="/images/client-services/2-1.png" alt="login2-1"></p>
+<h3 id="3首页">3.首页</h3>
+<p>首页是产品基础信息的汇总，包括当前的资产净值情况，各类资产占比、市场资讯、产品公告、FOF团队专栏文章和留言功能。</p>
+<p>预览图如下：</p>
+<p><img src="/images/client-services/3-1.png" alt="home3-1"></p>
+<p>资讯展开：</p>
+<p><img src="/images/client-services/3-2.png" alt="home3-2"></p>
+<p>专栏展开：</p>
+<p><img src="/images/client-services/3-3.png" alt="home3-3"></p>
+]]></content>
 		</item>
 		
 		<item>
