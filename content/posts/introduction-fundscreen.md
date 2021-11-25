@@ -224,15 +224,15 @@ tags:
 
 后端部分功能使用到了<code>grpc</code>，这功能块通常是与其他系统关联的，如基金分类、Brinson归因、基金风格等功能，会在多个系统中使用到，采用grpc可以降低其他系统的工作量。
 
-Python后端项目可[点击这里]([PengchuanC/fund_back_django: fund filter by django (github.com)](https://github.com/PengchuanC/fund_back_django))查看；
+Python后端项目可[点击这里](https://github.com/PengchuanC/fund_back_django)查看；
 
-Golang后端项目可[点击这里]([PengchuanC/fund_screen (github.com)](https://github.com/PengchuanC/fund_screen))查看。
+Golang后端项目可[点击这里](https://github.com/PengchuanC/fund_screen)查看。
 
 ### 3.前端程序
 
 前端程序基于<code>Vue3.x</code>开发，UI框架基于<code>Element Plus</code>，开发语言为<code>Typescript</code>，图表插件主要使用到了`vxe-table`和`echarts`。
 
-Github前端项目地址已开源，可[点击查看](https://github.com/PengchuanC/fund_vue3)。
+前端项目地址已开源，可[点击查看](https://github.com/PengchuanC/fund_vue3)。
 
 ### 4.前置机配置
 
