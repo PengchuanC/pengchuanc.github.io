@@ -67,3 +67,59 @@ SMA客户服务平台只是针对SMA单一FOF这一类产品，但购买了资�
 专栏展开：
 
 ![home3-3](/images/client-services/3-3.png)
+
+### 4.账户信息
+
+展示资产配置情况和持有基金的持仓情况。
+
+图表预览如下：
+
+![account4-1](/images/client-services/4-1.png)
+
+![account4-2](/images/client-services/4-2.png)
+
+点击持仓基金可显示交易情况：
+
+![account4-3](/images/client-services/4-3.png)
+
+### 5.业绩表现
+
+1.不同区间段产品业绩表现：
+
+![profit5-1](/images/client-services/5-1.png)
+
+点击费用可以查看区间产品层面产生的费用：
+
+![profit5-2](/images/client-services/5-2.png)
+
+2.分阶段累计收益情况
+
+![profit5-3](/images/client-services/5-3.png)
+
+3.净值曲线
+
+![profit5-4](/images/client-services/5-4.png)
+
+### 6.交易记录
+
+交易记录预览如下：
+
+![transaction6-1](/images/client-services/6-1.png)
+
+## 三、技术栈
+
+### 1.数据库
+
+数据库采用MySQL，数据处理难点在于对接恒生的O3.2系统和FA估值系统。
+
+### 2.后端
+
+后端采用Python Django框架集成DRF插件做认证和权限管理，权限管理根据官网认证方式做了相应扩展，保证从官网已登录的客户到SMA服务平台可以直接查看产品信息。
+
+后端项目可前往[PengchuanC/am_sma: am sma project (github.com)](https://github.com/PengchuanC/am_sma)查看。
+
+### 3.前端
+
+前端采用Vue 2.x框架。
+
+前端项目可前往[PengchuanC/sma_front_second: sma client server second version (github.com)](https://github.com/PengchuanC/sma_front_second)查看。

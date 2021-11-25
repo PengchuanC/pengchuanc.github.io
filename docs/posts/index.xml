@@ -50,6 +50,34 @@
 <p><img src="/images/client-services/3-2.png" alt="home3-2"></p>
 <p>专栏展开：</p>
 <p><img src="/images/client-services/3-3.png" alt="home3-3"></p>
+<h3 id="4账户信息">4.账户信息</h3>
+<p>展示资产配置情况和持有基金的持仓情况。</p>
+<p>图表预览如下：</p>
+<p><img src="/images/client-services/4-1.png" alt="account4-1"></p>
+<p><img src="/images/client-services/4-2.png" alt="account4-2"></p>
+<p>点击持仓基金可显示交易情况：</p>
+<p><img src="/images/client-services/4-3.png" alt="account4-3"></p>
+<h3 id="5业绩表现">5.业绩表现</h3>
+<p>1.不同区间段产品业绩表现：</p>
+<p><img src="/images/client-services/5-1.png" alt="profit5-1"></p>
+<p>点击费用可以查看区间产品层面产生的费用：</p>
+<p><img src="/images/client-services/5-2.png" alt="profit5-2"></p>
+<p>2.分阶段累计收益情况</p>
+<p><img src="/images/client-services/5-3.png" alt="profit5-3"></p>
+<p>3.净值曲线</p>
+<p><img src="/images/client-services/5-4.png" alt="profit5-4"></p>
+<h3 id="6交易记录">6.交易记录</h3>
+<p>交易记录预览如下：</p>
+<p><img src="/images/client-services/6-1.png" alt="transaction6-1"></p>
+<h2 id="三技术栈">三、技术栈</h2>
+<h3 id="1数据库">1.数据库</h3>
+<p>数据库采用MySQL，数据处理难点在于对接恒生的O3.2系统和FA估值系统。</p>
+<h3 id="2后端">2.后端</h3>
+<p>后端采用Python Django框架集成DRF插件做认证和权限管理，权限管理根据官网认证方式做了相应扩展，保证从官网已登录的客户到SMA服务平台可以直接查看产品信息。</p>
+<p>后端项目可前往<a href="https://github.com/PengchuanC/am_sma">PengchuanC/am_sma: am sma project (github.com)</a>查看。</p>
+<h3 id="3前端">3.前端</h3>
+<p>前端采用Vue 2.x框架。</p>
+<p>前端项目可前往<a href="https://github.com/PengchuanC/sma_front_second">PengchuanC/sma_front_second: sma client server second version (github.com)</a>查看。</p>
 ]]></content>
 		</item>
 		
