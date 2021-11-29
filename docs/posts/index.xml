@@ -6,8 +6,41 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>zh-cn</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Mon, 29 Nov 2021 16:08:21 +0800</lastBuildDate>
+		<lastBuildDate>Mon, 29 Nov 2021 17:28:16 +0800</lastBuildDate>
 		<atom:link href="https://pengchuanc.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>【FOF】SMA系列系统介绍</title>
+			<link>https://pengchuanc.github.io/posts/introduction_sma_system/</link>
+			<pubDate>Mon, 29 Nov 2021 17:28:16 +0800</pubDate>
+			
+			<guid>https://pengchuanc.github.io/posts/introduction_sma_system/</guid>
+			<description>一、SMA 1.起源 SMA起源于美国20世纪70年代，起初是一种基于客户存量资产收费的账户。SMA真正开始具有资产配置、投资顾问色彩，始于90</description>
+			<content type="html"><![CDATA[<h2 id="一sma">一、SMA</h2>
+<h3 id="1起源">1.起源</h3>
+<p><strong>SMA</strong>起源于美国20世纪70年代，起初是一种基于客户存量资产收费的账户。SMA真正开始具有资产配置、投资顾问色彩，始于90年代推行的销售薪酬激励改革，2008年金融危机中股票市场大幅下挫，资产配置账户开始得到重视。</p>
+<h3 id="2日本">2.日本</h3>
+<p>野村证券（日本）是日本首批开展SMA服务的投资银行，于2005年率先在财富管理业务中推行，并于2008年全面推广至全国各分支机构。</p>
+<h3 id="3中国">3.中国</h3>
+<p><strong>野村东方国际证券SMA服务</strong>是以大类资产配置为理念、以优质基金为载体、以坚持长期投资为原则、以定制化服务为特色的专户服务，通过科学的资产配置方法、严谨的基金筛选体系，并结合每位投资者提供的投资目标、风险偏好和个性化投资需求等各类因素，分散投资于权益、固收、货币、另类四大类资产，在严控风险的前提下为投资者实现不同的财富管理目标。</p>
+<h2 id="二系统建设">二、系统建设</h2>
+<p>为了协助野村东方国际证券SMA服务开展，野村东方国际证券资产管理部FOF团队设计三大系统，涵盖投资、客户服务和投后管理三个层面。</p>
+<p><img src="/images/sma_system/1-1.png" alt="home1-1"></p>
+<p><img src="/images/sma_system/1-2.png" alt="home1-2"></p>
+<h3 id="1基金筛选系统">1.基金筛选系统</h3>
+<p>基金筛选系统依托于FOF团队自己建立的基金分类方式，对基金进行定量分析，优选基金进入<strong>观察池</strong>，通过定期评估基金进入<strong>精选层</strong>。</p>
+<p>并且，随着系统的不断完善，我们在筛选的功能上，扩展出了基金挑选、基金看板、基金详情查看、ETF跟踪等功能。</p>
+<p>基金筛选系统的详细介绍可查看文章 <a href="https://pengchuanc.github.io/posts/introduction-fundscreen/">《基金筛选系统介绍》</a></p>
+<h3 id="2客户服务系统">2.客户服务系统</h3>
+<p>SMA服务区别于传统单一资管计划的一点在于，SMA会每日向客户提供产品运作信息，提供的方式便是<strong>SMA客户服务系统</strong>。通过客户服务系统，客户客户可以便捷的查看自己的产品信息，包含产品的最新净值、持仓、交易记录，以及产品公告等数据。</p>
+<p>客户服务系统的详细介绍可查看文章 <a href="https://pengchuanc.github.io/posts/introduction-clientservices/">《SMA业务客户服务平台》</a></p>
+<h3 id="3财富投管系统">3.财富投管系统</h3>
+<p>SMA服务本质上为单一资产管理计划，当产品数量上去后，产品的管理便会出现人力不足的困难，财富投管系统的目标便是减轻投资经理的负担，为其提供方便的产品管理方式。</p>
+<p>除SMA产品外，财富投管系统还录入了公募集合FOF和私募集合FOF产品信息，两者在能够功能上会有较大区别，财富投管系统主要解决的还是公募FOF产品的管理。</p>
+<p>财富投管系统主要包含的模块有产品统一管理、产品业绩跟踪、收益分析、绩效归因、风险控制和产品运作记录查看。</p>
+<p>财富投管系统的详细介绍可查看文章 <a href="https://pengchuanc.github.io/posts/introduction_sma_management/">《SMA投资管理系统》</a></p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>【FOF】客户问卷管理系统</title>

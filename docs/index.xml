@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Mon, 29 Nov 2021 16:08:21 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 29 Nov 2021 17:28:16 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>【FOF】SMA系列系统介绍</title>
+      <link>https://pengchuanc.github.io/posts/introduction_sma_system/</link>
+      <pubDate>Mon, 29 Nov 2021 17:28:16 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/introduction_sma_system/</guid>
+      <description>一、SMA 1.起源 SMA起源于美国20世纪70年代，起初是一种基于客户存量资产收费的账户。SMA真正开始具有资产配置、投资顾问色彩，始于90</description>
+    </item>
+    
     <item>
       <title>【FOF】客户问卷管理系统</title>
       <link>https://pengchuanc.github.io/posts/introduction_questionnaire/</link>
@@ -87,15 +96,6 @@
       
       <guid>https://pengchuanc.github.io/posts/vue_force_update/</guid>
       <description>解决方法 在使用vue3或vue2时，时常遇到数组或对象更新，但在列表渲染的UI却没有随数据改变而刷新，这是由于 JavaScript 的限制，Vue 不能检测数组的</description>
-    </item>
-    
-    <item>
-      <title>Python利用Consul实现服务发现</title>
-      <link>https://pengchuanc.github.io/posts/consul/</link>
-      <pubDate>Fri, 23 Apr 2021 14:17:25 +0800</pubDate>
-      
-      <guid>https://pengchuanc.github.io/posts/consul/</guid>
-      <description>1.背景 由于基金筛选系统和组合管理系统间存在一些互相需要使用到的基础数据，但又不想重复创建数据库表单和同步数据，因此在两个项目中使用了grp</description>
     </item>
     
   </channel>
