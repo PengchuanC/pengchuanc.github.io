@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Fri, 26 Nov 2021 15:09:00 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 29 Nov 2021 16:08:21 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>【FOF】客户问卷管理系统</title>
+      <link>https://pengchuanc.github.io/posts/introduction_questionnaire/</link>
+      <pubDate>Mon, 29 Nov 2021 16:08:21 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/introduction_questionnaire/</guid>
+      <description>一、系统介绍 除了柜台的合格投资者认定测评问卷外，野村东方证券FOF团队还为SMA客户定制了另一套问卷，用于测定客户风险偏好和承受能力，以便为</description>
+    </item>
+    
     <item>
       <title>【FOF】SMA投资管理系统</title>
       <link>https://pengchuanc.github.io/posts/introduction_sma_management/</link>
@@ -87,15 +96,6 @@
       
       <guid>https://pengchuanc.github.io/posts/consul/</guid>
       <description>1.背景 由于基金筛选系统和组合管理系统间存在一些互相需要使用到的基础数据，但又不想重复创建数据库表单和同步数据，因此在两个项目中使用了grp</description>
-    </item>
-    
-    <item>
-      <title>MariaDB 升级后无法运行</title>
-      <link>https://pengchuanc.github.io/posts/mariadb-upgrade/</link>
-      <pubDate>Wed, 24 Feb 2021 10:15:21 +0800</pubDate>
-      
-      <guid>https://pengchuanc.github.io/posts/mariadb-upgrade/</guid>
-      <description>1.事情起因 在redhat每次执行完yun update后，MariaDB也会升级，但我之前更换过MariaDB的数据存储目录，将数据保存在了</description>
     </item>
     
   </channel>
