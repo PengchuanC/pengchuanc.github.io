@@ -254,8 +254,8 @@ setup(
 
 ## 5.1 测试结果
 
-|  situation| Python | Python Compiled |  C    | Cython | CPP   |
-| --- ------| ------ | --------------- | ----- | ------ | ----- |
+| situation | Python | Python Compiled | C     | Cython | CPP   |
+| --------- | ------ | --------------- | ----- | ------ | ----- |
 | hello     | 0.001  | 0.001           | 0.003 | 0.001  | 0.011 |
 | fibnacci  | 0.909  | 0.900           | 0.033 | 0.045  | 0.051 |
 
