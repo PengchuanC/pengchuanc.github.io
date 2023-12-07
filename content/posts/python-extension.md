@@ -1,6 +1,6 @@
 ---
 title: python extension
-date: 2023-12-07 19:04:22
+date: 2023-12-07 19:04:22+8:00
 tags: 
   - python
   - cpp
@@ -13,7 +13,7 @@ tags:
 
 Python 语言的扩展模块，主要是用 C 语言编写的，可以直接在 Python 中使用。但实际上除了C语言的扩展模块，Python 还支持其他语言的扩展模块，比如 C++、Cython、C#、Rust 等，实现的方式有ABI、CFFI、SWIG等。
 
-此次主要研究 Python 的 C 系列扩展模块，包括C、Cython和CPP(pybind11)，作为对比，会加入纯Python和Python代码编译成动态链接库来作为对比项。
+此次主要研究 Python 的 C 系列扩展模块，基本都是通过ABI的方式实现，包括C、Cython和CPP(pybind11)，作为对比，会加入纯Python和Python代码编译成动态链接库来作为对比项。
 使用的Python解释器为官方的CPython解释器，版本为3.11.6，Cython为3.0以上版本，使用的编译工具为MSVC，如果要编译源码，必须提前安装[Microsoft Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist)。
 
 # 2. 扩展模块的类型
@@ -165,9 +165,9 @@ PYBIND11_MODULE(cc, m)
 
 # 4. 项目构建
 
-# 4.1 目录结构
+本次项目使用setuptools进行构建，编译扩展的脚本在`setupo.py`中，将各个语言的扩展作为子模块放到`speedup`项目下。
 
-项目使用`pyproject.py`来描述和构建，使用`setuptools`编译。
+# 4.1 目录结构
 
 ```
 speedup
@@ -186,7 +186,7 @@ speedup
 │       └── pp.py         // 纯python
 ├── tests
 │   ├── test_hello.py
-│   ├── test_fibnacci.py
+│   └── test_fibnacci.py
 ├── README.md
 ├── pyproject.toml        // 项目描述
 └── setup.py              //  构建脚本
@@ -244,13 +244,19 @@ setup(
 ## 4.2.3 编译
 
 ```bash
-> python -m build -n  # 编译
+> pip install -U build wheel cython setuptools pybind11  #  安装依赖
+> python -m build -n  # 编译和构建whl包
 > pip install dist/speedup-0.0.1-cp311-cp311-win_amd64.whl  # 安装
 ```
 
 # 5. 性能测试
 
-以下测试单位为秒。
+使用cProfile进行性能测试，测试单位为秒，测试命令如下：
+
+```bash
+> python tests/test_hello.py
+> python tests/test_fibnacci.py
+```
 
 ## 5.1 测试结果
 
@@ -261,9 +267,17 @@ setup(
 
 ## 5.2 分析
 
-从测试结果可以看出，在场景1，Python/Cython的性能会优于C/CPP，在语言间通信较多且任务十分简单时，不适合编写C扩展。
-在情景2下，C API性能明显强于其它扩展，Cython性能稍弱，Pybind11是对CPP和C API的封装，性能也不错，但开销还是比C/Cython高，
+从测试结果可以看出：
+
+在场景1，Python/Cython的性能会优于C/CPP，在语言间通信较多且任务十分简单时，不适合编写C扩展；在情景2下，C API性能明显强于其它扩展，Cython性能稍弱，Pybind11是对CPP和C API的封装，性能也不错，但开销还是比C/Cython高，
 原生Python最高。
 
-- 纯Python的性能优于C/Cython/CPP，主要是因为跨语言对对象进行序列化/反序列化的开销较大。
-- 在性能需求较高时，C扩展的速度是最快的，但考虑到C的开发维护成本，Cython/CPP也是不错的选择。
+- 纯Python的性能优于C/Cython/CPP，主要是因为跨语言对对象进行序列化/反序列化的开销较大；
+- 在性能需求较高时，C扩展的速度是最快的，但考虑到C的开发维护成本，Cython/CPP也是不错的选择；
+- 对比C，CPP(pybind11)作为C的高级封装和扩展，性能稍弱一点；
+- 对比C，Cython在不同情形下和C互有优劣；
+- 对比Python，Cython会有性能提升；
+
+# 6. 源码分享
+
+[speedup](https://github.com/PengchuanC/pengchuanc.github.io/tree/main/src/speedup)
