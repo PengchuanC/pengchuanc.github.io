@@ -1,13 +1,14 @@
 ---
-title: python extension
-date: 2023-12-07 19:04:22+8:00
+title: "Python语言扩展"
+date: 2023-12-06T20:12:28+08:00
+draft: false
+toc: false
 tags: 
   - python
   - cpp
   - c
   - cython
 ---
-
 
 # 1. 简介
 
@@ -169,7 +170,7 @@ PYBIND11_MODULE(cc, m)
 
 # 4.1 目录结构
 
-```
+```plain
 speedup
 ├── src
 │   ├── ccmodule          // cpp扩展
@@ -280,4 +281,4 @@ setup(
 
 # 6. 源码分享
 
-[speedup](https://github.com/PengchuanC/pengchuanc.github.io/tree/main/src/speedup)
+上述测试所用源代码见项目[speedup](https://github.com/PengchuanC/pengchuanc.github.io/tree/main/src/speedup)。

@@ -1,0 +1,84 @@
+baseURL = 'https://pengchuanc.github.io/'
+languageCode = "zh-cn"
+defaultContentLanguage = "zh-cn"
+title = '在我电脑上能跑'
+theme = 'hermit-v2'
+
+pygmentsCodefences = true
+pygmentsUseClasses = false
+hasCJKLanguage = true                                                                                             # If Chinese/Japanese/Korean is your main content language, enable this to make wordCount works right.
+rssLimit = 10                                                                                                     # Maximum number of items in the RSS feed.
+copyright = "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License." # This message is only used by the RSS template.
+enableEmoji = true                                                                                                # Shorthand emojis in content files - https://gohugo.io/functions/emojify/
+
+
+[author]
+name = "chuanchao.peng"
+
+[blackfriday]
+# hrefTargetBlank = true
+# noreferrerLinks = true
+# nofollowLinks = true
+
+[taxonomies]
+tag = "标签"
+# Categories are disabled by default.
+
+[params]
+dateform = "Jan 2, 2006"
+dateformShort = "Jan 2"
+dateformNum = "2006-01-02"
+dateformNumTime = "2006-01-02 15:04 -0700"
+
+themeColor = "#494f5c"
+
+homeSubtitle = "橘生淮北为枳"
+footerCopyright = ' &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">chuanchao.peng</a>'
+# bgImg = ""  # Homepage background-image URL
+
+# Prefix of link to the git commit detail page. GitInfo must be enabled.
+gitUrl = "https://github.com/PengchuanC"
+
+# Toggling this option needs to rebuild SCSS, requires Hugo extended version
+justifyContent = false # Set "text-align: justify" to `.content`.
+
+relatedPosts = false # Add a related content section to all single posts page
+
+code_copy_button = true # Turn on/off the code-copy-button for code-fields
+
+homeSubtitlePrinter = false
+scrollToTop = true
+global_mathjax = false
+readTime = true
+readTimeSeparator = "\u2026 \u23F2 Reading Time:"
+# legacyLayout = false
+shareSocial = true
+
+# Add custom css
+# customCSS = ["css/foo.css", "css/bar.css"]
+
+# Social Icons
+# Check https://github.com/Track3/hermit#social-icons for more info.
+[[params.socialLinks]]
+name = "twitter"
+url = "https://twitter.com/"
+
+[[params.socialLinks]]
+name = "qq"
+url = "https://qq.com/"
+
+[[params.socialLinks]]
+name = "github"
+url = "https://github.com/PengchuanC/"
+
+[menu]
+
+[[menu.main]]
+name = "文章"
+url = "posts/"
+weight = 10
+
+[[menu.main]]
+name = "关于"
+url = "about/"
+weight = 20
