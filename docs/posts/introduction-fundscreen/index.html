@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="robots" content="index, follow">
+<meta name="revisit-after" content="15 days">
+<link rel="author" href="/humans.txt">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileImage" content="/mstile-144x144.png">
+<link rel="shortcut icon" href="/favicon.ico"><meta name="author" content="">
+<meta name="theme-color" content="#494f5c">
+<meta name="msapplication-TileColor" content="#494f5c">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#494f5c">
+<meta itemprop="name" content="【FOF】基金筛选系统介绍">
+<meta itemprop="description" content="一、系统介绍 为了方便基金投资，开发了基金投资相关系统，基金筛选系统为最初开发系统，目前已经过三次迭代。当前基金筛选系统主要包含8个模块，分别"><meta itemprop="datePublished" content="2021-11-18T15:36:45+08:00" />
+<meta itemprop="dateModified" content="2021-11-18T15:36:45+08:00" />
+<meta itemprop="wordCount" content="2051">
+<meta itemprop="keywords" content="fof,基金筛选,fund,公募基金," /><meta property="og:title" content="【FOF】基金筛选系统介绍" />
+<meta property="og:description" content="一、系统介绍 为了方便基金投资，开发了基金投资相关系统，基金筛选系统为最初开发系统，目前已经过三次迭代。当前基金筛选系统主要包含8个模块，分别" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://pengchuanc.github.io/posts/introduction-fundscreen/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-11-18T15:36:45+08:00" />
+<meta property="article:modified_time" content="2021-11-18T15:36:45+08:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="【FOF】基金筛选系统介绍"/>
+<meta name="twitter:description" content="一、系统介绍 为了方便基金投资，开发了基金投资相关系统，基金筛选系统为最初开发系统，目前已经过三次迭代。当前基金筛选系统主要包含8个模块，分别"/>
+<title>【FOF】基金筛选系统介绍</title>
+<link rel="stylesheet dns-prefetch preconnect preload prefetch" as="style" href="https://pengchuanc.github.io/css/style.min.947d16cd3d7efa8ccfabd16e40c0865f392c1588ba2726938f74e7e1593f2ede.css" integrity="sha256-lH0WzT1++ozPq9FuQMCGXzksFYi6JyaTj3Tn4Vk/Lt4=" crossorigin="anonymous">
+	</head>
+<body id="page">
+	<header id="site-header" class="animated slideInUp">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://pengchuanc.github.io/">在我电脑上能跑</a>
+				</div>
+				<nav class="site-nav hide-in-mobile">
+				<a href="https://pengchuanc.github.io/posts/">文章</a>
+				<a href="https://pengchuanc.github.io/about/">关于</a>
+</nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<span class="hdr-social hide-in-mobile"><a href="https://twitter.com/" target="_blank" rel="noopener me" title="Twitter"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a><a href="https://qq.com/" target="_blank" rel="noopener me" title="Qq"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path transform="scale(0.04) translate(75 40)" stroke-width="50" d="M433.754 420.445c-11.526 1.393-44.86-52.741-44.86-52.741 0 31.345-16.136 72.247-51.051 101.786 16.842 5.192 54.843 19.167 45.803 34.421-7.316 12.343-125.51 7.881-159.632 4.037-34.122 3.844-152.316 8.306-159.632-4.037-9.045-15.25 28.918-29.214 45.783-34.415-34.92-29.539-51.059-70.445-51.059-101.792 0 0-33.334 54.134-44.859 52.741-5.37-.65-12.424-29.644 9.347-99.704 10.261-33.024 21.995-60.478 40.144-105.779C60.683 98.063 108.982.006 224 0c113.737.006 163.156 96.133 160.264 214.963 18.118 45.223 29.912 72.85 40.144 105.778 21.768 70.06 14.716 99.053 9.346 99.704z"></path></svg></a><a href="https://github.com/PengchuanC/" target="_blank" rel="noopener me" title="Github"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a></span><button id="share-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg></button>
+ 
+<div id="share-links" class="animated fast">
+    
+    
+    
+    
+    <ul>
+        <li>
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fpengchuanc.github.io%2fposts%2fintroduction-fundscreen%2f&amp;text=%e3%80%90FOF%e3%80%91%e5%9f%ba%e9%87%91%e7%ad%9b%e9%80%89%e7%b3%bb%e7%bb%9f%e4%bb%8b%e7%bb%8d" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6"/></svg></a>
+        </li>
+        <li>
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fpengchuanc.github.io%2fposts%2fintroduction-fundscreen%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
+        </li>
+        <li>
+            <a href="mailto:?subject=%e3%80%90FOF%e3%80%91%e5%9f%ba%e9%87%91%e7%ad%9b%e9%80%89%e7%b3%bb%e7%bb%9f%e4%bb%8b%e7%bb%8d&amp;body=https%3a%2f%2fpengchuanc.github.io%2fposts%2fintroduction-fundscreen%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></a>
+        </li>
+        <li>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fpengchuanc.github.io%2fposts%2fintroduction-fundscreen%2f&amp;source=https://pengchuanc.github.io/&amp;title=%e3%80%90FOF%e3%80%91%e5%9f%ba%e9%87%91%e7%ad%9b%e9%80%89%e7%b3%bb%e7%bb%9f%e4%bb%8b%e7%bb%8d&amp;summary=%e3%80%90FOF%e3%80%91%e5%9f%ba%e9%87%91%e7%ad%9b%e9%80%89%e7%b3%bb%e7%bb%9f%e4%bb%8b%e7%bb%8d%2c%20by%20%3cnil%3e%0a%0a%3cnil%3e%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
+        </li>
+        <li>
+            <a href="#" onclick="linkShare(&#34;【FOF】基金筛选系统介绍&#34;,&#34;https://pengchuanc.github.io/posts/introduction-fundscreen/&#34;,&#34;【FOF】基金筛选系统介绍, by \u003cnil\u003e\n\n\u003cnil\u003e\n&#34;); return false;" target="_self" rel="noopener" aria-label="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></a>
+        </li>
+    </ul>
+</div><button id="menu-btn" class="hdr-btn" title=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://pengchuanc.github.io/posts/">文章</a></li>
+			<li><a href="https://pengchuanc.github.io/about/">关于</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner animated fadeIn faster"><article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>Nov 18, 2021</span></div>
+				<h1>【FOF】基金筛选系统介绍</h1>
+			</header>
+			<div class="post-info"><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-feather"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path><line x1="16" y1="8" x2="2" y2="22"></line><line x1="17.5" y1="15" x2="9" y2="15"></line></svg><a href="" target="_blank"></a></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://pengchuanc.github.io/tags/fof">fof</a></span><span class="tag"><a href="https://pengchuanc.github.io/tags/%E5%9F%BA%E9%87%91%E7%AD%9B%E9%80%89">基金筛选</a></span><span class="tag"><a href="https://pengchuanc.github.io/tags/fund">fund</a></span><span class="tag"><a href="https://pengchuanc.github.io/tags/%E5%85%AC%E5%8B%9F%E5%9F%BA%E9%87%91">公募基金</a></span></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+    … ⏲ Reading Time:
+    
+    
+    
+    9 Minutes, 19 Seconds</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2021-11-18 15:36 &#43;0800</p></div>
+			<hr class="post-end">
+			<div class="content">
+				<h1 id="一系统介绍">一、系统介绍<a href="#一系统介绍" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<p>为了方便基金投资，开发了基金投资相关系统，基金筛选系统为最初开发系统，目前已经过三次迭代。当前基金筛选系统主要包含8个模块，分别为</p>
+<ol>
+<li>基金市场整体统计</li>
+<li>基金挑选</li>
+<li>基金看板</li>
+<li>ETF每日跟踪</li>
+<li>基金分类筛选入池</li>
+<li>入池基金管理</li>
+<li>市场热点资讯</li>
+<li>基金详细信息</li>
+</ol>
+<h1 id="二功能展示">二、功能展示<a href="#二功能展示" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<h2 id="1基金市场统计">1.基金市场统计<a href="#1基金市场统计" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>该模块为整个系统首页，统计截止上个月底的基金市场规模和数量，基金分类为野村东方国际FOF组根据基金发行公告中的投资范围自定义的分类方式。</p>
+<p><img src="/images/fundscreen/1-1.png" alt="home1-1"></p>
+<p><img src="/images/fundscreen/1-2.png" alt="home1-2"></p>
+<p><img src="/images/fundscreen/1-3.png" alt="home1-3"></p>
+<h2 id="2基金挑选">2.基金挑选<a href="#2基金挑选" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>基金挑选模块可以从全市场的公募基金中按一些预设的条件，挑选出符合条件的基金，针对常用的主动权益基金、被动指数基金和债券型基金会有一些更符合基金特点的筛选条件。</p>
+<h3 id="21-筛选界面预览">2.1 筛选界面预览<a href="#21-筛选界面预览" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>界面上方为基金筛选条件，下方为展示表格。</p>
+<p><img src="/images/fundscreen/2-1.png" alt="cart2-1"></p>
+<p>执行筛选条件后：</p>
+<p><img src="/images/fundscreen/2-2.png" alt="cart2-2"></p>
+<p>数据预览表格可全屏，方便查看数据。</p>
+<p><img src="/images/fundscreen/2-3.png" alt="cart2-3"></p>
+<h2 id="3基金看板">3.基金看板<a href="#3基金看板" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>根据基金年报和半年报持仓股票，对基金持有股票总市值占比大于60%的基金（多为股票型和偏股混合型基金），可以按市值风格将基金分为成长型、均衡性和价值型，根据股票行业占比，可以确定基金的行业风格。</p>
+<p>基金看板模块即是对这些基金的跟踪，基金看板首页将这些基金类型按小卡片形式展示，单个卡片最多不超过5条记录，点击全屏按钮可以查看全部该类型基金。</p>
+<p><img src="/images/fundscreen/3-1.png" alt="outlook3-1"></p>
+<p>展开后如下：</p>
+<p><img src="/images/fundscreen/3-2.png" alt="outlook3-2"></p>
+<h2 id="4etf每日跟踪">4.ETF每日跟踪<a href="#4etf每日跟踪" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<h3 id="41-资金概览">4.1 资金概览<a href="#41-资金概览" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>本页可以按日频、周频、月频查看各类ETF净资金流向，通过图表两种方式展现。</p>
+<p><img src="/images/fundscreen/4-1.png" alt="etf4-1"></p>
+<h3 id="42-分类统计">4.2 分类统计<a href="#42-分类统计" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>本页可以查看具体某一类ETF的资金流向情况和场内、场外业绩表现情况。</p>
+<p><img src="/images/fundscreen/4-2.png" alt="etf4-2"></p>
+<h3 id="43-近期情况">4.3 近期情况<a href="#43-近期情况" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>本页展示分周度、分类型ETF资金流入热力图。</p>
+<p><img src="/images/fundscreen/4-3.png" alt="etf4-3"></p>
+<h2 id="5基金分类筛选入池">5.基金分类筛选入池<a href="#5基金分类筛选入池" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>此模块本身用于NOI FOF团队每月筛选合适的基金进入<strong>观察池</strong>和<strong>核心池</strong>，便于持续跟踪，对于合适的基金可以放入<strong>精选层</strong>。</p>
+<h3 id="51-基础筛选">5.1 基础筛选<a href="#51-基础筛选" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>基金经过基础筛选，可放入观察池。</p>
+<p><img src="/images/fundscreen/5-1.png" alt="screen5-1"></p>
+<h3 id="52-进阶筛选">5.2 进阶筛选<a href="#52-进阶筛选" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>进阶筛选结果，可放入核心池。</p>
+<p><img src="/images/fundscreen/5-2.png" alt="screen5-2"></p>
+<p>入池保存页面：</p>
+<p><img src="/images/fundscreen/5-3.png" alt="screen5-3"></p>
+<h2 id="6组合管理">6.组合管理<a href="#6组合管理" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>组合管理模块主要用于跟踪入池的基金，主要功能如下（涉及具体基金数据，仅展示部分数据）：</p>
+<p>观察池：</p>
+<p><img src="/images/fundscreen/6-1.png" alt="pool6-1"></p>
+<p>核心池：</p>
+<p><img src="/images/fundscreen/6-2.png" alt="pool6-2"></p>
+<p>精选层：</p>
+<p><img src="/images/fundscreen/6-3.png" alt="pool6-3"></p>
+<h2 id="7市场热点资讯">7.市场热点资讯<a href="#7市场热点资讯" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>此模块最初用于收集市场热门新闻整理发布给公司各部门，此后改造进入客户服务系统，目前此模块处于半废弃状态。</p>
+<p><img src="/images/fundscreen/7-1.png" alt="news7-1"></p>
+<h2 id="8基金详细信息">8.基金详细信息<a href="#8基金详细信息" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>在系统其他模块，点击基金代码，即可进入单只基金详细信息页面。</p>
+<h3 id="81-基金概览">8.1 基金概览<a href="#81-基金概览" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>概览页面包括如下信息：</p>
+<ul>
+<li>基金摘要</li>
+<li>近期业绩表现</li>
+<li>基金与基准净值曲线</li>
+<li>规模变化</li>
+<li>风格指标</li>
+<li>基金风格</li>
+<li>换手情况</li>
+<li>规模变化</li>
+</ul>
+<p>预览图如下：</p>
+<p><img src="/images/fundscreen/8-1.png" alt="detail8-1"></p>
+<h3 id="82-业绩表现">8.2 业绩表现<a href="#82-业绩表现" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>业绩表现对基金区间业绩从多个维度做一个详细的诊断，预览图如下：</p>
+<p><img src="/images/fundscreen/8-2.png" alt="detail8-2"></p>
+<h3 id="83-基金经理">8.3 基金经理<a href="#83-基金经理" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>本页主要展示该基金的基金经理同时在管基金的简单信息汇总，预览图如下：</p>
+<p><img src="/images/fundscreen/8-3.png" alt="detail8-3"></p>
+<h3 id="84-资产配置">8.4 资产配置<a href="#84-资产配置" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>基金资产配置情况，预览图如下：</p>
+<p><img src="/images/fundscreen/8-4.png" alt="detail8-4"></p>
+<h3 id="85-业绩归因">8.5 业绩归因<a href="#85-业绩归因" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>基金Brinson归因情况，可选区间，预览图如下：</p>
+<p><img src="/images/fundscreen/8-5.png" alt="detail8-5"></p>
+<h3 id="86-重仓持股">8.6 重仓持股<a href="#86-重仓持股" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>本页主要展示至当前基金经理任职以来，多个报告期的持股情况统计，分析其持股偏好。预览图如下：
+<img src="/images/fundscreen/8-6.png" alt="detail8-6"></p>
+<h2 id="三程序设计">三、程序设计<a href="#三程序设计" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>项目采用前后端分离设计，前端负责渲染和处理交互，后端以restful api方式提高数据。</p>
+<p>整个项目前前后后经过3次迭代，前端完整重构了一次。本系统需要大量的基金数据和常用的股票数据，项目开发早期由于没有数据支持，只能从Wind终端的api接口提取数据，数据库接口也只能按照适合处理wind api的方式来构建，为整个程序的开发带来了巨大的工程量。</p>
+<p>第一次版本更新正是考虑到数据维护的复杂性，开始将数据库迁移至恒生聚源数据，主要重构的部分在后端。</p>
+<p>第二次版本更新主要是前端的改造，初版基金筛选系统主要功能集中在<strong>基金筛选</strong>这个功能上，所有功能都围绕基金筛选展开，此后产品提出了相当多的基于单个基金展示和基金挑选的需求，前后端进行大改造。</p>
+<p>第三次版本更新主要是对后端单只基金信息展示的改造，后端由于Python的性能瓶颈限制，将部分功能的实现通过Golang来扩展了，以保证延迟和并发需求。</p>
+<p>目前系统仍有一些小修小改，但整体呈现的效果如前所述。</p>
+<h2 id="四技术栈">四、技术栈<a href="#四技术栈" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>总体来说，项目基于MySQL+Python+Golang+Typescript，使用到的框架包括Django、Gin和Vue。</p>
+<h3 id="1数据库">1.数据库<a href="#1数据库" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>数据库使用关系型数据库MySQL，采用读写分离模式，部署到了两台服务器上。</p>
+<h3 id="2后端程序">2.后端程序<a href="#2后端程序" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>后端经过改造和性能提升，目前用到的工具包括：</p>
+<ul>
+<li>Python: Django grpc</li>
+<li>Golang: Gin Gorm grpc</li>
+</ul>
+<p>后端部分功能使用到了<!-- raw HTML omitted -->grpc<!-- raw HTML omitted -->，这功能块通常是与其他系统关联的，如基金分类、Brinson归因、基金风格等功能，会在多个系统中使用到，采用grpc可以降低其他系统的工作量。</p>
+<p>Python后端项目可<a href="https://github.com/PengchuanC/fund_back_django">点击这里</a>查看；</p>
+<p>Golang后端项目可<a href="https://github.com/PengchuanC/fund_screen">点击这里</a>查看。</p>
+<h3 id="3前端程序">3.前端程序<a href="#3前端程序" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>前端程序基于<!-- raw HTML omitted -->Vue3.x<!-- raw HTML omitted -->开发，UI框架基于<!-- raw HTML omitted -->Element Plus<!-- raw HTML omitted -->，开发语言为<!-- raw HTML omitted -->Typescript<!-- raw HTML omitted -->，图表插件主要使用到了<code>vxe-table</code>和<code>echarts</code>。</p>
+<p>前端项目地址已开源，可<a href="https://github.com/PengchuanC/fund_vue3">点击查看</a>。</p>
+<h3 id="4前置机配置">4.前置机配置<a href="#4前置机配置" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>前置机采用常用的<code>Nginx</code>做反向代理，主要使用到了<code>httpv2</code>、<code>stream</code>和<code>grpc</code>代理等功能。</p>
+<p>后端Python网关选用<code>asgi</code>框架<code>uvicorn</code>，充分利用异步能力。</p>
+<p>项目托管软件采用<code>supervisor</code>，监控后端程序并赋予多进程能力。</p>
+
+			</div>
+		</article>
+		<div class="post-nav thin">
+			<a class="next-post" href="https://pengchuanc.github.io/posts/introduction-clientservices/">
+				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>&nbsp;</span><br><span>【FOF】SMA业务客户服务平台</span>
+			</a>
+			<a class="prev-post" href="https://pengchuanc.github.io/posts/compile_install_nginx_and_python/">
+				<span class="post-nav-label">&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span><br><span>Centos7 编译安装Nginx-1.21.3版本和Python-3.10</span>
+			</a>
+		</div>
+		<div id="comments" class="thin">
+</div>
+	</main>
+
+<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+	<p>
+		&copy; 2023 <a href="https://pengchuanc.github.io/"></a>
+		&#183;  &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">chuanchao.peng</a>
+		&#183; Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a>
+		&#183; Theme <a href="https://github.com/1bl4z3r/hermit-V2" target="_blank" rel="noopener">Hermit-V2</a>
+		
+		&#183; <a href="https://pengchuanc.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+		
+	</p>
+
+</footer>
+<script async src="https://pengchuanc.github.io/js/bundle.min.038214de9d568246fadcfeb06c69349925de3209f332ec123861b6aa031d63c6.js" integrity="sha256-A4IU3p1Wgkb63P6wbGk0mSXeMgnzMuwSOGG2qgMdY8Y=" crossorigin="anonymous"></script><script async src="https://pengchuanc.github.io/js/link-share.min.24409a4f6e5537d70ffc55ec8f9192208d718678cb8638585342423020b37f39.js" integrity="sha256-JECaT25VN9cP/FXsj5GSII1xhnjLhjhYU0JCMCCzfzk=" crossorigin="anonymous"></script>
+</body>
+
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>{{.title}}</title>
+    <link href="/statics/css/semantic.css" rel="stylesheet" type="text/css">
+    <script src="/statics/js/jquery-3.6.0.min.js"></script>
+    <script src="/statics/js/semantic.min.js"></script>
+</head>
+<body>
+<div class="ui secondary pointing menu">
+    <a href="first" class="item first-menu-item active">
+        第一页
+    </a>
+    <a class="item" href="second">
+        第二页
+    </a>
+</div>
+<div class="ui container">
+    <p>我是基础页面</p>
+    <button class="ui button primary">按钮</button>
+    {{block "content" .}}{{end}}
+</div>
+</body>
+</html>

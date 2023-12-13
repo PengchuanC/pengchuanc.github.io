@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>在我电脑上能跑</title>
+    <link>https://pengchuanc.github.io/</link>
+    <description>Recent content on 在我电脑上能跑</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Wed, 13 Dec 2023 17:37:12 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Python语言扩展</title>
+      <link>https://pengchuanc.github.io/posts/python-extension/</link>
+      <pubDate>Wed, 13 Dec 2023 17:37:12 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/python-extension/</guid>
+      <description>1. 简介 Python 语言的扩展模块，主要是用 C 语言编写的，可以直接在 Python 中使用。但实际上除了C语言的扩展模块，Python 还支持其他语言的扩展模块，比如 C</description>
+    </item>
+    
+    <item>
+      <title>【FOF】SMA系列系统介绍</title>
+      <link>https://pengchuanc.github.io/posts/introduction_sma_system/</link>
+      <pubDate>Mon, 29 Nov 2021 17:28:16 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/introduction_sma_system/</guid>
+      <description>一、SMA 1.起源 SMA起源于美国20世纪70年代，起初是一种基于客户存量资产收费的账户。SMA真正开始具有资产配置、投资顾问色彩，始于90</description>
+    </item>
+    
+    <item>
+      <title>【FOF】客户问卷管理系统</title>
+      <link>https://pengchuanc.github.io/posts/introduction_questionnaire/</link>
+      <pubDate>Mon, 29 Nov 2021 16:08:21 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/introduction_questionnaire/</guid>
+      <description>一、系统介绍 除了柜台的合格投资者认定测评问卷外，野村东方证券FOF团队还为SMA客户定制了另一套问卷，用于测定客户风险偏好和承受能力，以便为</description>
+    </item>
+    
+    <item>
+      <title>【FOF】SMA投资管理系统</title>
+      <link>https://pengchuanc.github.io/posts/introduction_sma_management/</link>
+      <pubDate>Fri, 26 Nov 2021 15:09:00 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/introduction_sma_management/</guid>
+      <description>一、系统介绍 SMA投资管理系统基于恒生O3.2基金管理系统和FA估值记账系统，除了跟踪产品的估值和持仓信息外，还针对FOF做了一些风险收益的</description>
+    </item>
+    
+    <item>
+      <title>【FOF】SMA业务客户服务平台</title>
+      <link>https://pengchuanc.github.io/posts/introduction-clientservices/</link>
+      <pubDate>Thu, 25 Nov 2021 16:55:17 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/introduction-clientservices/</guid>
+      <description>一、系统介绍 野村东方国际证券资管部FOF团队除了提供集合FOF产品外，还会为高净值客户提供SMA单一资管计划，关于什么是SMA，可以点击这里</description>
+    </item>
+    
+    <item>
+      <title>【FOF】基金筛选系统介绍</title>
+      <link>https://pengchuanc.github.io/posts/introduction-fundscreen/</link>
+      <pubDate>Thu, 18 Nov 2021 15:36:45 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/introduction-fundscreen/</guid>
+      <description>一、系统介绍 为了方便基金投资，开发了基金投资相关系统，基金筛选系统为最初开发系统，目前已经过三次迭代。当前基金筛选系统主要包含8个模块，分别</description>
+    </item>
+    
+    <item>
+      <title>Centos7 编译安装Nginx-1.21.3版本和Python-3.10</title>
+      <link>https://pengchuanc.github.io/posts/compile_install_nginx_and_python/</link>
+      <pubDate>Fri, 22 Oct 2021 10:42:05 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/compile_install_nginx_and_python/</guid>
+      <description>一、起因 由于生产网段与测试网段隔离，但测试网段也需要数据来进行开发，于是考虑用GRPC来中转数据，并用Nginx来代理端口，需要用到Ngin</description>
+    </item>
+    
+    <item>
+      <title>Mariadb意外崩溃数据恢复</title>
+      <link>https://pengchuanc.github.io/posts/mariadb-recovery/</link>
+      <pubDate>Fri, 03 Sep 2021 11:05:55 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/mariadb-recovery/</guid>
+      <description>1.事故还原 优于同时在多个终端执行select、insert和delete操作，数据库意外崩溃 2.数据恢复 2.1 尝试重新启动 执行service mysqld</description>
+    </item>
+    
+    <item>
+      <title>Go 1.16 新特性embed在gin中使用</title>
+      <link>https://pengchuanc.github.io/posts/go-embed/</link>
+      <pubDate>Fri, 02 Jul 2021 15:14:15 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/go-embed/</guid>
+      <description>在golang1.16加入之前，编译出来的二进制文件默认是不包括非代码文件的，那么开发一个web网站，则需要将html模板文件、配置文件和静</description>
+    </item>
+    
+    <item>
+      <title>【FOF】野村基金筛选系统第二版</title>
+      <link>https://pengchuanc.github.io/posts/fund-screen-system/</link>
+      <pubDate>Thu, 01 Jul 2021 17:06:30 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/fund-screen-system/</guid>
+      <description>在第一版的基础上优化了布局，重新设计了基金详情页的界面，并且新增了基金筛选功能和基金看板功能、ETF资金流向统计等功能 开发框架升级到vue3</description>
+    </item>
+    
+  </channel>
+</rss>
