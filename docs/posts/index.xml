@@ -6,268 +6,8 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>zh-cn</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Wed, 06 Dec 2023 20:12:28 +0800</lastBuildDate>
+		<lastBuildDate>Mon, 29 Nov 2021 17:28:16 +0800</lastBuildDate>
 		<atom:link href="https://pengchuanc.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
-		
-		<item>
-			<title>Python语言扩展</title>
-			<link>https://pengchuanc.github.io/posts/python-extension/</link>
-			<pubDate>Wed, 06 Dec 2023 20:12:28 +0800</pubDate>
-			
-			<guid>https://pengchuanc.github.io/posts/python-extension/</guid>
-			<description>1. 简介 Python 语言的扩展模块，主要是用 C 语言编写的，可以直接在 Python 中使用。但实际上除了C语言的扩展模块，Python 还支持其他语言的扩展模块，比如 C</description>
-			<content type="html"><![CDATA[<h1 id="1-简介">1. 简介</h1>
-<p>Python 语言的扩展模块，主要是用 C 语言编写的，可以直接在 Python 中使用。但实际上除了C语言的扩展模块，Python 还支持其他语言的扩展模块，比如 C++、Cython、C#、Rust 等，实现的方式有ABI、CFFI、SWIG等。</p>
-<p>此次主要研究 Python 的 C 系列扩展模块，基本都是通过ABI的方式实现，包括C、Cython和CPP(pybind11)，作为对比，会加入纯Python和Python代码编译成动态链接库来作为对比项。
-使用的Python解释器为官方的CPython解释器，版本为3.11.6，Cython为3.0以上版本，使用的编译工具为MSVC，如果要编译源码，必须提前安装<a href="https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist">Microsoft Visual C++ Redistributable</a>。</p>
-<h1 id="2-扩展模块的类型">2. 扩展模块的类型</h1>
-<p>windows下，Python的扩展模块通常是由其他语言编译出的动态链接库，可以直接在 Python 中使用，在本次的测试环境中文件名通常为<code>modulename.cp311-win_amd64.pyd</code>。</p>
-<p>本次测试主要测试两类场景:</p>
-<ul>
-<li>
-<ol>
-<li>需要频繁在语言间进行数据交换，但是CPU开销很小的场景</li>
-</ol>
-</li>
-<li>
-<ol start="2">
-<li>语言间通信次数很少，但是CPU开销较大的场景</li>
-</ol>
-</li>
-</ul>
-<h1 id="3-代码编写">3. 代码编写</h1>
-<p>本次测试要实现的功能很简单，主要包含<code>hello(name)</code>和<code>fibnacci(n)</code>两个函数，来对应前述两种场景。</p>
-<h2 id="31-纯python">3.1 纯Python</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">hello</span>(name):
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;Hello, </span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> !&#34;</span> <span style="color:#f92672">%</span> name
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">fibnacci</span>(n):
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> n <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> n
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> fibnacci(n <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> fibnacci(n <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span>)
-</span></span></code></pre></div><h2 id="32-c">3.2 C</h2>
-<p>C语言扩展模块基于官方标准的Python/C API开发。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#define PY_SSIZE_T_CLEAN
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;Python.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&#34;stdio.h&#34;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> PyObject <span style="color:#f92672">*</span><span style="color:#a6e22e">Py_hello</span>(PyObject <span style="color:#f92672">*</span>self, PyObject <span style="color:#f92672">*</span>args)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>name;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">PyArg_ParseTuple</span>(args, <span style="color:#e6db74">&#34;s&#34;</span>, <span style="color:#f92672">&amp;</span>name))
-</span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> greeting[<span style="color:#ae81ff">50</span>];
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">snprintf</span>(greeting, <span style="color:#66d9ef">sizeof</span>(greeting), <span style="color:#e6db74">&#34;Hello, %s!&#34;</span>, name);
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">Py_BuildValue</span>(<span style="color:#e6db74">&#34;s&#34;</span>, greeting);
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">fibonacci</span>(<span style="color:#66d9ef">int</span> n)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (n <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">2</span>)
-</span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>
-</span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fibonacci</span>(n <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> <span style="color:#a6e22e">fibonacci</span>(n <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span>);
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> PyObject <span style="color:#f92672">*</span><span style="color:#a6e22e">Py_fibnacci</span>(PyObject <span style="color:#f92672">*</span>self, PyObject <span style="color:#f92672">*</span>args)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> n;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">PyArg_ParseTuple</span>(args, <span style="color:#e6db74">&#34;i&#34;</span>, <span style="color:#f92672">&amp;</span>n))
-</span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> ret <span style="color:#f92672">=</span> <span style="color:#a6e22e">fibonacci</span>(n);
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">Py_BuildValue</span>(<span style="color:#e6db74">&#34;i&#34;</span>, ret);
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> PyMethodDef methods[] <span style="color:#f92672">=</span> {
-</span></span><span style="display:flex;"><span>    {<span style="color:#e6db74">&#34;hello&#34;</span>, Py_hello, METH_VARARGS, <span style="color:#e6db74">&#34;Print Hello, World!&#34;</span>},
-</span></span><span style="display:flex;"><span>    {<span style="color:#e6db74">&#34;fibnacci&#34;</span>, Py_fibnacci, METH_VARARGS, <span style="color:#e6db74">&#34;cal fibnacci&#34;</span>},
-</span></span><span style="display:flex;"><span>    {NULL, NULL, <span style="color:#ae81ff">0</span>, NULL} <span style="color:#75715e">// 结束标志
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">struct</span> PyModuleDef cpmodule <span style="color:#f92672">=</span> {
-</span></span><span style="display:flex;"><span>    PyModuleDef_HEAD_INIT,
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;cp&#34;</span>,      <span style="color:#75715e">/* name of module */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;cp desc&#34;</span>, <span style="color:#75715e">/* module documentation, may be NULL */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>,
-</span></span><span style="display:flex;"><span>    methods};
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>PyMODINIT_FUNC <span style="color:#a6e22e">PyInit_cp</span>(<span style="color:#66d9ef">void</span>)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">PyModule_Create</span>(<span style="color:#f92672">&amp;</span>cpmodule);
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><h2 id="33-cython">3.3 Cython</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>cpdef str hello(str name) <span style="color:#66d9ef">except</span> <span style="color:#f92672">*</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;hello, &#34;</span> <span style="color:#f92672">+</span> name
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>cdef int fib(int n):
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> n <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">2</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> n
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> fib(n<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> fib(n<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>cpdef int fibnacci(int n) <span style="color:#66d9ef">except</span> <span style="color:#f92672">*</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> fib(n)
-</span></span></code></pre></div><h2 id="34-cpp">3.4 CPP</h2>
-<p>CPP版本使用<a href="https://pybind11.readthedocs.io/en/stable/">pybind11</a>来实现语言绑定。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;pybind11/pybind11.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">namespace</span> py <span style="color:#f92672">=</span> pybind11;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>py<span style="color:#f92672">::</span>str hello(py<span style="color:#f92672">::</span>str name)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    py<span style="color:#f92672">::</span>str greeting <span style="color:#f92672">=</span> py<span style="color:#f92672">::</span>str(<span style="color:#e6db74">&#34;hello, {} !&#34;</span>).format(name);
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> greeting;
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">fibnacci</span>(<span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> n)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (n <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2</span>)
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> n;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> fibnacci(n <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> fibnacci(n <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span>);
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>PYBIND11_MODULE(cc, m)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    m.doc() <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ccmodule&#34;</span>;
-</span></span><span style="display:flex;"><span>    m.def(<span style="color:#e6db74">&#34;hello&#34;</span>, <span style="color:#f92672">&amp;</span>hello, <span style="color:#e6db74">&#34;Say hello&#34;</span>);
-</span></span><span style="display:flex;"><span>    m.def(<span style="color:#e6db74">&#34;fibnacci&#34;</span>, <span style="color:#f92672">&amp;</span>fibnacci, <span style="color:#e6db74">&#34;Fibonacci&#34;</span>);
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><h1 id="4-项目构建">4. 项目构建</h1>
-<p>本次项目使用setuptools进行构建，编译扩展的脚本在<code>setupo.py</code>中，将各个语言的扩展作为子模块放到<code>speedup</code>项目下。</p>
-<h1 id="41-目录结构">4.1 目录结构</h1>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plain" data-lang="plain"><span style="display:flex;"><span>speedup
-</span></span><span style="display:flex;"><span>├── src
-</span></span><span style="display:flex;"><span>│   ├── ccmodule          // cpp扩展
-</span></span><span style="display:flex;"><span>│   │   └── ccmodule.cc
-</span></span><span style="display:flex;"><span>│   ├── cpmodule          // c扩展
-</span></span><span style="display:flex;"><span>│   │   └── cpmodule.c
-</span></span><span style="display:flex;"><span>│   ├── cymodule          // cython扩展
-</span></span><span style="display:flex;"><span>│   │   ├── cymodule.pxd
-</span></span><span style="display:flex;"><span>│   │   └── cymodule.pyx
-</span></span><span style="display:flex;"><span>│   ├── pymodule          // 纯python编译
-</span></span><span style="display:flex;"><span>│   │   └── pymodule.py
-</span></span><span style="display:flex;"><span>│   └── speedup
-</span></span><span style="display:flex;"><span>│       ├── __init__.py
-</span></span><span style="display:flex;"><span>│       └── pp.py         // 纯python
-</span></span><span style="display:flex;"><span>├── tests
-</span></span><span style="display:flex;"><span>│   ├── test_hello.py
-</span></span><span style="display:flex;"><span>│   └── test_fibnacci.py
-</span></span><span style="display:flex;"><span>├── README.md
-</span></span><span style="display:flex;"><span>├── pyproject.toml        // 项目描述
-</span></span><span style="display:flex;"><span>└── setup.py              //  构建脚本
-</span></span></code></pre></div><h1 id="42-构建">4.2 构建</h1>
-<h2 id="421-pyprojecttoml">4.2.1 pyproject.toml</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-toml" data-lang="toml"><span style="display:flex;"><span>[<span style="color:#a6e22e">build-system</span>]
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">requires</span> = [<span style="color:#e6db74">&#34;setuptools&#34;</span>, <span style="color:#e6db74">&#34;Cython&#34;</span>, <span style="color:#e6db74">&#34;wheel&#34;</span>]
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">build-backend</span> = <span style="color:#e6db74">&#34;setuptools.build_meta&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>[<span style="color:#a6e22e">project</span>]
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">name</span> = <span style="color:#e6db74">&#34;speedup&#34;</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">version</span> = <span style="color:#e6db74">&#34;0.0.1&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>[<span style="color:#a6e22e">tool</span>.<span style="color:#a6e22e">setuptools</span>]
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">package-dir</span> = { <span style="color:#e6db74">&#34;&#34;</span> = <span style="color:#e6db74">&#34;src&#34;</span> }
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">include-package-data</span> = <span style="color:#66d9ef">true</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>[<span style="color:#a6e22e">tool</span>.<span style="color:#a6e22e">setuptools</span>.<span style="color:#a6e22e">packages</span>.<span style="color:#a6e22e">find</span>]
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">where</span> = [<span style="color:#e6db74">&#34;src&#34;</span>]
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">include</span> = [<span style="color:#e6db74">&#34;*&#34;</span>]
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">exclude</span> = [<span style="color:#e6db74">&#34;tests*&#34;</span>]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>[<span style="color:#a6e22e">tool</span>.<span style="color:#a6e22e">setuptools</span>.<span style="color:#a6e22e">package-data</span>]
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">speedup</span> = [<span style="color:#e6db74">&#34;*.pyi&#34;</span>, <span style="color:#e6db74">&#34;*.pxd&#34;</span>]
-</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;speedup.cp&#34;</span> = [<span style="color:#e6db74">&#34;*.pxd&#34;</span>, <span style="color:#e6db74">&#34;*.pyi&#34;</span>, <span style="color:#e6db74">&#34;*.pyx&#34;</span>]
-</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;speedup.cy&#34;</span> = [<span style="color:#e6db74">&#34;*.pxd&#34;</span>, <span style="color:#e6db74">&#34;*.pyi&#34;</span>, <span style="color:#e6db74">&#34;*.pyx&#34;</span>]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>[<span style="color:#a6e22e">tool</span>.<span style="color:#a6e22e">pytest</span>.<span style="color:#a6e22e">ini_options</span>]
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">addopts</span> = [<span style="color:#e6db74">&#34;--import-mode=importlib&#34;</span>]
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pythonpath</span> = <span style="color:#e6db74">&#34;src&#34;</span>
-</span></span></code></pre></div><h2 id="422-setuppy">4.2.2 setup.py</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> setuptools <span style="color:#f92672">import</span> Extension, setup
-</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pybind11.setup_helpers <span style="color:#f92672">import</span> Pybind11Extension, build_ext
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>setup(
-</span></span><span style="display:flex;"><span>    ext_modules<span style="color:#f92672">=</span>[
-</span></span><span style="display:flex;"><span>        Extension(<span style="color:#e6db74">&#34;speedup.cp&#34;</span>, [<span style="color:#e6db74">&#34;src/cpmodule/cpmodule.c&#34;</span>]),
-</span></span><span style="display:flex;"><span>        Pybind11Extension(<span style="color:#e6db74">&#34;speedup.cc&#34;</span>, [<span style="color:#e6db74">&#34;src/ccmodule/ccmodule.cc&#34;</span>]),
-</span></span><span style="display:flex;"><span>        Extension(<span style="color:#e6db74">&#34;speedup.cy&#34;</span>, [<span style="color:#e6db74">&#34;src/cymodule/cymodule.pyx&#34;</span>]),
-</span></span><span style="display:flex;"><span>        Extension(<span style="color:#e6db74">&#34;speedup.py&#34;</span>, [<span style="color:#e6db74">&#34;src/pymodule/pymodule.py&#34;</span>]),
-</span></span><span style="display:flex;"><span>    ],
-</span></span><span style="display:flex;"><span>    build_ext<span style="color:#f92672">=</span>build_ext
-</span></span><span style="display:flex;"><span>)
-</span></span></code></pre></div><h2 id="423-编译">4.2.3 编译</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>&gt; pip install -U build wheel cython setuptools pybind11  <span style="color:#75715e">#  安装依赖</span>
-</span></span><span style="display:flex;"><span>&gt; python -m build -n  <span style="color:#75715e"># 编译和构建whl包</span>
-</span></span><span style="display:flex;"><span>&gt; pip install dist/speedup-0.0.1-cp311-cp311-win_amd64.whl  <span style="color:#75715e"># 安装</span>
-</span></span></code></pre></div><h1 id="5-性能测试">5. 性能测试</h1>
-<p>使用cProfile进行性能测试，测试单位为秒，测试命令如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>&gt; python tests/test_hello.py
-</span></span><span style="display:flex;"><span>&gt; python tests/test_fibnacci.py
-</span></span></code></pre></div><h2 id="51-测试结果">5.1 测试结果</h2>
-<table>
-<thead>
-<tr>
-<th>situation</th>
-<th>Python</th>
-<th>Python Compiled</th>
-<th>C</th>
-<th>Cython</th>
-<th>CPP</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>hello</td>
-<td>0.001</td>
-<td>0.001</td>
-<td>0.003</td>
-<td>0.001</td>
-<td>0.011</td>
-</tr>
-<tr>
-<td>fibnacci</td>
-<td>0.909</td>
-<td>0.900</td>
-<td>0.033</td>
-<td>0.045</td>
-<td>0.051</td>
-</tr>
-</tbody>
-</table>
-<h2 id="52-分析">5.2 分析</h2>
-<p>从测试结果可以看出：</p>
-<p>在场景1，Python/Cython的性能会优于C/CPP，在语言间通信较多且任务十分简单时，不适合编写C扩展；在情景2下，C API性能明显强于其它扩展，Cython性能稍弱，Pybind11是对CPP和C API的封装，性能也不错，但开销还是比C/Cython高，
-原生Python最高。</p>
-<ul>
-<li>纯Python的性能优于C/Cython/CPP，主要是因为跨语言对对象进行序列化/反序列化的开销较大；</li>
-<li>在性能需求较高时，C扩展的速度是最快的，但考虑到C的开发维护成本，Cython/CPP也是不错的选择；</li>
-<li>对比C，CPP(pybind11)作为C的高级封装和扩展，性能稍弱一点；</li>
-<li>对比C，Cython在不同情形下和C互有优劣；</li>
-<li>对比Python，Cython会有性能提升；</li>
-</ul>
-<h1 id="6-源码分享">6. 源码分享</h1>
-<p>上述测试所用源代码见项目<a href="https://github.com/PengchuanC/pengchuanc.github.io/tree/main/src/speedup">speedup</a>。</p>
-]]></content>
-		</item>
 		
 		<item>
 			<title>【FOF】SMA系列系统介绍</title>
@@ -2473,6 +2213,266 @@ import file_server.fileserver_pb2 as fileserver__pb2
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>&gt; cd protobuf
 </span></span><span style="display:flex;"><span>&gt; protoc --go_out<span style="color:#f92672">=</span>plugins<span style="color:#f92672">=</span>grpc:. hello.proto
 </span></span></code></pre></div>]]></content>
+		</item>
+		
+		<item>
+			<title>Python语言扩展</title>
+			<link>https://pengchuanc.github.io/posts/python-extension/</link>
+			<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+			
+			<guid>https://pengchuanc.github.io/posts/python-extension/</guid>
+			<description>1. 简介 Python 语言的扩展模块，主要是用 C 语言编写的，可以直接在 Python 中使用。但实际上除了C语言的扩展模块，Python 还支持其他语言的扩展模块，比如 C</description>
+			<content type="html"><![CDATA[<h1 id="1-简介">1. 简介</h1>
+<p>Python 语言的扩展模块，主要是用 C 语言编写的，可以直接在 Python 中使用。但实际上除了C语言的扩展模块，Python 还支持其他语言的扩展模块，比如 C++、Cython、C#、Rust 等，实现的方式有ABI、CFFI、SWIG等。</p>
+<p>此次主要研究 Python 的 C 系列扩展模块，基本都是通过ABI的方式实现，包括C、Cython和CPP(pybind11)，作为对比，会加入纯Python和Python代码编译成动态链接库来作为对比项。
+使用的Python解释器为官方的CPython解释器，版本为3.11.6，Cython为3.0以上版本，使用的编译工具为MSVC，如果要编译源码，必须提前安装<a href="https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist">Microsoft Visual C++ Redistributable</a>。</p>
+<h1 id="2-扩展模块的类型">2. 扩展模块的类型</h1>
+<p>windows下，Python的扩展模块通常是由其他语言编译出的动态链接库，可以直接在 Python 中使用，在本次的测试环境中文件名通常为<code>modulename.cp311-win_amd64.pyd</code>。</p>
+<p>本次测试主要测试两类场景:</p>
+<ul>
+<li>
+<ol>
+<li>需要频繁在语言间进行数据交换，但是CPU开销很小的场景</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>语言间通信次数很少，但是CPU开销较大的场景</li>
+</ol>
+</li>
+</ul>
+<h1 id="3-代码编写">3. 代码编写</h1>
+<p>本次测试要实现的功能很简单，主要包含<code>hello(name)</code>和<code>fibnacci(n)</code>两个函数，来对应前述两种场景。</p>
+<h2 id="31-纯python">3.1 纯Python</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">hello</span>(name):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;Hello, </span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> !&#34;</span> <span style="color:#f92672">%</span> name
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">fibnacci</span>(n):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> n <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> n
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> fibnacci(n <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> fibnacci(n <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span>)
+</span></span></code></pre></div><h2 id="32-c">3.2 C</h2>
+<p>C语言扩展模块基于官方标准的Python/C API开发。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#define PY_SSIZE_T_CLEAN
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;Python.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&#34;stdio.h&#34;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> PyObject <span style="color:#f92672">*</span><span style="color:#a6e22e">Py_hello</span>(PyObject <span style="color:#f92672">*</span>self, PyObject <span style="color:#f92672">*</span>args)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>name;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">PyArg_ParseTuple</span>(args, <span style="color:#e6db74">&#34;s&#34;</span>, <span style="color:#f92672">&amp;</span>name))
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> greeting[<span style="color:#ae81ff">50</span>];
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">snprintf</span>(greeting, <span style="color:#66d9ef">sizeof</span>(greeting), <span style="color:#e6db74">&#34;Hello, %s!&#34;</span>, name);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">Py_BuildValue</span>(<span style="color:#e6db74">&#34;s&#34;</span>, greeting);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">fibonacci</span>(<span style="color:#66d9ef">int</span> n)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (n <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fibonacci</span>(n <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> <span style="color:#a6e22e">fibonacci</span>(n <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> PyObject <span style="color:#f92672">*</span><span style="color:#a6e22e">Py_fibnacci</span>(PyObject <span style="color:#f92672">*</span>self, PyObject <span style="color:#f92672">*</span>args)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> n;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">PyArg_ParseTuple</span>(args, <span style="color:#e6db74">&#34;i&#34;</span>, <span style="color:#f92672">&amp;</span>n))
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> ret <span style="color:#f92672">=</span> <span style="color:#a6e22e">fibonacci</span>(n);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">Py_BuildValue</span>(<span style="color:#e6db74">&#34;i&#34;</span>, ret);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> PyMethodDef methods[] <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    {<span style="color:#e6db74">&#34;hello&#34;</span>, Py_hello, METH_VARARGS, <span style="color:#e6db74">&#34;Print Hello, World!&#34;</span>},
+</span></span><span style="display:flex;"><span>    {<span style="color:#e6db74">&#34;fibnacci&#34;</span>, Py_fibnacci, METH_VARARGS, <span style="color:#e6db74">&#34;cal fibnacci&#34;</span>},
+</span></span><span style="display:flex;"><span>    {NULL, NULL, <span style="color:#ae81ff">0</span>, NULL} <span style="color:#75715e">// 结束标志
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">struct</span> PyModuleDef cpmodule <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    PyModuleDef_HEAD_INIT,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;cp&#34;</span>,      <span style="color:#75715e">/* name of module */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;cp desc&#34;</span>, <span style="color:#75715e">/* module documentation, may be NULL */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>    methods};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>PyMODINIT_FUNC <span style="color:#a6e22e">PyInit_cp</span>(<span style="color:#66d9ef">void</span>)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">PyModule_Create</span>(<span style="color:#f92672">&amp;</span>cpmodule);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="33-cython">3.3 Cython</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>cpdef str hello(str name) <span style="color:#66d9ef">except</span> <span style="color:#f92672">*</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;hello, &#34;</span> <span style="color:#f92672">+</span> name
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cdef int fib(int n):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> n <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">2</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> n
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> fib(n<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> fib(n<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cpdef int fibnacci(int n) <span style="color:#66d9ef">except</span> <span style="color:#f92672">*</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> fib(n)
+</span></span></code></pre></div><h2 id="34-cpp">3.4 CPP</h2>
+<p>CPP版本使用<a href="https://pybind11.readthedocs.io/en/stable/">pybind11</a>来实现语言绑定。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;pybind11/pybind11.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">namespace</span> py <span style="color:#f92672">=</span> pybind11;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>py<span style="color:#f92672">::</span>str hello(py<span style="color:#f92672">::</span>str name)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    py<span style="color:#f92672">::</span>str greeting <span style="color:#f92672">=</span> py<span style="color:#f92672">::</span>str(<span style="color:#e6db74">&#34;hello, {} !&#34;</span>).format(name);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> greeting;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">fibnacci</span>(<span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> n)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (n <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> n;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> fibnacci(n <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> fibnacci(n <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>PYBIND11_MODULE(cc, m)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    m.doc() <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ccmodule&#34;</span>;
+</span></span><span style="display:flex;"><span>    m.def(<span style="color:#e6db74">&#34;hello&#34;</span>, <span style="color:#f92672">&amp;</span>hello, <span style="color:#e6db74">&#34;Say hello&#34;</span>);
+</span></span><span style="display:flex;"><span>    m.def(<span style="color:#e6db74">&#34;fibnacci&#34;</span>, <span style="color:#f92672">&amp;</span>fibnacci, <span style="color:#e6db74">&#34;Fibonacci&#34;</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h1 id="4-项目构建">4. 项目构建</h1>
+<p>本次项目使用setuptools进行构建，编译扩展的脚本在<code>setupo.py</code>中，将各个语言的扩展作为子模块放到<code>speedup</code>项目下。</p>
+<h1 id="41-目录结构">4.1 目录结构</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plain" data-lang="plain"><span style="display:flex;"><span>speedup
+</span></span><span style="display:flex;"><span>├── src
+</span></span><span style="display:flex;"><span>│   ├── ccmodule          // cpp扩展
+</span></span><span style="display:flex;"><span>│   │   └── ccmodule.cc
+</span></span><span style="display:flex;"><span>│   ├── cpmodule          // c扩展
+</span></span><span style="display:flex;"><span>│   │   └── cpmodule.c
+</span></span><span style="display:flex;"><span>│   ├── cymodule          // cython扩展
+</span></span><span style="display:flex;"><span>│   │   ├── cymodule.pxd
+</span></span><span style="display:flex;"><span>│   │   └── cymodule.pyx
+</span></span><span style="display:flex;"><span>│   ├── pymodule          // 纯python编译
+</span></span><span style="display:flex;"><span>│   │   └── pymodule.py
+</span></span><span style="display:flex;"><span>│   └── speedup
+</span></span><span style="display:flex;"><span>│       ├── __init__.py
+</span></span><span style="display:flex;"><span>│       └── pp.py         // 纯python
+</span></span><span style="display:flex;"><span>├── tests
+</span></span><span style="display:flex;"><span>│   ├── test_hello.py
+</span></span><span style="display:flex;"><span>│   └── test_fibnacci.py
+</span></span><span style="display:flex;"><span>├── README.md
+</span></span><span style="display:flex;"><span>├── pyproject.toml        // 项目描述
+</span></span><span style="display:flex;"><span>└── setup.py              //  构建脚本
+</span></span></code></pre></div><h1 id="42-构建">4.2 构建</h1>
+<h2 id="421-pyprojecttoml">4.2.1 pyproject.toml</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-toml" data-lang="toml"><span style="display:flex;"><span>[<span style="color:#a6e22e">build-system</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">requires</span> = [<span style="color:#e6db74">&#34;setuptools&#34;</span>, <span style="color:#e6db74">&#34;Cython&#34;</span>, <span style="color:#e6db74">&#34;wheel&#34;</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">build-backend</span> = <span style="color:#e6db74">&#34;setuptools.build_meta&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[<span style="color:#a6e22e">project</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">name</span> = <span style="color:#e6db74">&#34;speedup&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">version</span> = <span style="color:#e6db74">&#34;0.0.1&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[<span style="color:#a6e22e">tool</span>.<span style="color:#a6e22e">setuptools</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">package-dir</span> = { <span style="color:#e6db74">&#34;&#34;</span> = <span style="color:#e6db74">&#34;src&#34;</span> }
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">include-package-data</span> = <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[<span style="color:#a6e22e">tool</span>.<span style="color:#a6e22e">setuptools</span>.<span style="color:#a6e22e">packages</span>.<span style="color:#a6e22e">find</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">where</span> = [<span style="color:#e6db74">&#34;src&#34;</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">include</span> = [<span style="color:#e6db74">&#34;*&#34;</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">exclude</span> = [<span style="color:#e6db74">&#34;tests*&#34;</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[<span style="color:#a6e22e">tool</span>.<span style="color:#a6e22e">setuptools</span>.<span style="color:#a6e22e">package-data</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">speedup</span> = [<span style="color:#e6db74">&#34;*.pyi&#34;</span>, <span style="color:#e6db74">&#34;*.pxd&#34;</span>]
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;speedup.cp&#34;</span> = [<span style="color:#e6db74">&#34;*.pxd&#34;</span>, <span style="color:#e6db74">&#34;*.pyi&#34;</span>, <span style="color:#e6db74">&#34;*.pyx&#34;</span>]
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;speedup.cy&#34;</span> = [<span style="color:#e6db74">&#34;*.pxd&#34;</span>, <span style="color:#e6db74">&#34;*.pyi&#34;</span>, <span style="color:#e6db74">&#34;*.pyx&#34;</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[<span style="color:#a6e22e">tool</span>.<span style="color:#a6e22e">pytest</span>.<span style="color:#a6e22e">ini_options</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">addopts</span> = [<span style="color:#e6db74">&#34;--import-mode=importlib&#34;</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pythonpath</span> = <span style="color:#e6db74">&#34;src&#34;</span>
+</span></span></code></pre></div><h2 id="422-setuppy">4.2.2 setup.py</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> setuptools <span style="color:#f92672">import</span> Extension, setup
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pybind11.setup_helpers <span style="color:#f92672">import</span> Pybind11Extension, build_ext
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>setup(
+</span></span><span style="display:flex;"><span>    ext_modules<span style="color:#f92672">=</span>[
+</span></span><span style="display:flex;"><span>        Extension(<span style="color:#e6db74">&#34;speedup.cp&#34;</span>, [<span style="color:#e6db74">&#34;src/cpmodule/cpmodule.c&#34;</span>]),
+</span></span><span style="display:flex;"><span>        Pybind11Extension(<span style="color:#e6db74">&#34;speedup.cc&#34;</span>, [<span style="color:#e6db74">&#34;src/ccmodule/ccmodule.cc&#34;</span>]),
+</span></span><span style="display:flex;"><span>        Extension(<span style="color:#e6db74">&#34;speedup.cy&#34;</span>, [<span style="color:#e6db74">&#34;src/cymodule/cymodule.pyx&#34;</span>]),
+</span></span><span style="display:flex;"><span>        Extension(<span style="color:#e6db74">&#34;speedup.py&#34;</span>, [<span style="color:#e6db74">&#34;src/pymodule/pymodule.py&#34;</span>]),
+</span></span><span style="display:flex;"><span>    ],
+</span></span><span style="display:flex;"><span>    build_ext<span style="color:#f92672">=</span>build_ext
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><h2 id="423-编译">4.2.3 编译</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>&gt; pip install -U build wheel cython setuptools pybind11  <span style="color:#75715e">#  安装依赖</span>
+</span></span><span style="display:flex;"><span>&gt; python -m build -n  <span style="color:#75715e"># 编译和构建whl包</span>
+</span></span><span style="display:flex;"><span>&gt; pip install dist/speedup-0.0.1-cp311-cp311-win_amd64.whl  <span style="color:#75715e"># 安装</span>
+</span></span></code></pre></div><h1 id="5-性能测试">5. 性能测试</h1>
+<p>使用cProfile进行性能测试，测试单位为秒，测试命令如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>&gt; python tests/test_hello.py
+</span></span><span style="display:flex;"><span>&gt; python tests/test_fibnacci.py
+</span></span></code></pre></div><h2 id="51-测试结果">5.1 测试结果</h2>
+<table>
+<thead>
+<tr>
+<th>situation</th>
+<th>Python</th>
+<th>Python Compiled</th>
+<th>C</th>
+<th>Cython</th>
+<th>CPP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hello</td>
+<td>0.001</td>
+<td>0.001</td>
+<td>0.003</td>
+<td>0.001</td>
+<td>0.011</td>
+</tr>
+<tr>
+<td>fibnacci</td>
+<td>0.909</td>
+<td>0.900</td>
+<td>0.033</td>
+<td>0.045</td>
+<td>0.051</td>
+</tr>
+</tbody>
+</table>
+<h2 id="52-分析">5.2 分析</h2>
+<p>从测试结果可以看出：</p>
+<p>在场景1，Python/Cython的性能会优于C/CPP，在语言间通信较多且任务十分简单时，不适合编写C扩展；在情景2下，C API性能明显强于其它扩展，Cython性能稍弱，Pybind11是对CPP和C API的封装，性能也不错，但开销还是比C/Cython高，
+原生Python最高。</p>
+<ul>
+<li>纯Python的性能优于C/Cython/CPP，主要是因为跨语言对对象进行序列化/反序列化的开销较大；</li>
+<li>在性能需求较高时，C扩展的速度是最快的，但考虑到C的开发维护成本，Cython/CPP也是不错的选择；</li>
+<li>对比C，CPP(pybind11)作为C的高级封装和扩展，性能稍弱一点；</li>
+<li>对比C，Cython在不同情形下和C互有优劣；</li>
+<li>对比Python，Cython会有性能提升；</li>
+</ul>
+<h1 id="6-源码分享">6. 源码分享</h1>
+<p>上述测试所用源代码见项目<a href="https://github.com/PengchuanC/pengchuanc.github.io/tree/main/src/speedup">speedup</a>。</p>
+]]></content>
 		</item>
 		
 	</channel>

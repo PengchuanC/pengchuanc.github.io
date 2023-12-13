@@ -7,16 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Wed, 06 Dec 2023 20:12:28 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Python语言扩展</title>
-      <link>https://pengchuanc.github.io/posts/python-extension/</link>
-      <pubDate>Wed, 06 Dec 2023 20:12:28 +0800</pubDate>
-      
-      <guid>https://pengchuanc.github.io/posts/python-extension/</guid>
-      <description>1. 简介 Python 语言的扩展模块，主要是用 C 语言编写的，可以直接在 Python 中使用。但实际上除了C语言的扩展模块，Python 还支持其他语言的扩展模块，比如 C</description>
-    </item>
-    
+    <lastBuildDate>Mon, 29 Nov 2021 17:28:16 +0800</lastBuildDate><atom:link href="https://pengchuanc.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>【FOF】SMA系列系统介绍</title>
       <link>https://pengchuanc.github.io/posts/introduction_sma_system/</link>
@@ -96,6 +87,15 @@
       
       <guid>https://pengchuanc.github.io/posts/fund-screen-system/</guid>
       <description>在第一版的基础上优化了布局，重新设计了基金详情页的界面，并且新增了基金筛选功能和基金看板功能、ETF资金流向统计等功能 开发框架升级到vue3</description>
+    </item>
+    
+    <item>
+      <title>Vue3解决数组改变界面没有重新刷新的问题</title>
+      <link>https://pengchuanc.github.io/posts/vue_force_update/</link>
+      <pubDate>Wed, 19 May 2021 10:07:04 +0800</pubDate>
+      
+      <guid>https://pengchuanc.github.io/posts/vue_force_update/</guid>
+      <description>解决方法 在使用vue3或vue2时，时常遇到数组或对象更新，但在列表渲染的UI却没有随数据改变而刷新，这是由于 JavaScript 的限制，Vue 不能检测数组的</description>
     </item>
     
   </channel>
